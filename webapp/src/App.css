@@ -1,3 +1,14 @@
+body {
+  --dark-primary: #E64A19;
+  --light-primary: #FFCCBC;
+  --primary-color: #FF5722;
+  --text-icons: #FFFFFF;
+  --accent-color: #607D8B;
+  --primary-text: #212121;
+  --secondary-text: #757575;
+  --divider-color: #BDBDBD;
+}
+
 .App {
   text-align: center;
 }
