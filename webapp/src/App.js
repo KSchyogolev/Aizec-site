@@ -14,11 +14,12 @@ startRouter(routes, store)
 class App extends Component {
 
   render () {
-
     return (
       <div className='App'>
-        <LeftMenu pages={['homework','calendar','profile']}/>
-        <MobxRouter/>
+        <LeftMenu pages={['profile','homework','calendar']}/>
+        <div className={'content-view'}>
+          <MobxRouter/>
+        </div>
       </div>
     )
   }

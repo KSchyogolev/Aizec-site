@@ -22,7 +22,25 @@ import routes from '../config/routes'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex'
+    display: 'flex',
+    '& .MuiList-root': {
+      width: '100%'
+    }
+  },
+  drawerPaper: {
+    width: 250,
+    color: '#212121'
+    // backgroundColor: '#FFCCBC',
+  },
+  selected: {
+    backgroundColor: '#FF5722',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#E64A19'
+    },
+    '& svg': {
+      color: '#FFFFFF !important',
+    }
   }
 }))
 
@@ -34,17 +52,26 @@ const translate = {
 
 const LeftMenu = (props) => {
   const classes = useStyles()
-  const theme = useTheme()
 
   return <div className={classes.root}>
-    <List>
-      {props.pages ? props.pages.map((item, index) => {
-        return <ListItem button key={index} onClick={() => store.router.goTo(routes[item])}>
-          <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-          <ListItemText primary={translate[item]}/>
-        </ListItem>
-      }) : null}
-    </List>
+    <Drawer classes={{
+      paper: classes.drawerPaper
+    }}
+            variant="permanent"
+            open>
+      <List>
+        {props.pages ? props.pages.map((item, index) => {
+          return <ListItem button key={index}
+                           className={store.router.currentView.path === '/' + item ? classes.selected : ''}
+                           onClick={() => {
+                             store.router.goTo(routes[item])
+                           }}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
+            <ListItemText primary={translate[item]}/>
+          </ListItem>
+        }) : null}
+      </List>
+    </Drawer>
   </div>
 }
 
