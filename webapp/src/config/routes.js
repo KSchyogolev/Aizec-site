@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route } from 'mobx-router'
+import { ProfilePage } from '../components/pages'
 
 const routes = {
   home: new Route({
@@ -16,7 +17,7 @@ const routes = {
   }),
   profile: new Route({
     path: '/profile',
-    component: <div>PROFILE</div>
+    component: <ProfilePage/>
   })
 }
 

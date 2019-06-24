@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+const API = {main: {}}
+
+API.main.getUsers = () => get('restapi/users')
 
 function get (url) {
   return new Promise((resolve, reject) =>
@@ -9,3 +12,5 @@ function get (url) {
       .catch(error => reject(error.response))
   )
 }
+
+export default API

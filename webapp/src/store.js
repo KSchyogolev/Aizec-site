@@ -1,13 +1,15 @@
 import { action, observable } from 'mobx'
-import {RouterStore} from 'mobx-router';
-
+import { RouterStore } from 'mobx-router'
+import API from './api/api'
 
 class Store {
-  @observable fileList = {}
-  @observable currentState = {}
-  @observable currentDictionary = {nodes: []}
-  @observable currentScenario = {}
+
   @observable router = new RouterStore()
+
+  @action
+  getUsers () {
+    API.main.getUsers().then(res => console.log(res))
+  }
 }
 
 export default new Store()
