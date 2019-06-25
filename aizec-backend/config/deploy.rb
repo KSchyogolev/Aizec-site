@@ -8,6 +8,9 @@ set :repo_tree, 'aizec-backend'
 # Deploy to the user's home directory
 set :deploy_to, "/home/ubuntu/deploy/aizec_backend"
 
+set :puma_threads,    [4, 16]
+set :puma_workers,    0
+
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 
 # Only keep the last 5 releases to save disk space
