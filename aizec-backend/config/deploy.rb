@@ -3,6 +3,7 @@ lock "~> 3.11.0"
 
 set :application, "aizec"
 set :repo_url, "git@github.com:KSchyogolev/Aizec-site.git"
+set :repo_tree, 'aizec-backend'
 
 # Deploy to the user's home directory
 set :deploy_to, "/home/ubuntu/deploy/aizec_backend"
