@@ -16,7 +16,7 @@ class App extends Component {
   render () {
     return (
       <div className='App'>
-        <LeftMenu pages={['profile','homework','calendar']}/>
+        <LeftMenu pages={['profile','homework','calendar', 'users']}/>
         <div className={'content-view'}>
           <MobxRouter/>
         </div>
