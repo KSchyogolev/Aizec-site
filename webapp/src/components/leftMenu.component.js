@@ -15,7 +15,21 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     '& .MuiList-root': {
-      width: '100%'
+      width: '100%',
+      '& .MuiListItem-root': {
+        width: '100%',
+        display: 'flex',
+        position: 'relative',
+        boxSizing: 'border-box',
+        textAlign: 'left',
+        alignItems: 'center',
+        paddingTop: 8,
+        paddingBottom: 8,
+        justifyContent: 'flex-start',
+        textDecoration: 'none',
+        paddingLeft: 16,
+        paddingRight: 16
+      }
     }
   },
   drawerPaper: {
@@ -30,7 +44,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: '#E64A19'
     },
     '& svg': {
-      color: '#FFFFFF !important',
+      color: '#FFFFFF !important'
     }
   }
 }))
@@ -38,7 +52,8 @@ const useStyles = makeStyles(theme => ({
 const translate = {
   homework: 'Домашняя работа',
   calendar: 'Календарь',
-  profile: 'Профиль'
+  profile: 'Профиль',
+  users: 'Пользователи'
 }
 
 const LeftMenu = (props) => {

@@ -50,4 +50,23 @@ body {
     right: 0;
     top:0;
     bottom: 0;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(210, 210, 210, 0.75);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(153, 153, 153, 0.75);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(106, 106, 106, 0.75);
 }
