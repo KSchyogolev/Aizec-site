@@ -1,5 +1,6 @@
 class SessionsController < Devise::SessionsController
   respond_to :json
+  wrap_parameters :user, include: [:password, :password_confirmation, :email]
 
   private
 
