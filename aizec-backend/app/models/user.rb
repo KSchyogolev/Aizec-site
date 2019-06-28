@@ -6,5 +6,4 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          jwt_revocation_strategy: JWTBlacklist
 
-  has_secure_password
 end
