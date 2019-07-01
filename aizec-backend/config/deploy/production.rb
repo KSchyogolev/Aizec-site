@@ -49,12 +49,13 @@
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
-server "34.252.220.187",
-  user: "ubuntu",
+
+server "176.99.9.4",
+  user: "root",
   roles: %w{app db web},
   ssh_options: {
-    user: "ubuntu", # overrides user setting above
-    keys: %w(/Users/vladchuprin/Downloads/jun2019.pem),
+    user: "root", # overrides user setting above
+    keys: %w(/Users/vladchuprin/Downloads/aizec.pem),
     forward_agent: true,
     auth_methods: %w(publickey)
     # password: "please use keys"
