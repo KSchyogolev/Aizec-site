@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
-  wrap_parameters :user, include: [:login, :password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
+  wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
 
   # GET /users
   # GET /users.json
@@ -49,6 +49,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:login, :password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email)
+      params.require(:user).permit(:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email)
     end
 end
