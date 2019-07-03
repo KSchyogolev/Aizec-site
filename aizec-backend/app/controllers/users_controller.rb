@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :index]
+  before_filter :is_admin, only: [:index]
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
 
   # GET /users
@@ -45,6 +46,15 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def is_admin
+      if @user.role == 'admin'
+        return true
+      else
+        render head :forbidden
+        return false
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
