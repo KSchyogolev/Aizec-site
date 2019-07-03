@@ -6,7 +6,7 @@ set :repo_url, "git@github.com:KSchyogolev/Aizec-site.git"
 set :repo_tree, 'aizec-backend'
 
 # Deploy to the user's home directory
-set :deploy_to, "/home/ubuntu/deploy/aizec_backend"
+set :deploy_to, "/root/deploy/aizec_backend"
 
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
