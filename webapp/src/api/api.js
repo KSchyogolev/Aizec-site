@@ -2,11 +2,11 @@ import axios from 'axios'
 
 const API = {main: {}}
 
-API.main.getAllUsers = () => get('users')
-API.main.getUser = (userId) => get('users/' + userId)
-API.main.deleteUser = (userId) => del('users/' + userId)
-API.main.updateUser = (userId, data) => patch('users/' + userId, data)
-API.main.addUser = (data) => post('users', data)
+API.main.getAllUsers = () => get('restapi/users')
+API.main.getUser = (userId) => get('restapi/users/' + userId)
+API.main.deleteUser = (userId) => del('restapi/users/' + userId)
+API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
+API.main.addUser = (data) => post('restapi/users', data)
 
 
 function get (url) {
