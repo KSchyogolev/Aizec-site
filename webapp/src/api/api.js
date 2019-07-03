@@ -1,4 +1,5 @@
-import axios from 'axios'
+require('whatwg-fetch')
+const browserFetch = window.fetch
 
 const API = {main: {}}
 
@@ -11,7 +12,7 @@ API.main.addUser = (data) => post('restapi/users', data)
 
 function get (url) {
   return new Promise((resolve, reject) =>
-    axios.get(url)
+    browserFetch(url, {method: 'GET'})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
@@ -19,32 +20,30 @@ function get (url) {
 
 function del (url) {
   return new Promise((resolve, reject) =>
-    axios.delete(url)
+    browserFetch(url, {method: "DELETE"})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
 }
 
-function post (url, data = '', type = 'text/plain') {
+function post (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
-    axios({
-      method: 'post',
-      headers: {'Content-Type': type},
-      url,
-      data
+    browserFetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': type, 'Accept': type},
+      body: JSON.stringify(data)
     })
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   })
 }
 
-function patch (url, data = '', type = 'text/plain') {
+function patch (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
-    axios({
-      method: 'patch',
-      headers: {'Content-Type': type},
-      url,
-      data
+    browserFetch(url,{
+      method: 'PATCH',
+      headers: {'Content-Type': type, 'Accept': type},
+      body: JSON.stringify(data)
     })
       .then(response => resolve(response))
       .catch(error => reject(error.response))
