@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy, :index]
-  before_filter :is_admin, only: [:index]
+  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :is_admin, only: [:index]
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
 
   # GET /users
@@ -49,11 +49,8 @@ class UsersController < ApplicationController
     end
 
     def is_admin
-      if @user.role == 'admin'
-        return true
-      else
-        render head :forbidden
-        return false
+      unless @current_user&.role == 'admin'
+        head :forbidden
       end
     end
 
