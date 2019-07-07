@@ -14,10 +14,12 @@ startRouter(routes, store)
 class App extends Component {
 
   render () {
+    const {router} = store
+    const isFullPage = router.currentView.path === '/login'
     return (
       <div className='App'>
-        <LeftMenu pages={['profile','homework','calendar', 'users']}/>
-        <div className={'content-view'}>
+        {!isFullPage ? <LeftMenu pages={['profile', 'homework', 'calendar', 'users']}/> : ''}
+        <div className={'content-view ' + (isFullPage ? 'full-page' : '')}>
           <MobxRouter/>
         </div>
       </div>

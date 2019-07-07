@@ -5,7 +5,14 @@ import store from './store'
 import './index.css'
 import App from './App'
 
+// const routingStore = new RouterStore()
 
 
-ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'))
+const stores = {
+  // routing: routingStore,
+  store: store
+}
+
+
+ReactDOM.render(<Provider {...stores}><App/></Provider>, document.getElementById('root'))
 

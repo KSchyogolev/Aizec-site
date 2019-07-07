@@ -1,8 +1,22 @@
 import React from 'react'
 import { Route } from 'mobx-router'
-import { ProfilePage, UsersPage } from '../components/pages'
+import { ProfilePage, UsersPage, LoginPage } from '../components/pages'
+
+const checkForUserSignedIn = (fromState, toState, routerStore) => {
+  const {rootStore: {authStore}} = routerStore
+  if (authStore.user) {
+    return Promise.resolve()
+  } else {
+    // authStore.setSignInRedirect(toState);
+    // return Promise.reject(new RouterState('signin'));
+  }
+}
 
 const routes = {
+  login: new Route({
+    path: '/login',
+    component: <LoginPage/>
+  }),
   home: new Route({
     path: '/',
     component: <div>HOME</div>

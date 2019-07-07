@@ -53,6 +53,10 @@ body {
     overflow: auto;
 }
 
+.content-view.full-page {
+    left: 0!important;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;

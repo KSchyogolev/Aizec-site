@@ -1,5 +1,4 @@
-require('whatwg-fetch')
-const browserFetch = window.fetch
+import { fetch } from "./common"
 
 const API = {main: {}}
 
@@ -12,7 +11,7 @@ API.main.addUser = (data) => post('restapi/users', data)
 
 function get (url) {
   return new Promise((resolve, reject) =>
-    browserFetch(url, {method: 'GET'})
+    fetch(url, {method: 'GET'})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
@@ -20,7 +19,7 @@ function get (url) {
 
 function del (url) {
   return new Promise((resolve, reject) =>
-    browserFetch(url, {method: "DELETE"})
+    fetch(url, {method: "DELETE"})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
@@ -28,7 +27,7 @@ function del (url) {
 
 function post (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
-    browserFetch(url, {
+    fetch(url, {
       method: 'POST',
       headers: {'Content-Type': type, 'Accept': type},
       body: JSON.stringify(data)
@@ -40,7 +39,7 @@ function post (url, data = '', type = 'application/json') {
 
 function patch (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
-    browserFetch(url,{
+    fetch(url, {
       method: 'PATCH',
       headers: {'Content-Type': type, 'Accept': type},
       body: JSON.stringify(data)
