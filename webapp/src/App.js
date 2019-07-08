@@ -15,7 +15,7 @@ class App extends Component {
 
   render () {
     const {router} = store
-    const isFullPage = router.currentView.path === '/login'
+    const isFullPage = router.currentView && router.currentView.path === '/login'
     return (
       <div className='App'>
         {!isFullPage ? <LeftMenu pages={['profile', 'homework', 'calendar', 'users']}/> : ''}

@@ -68,7 +68,7 @@ const LeftMenu = (props) => {
       <List>
         {props.pages ? props.pages.map((item, index) => {
           return <ListItem button key={index}
-                           className={store.router.currentView.path === '/' + item ? classes.selected : ''}
+                           className={store.router.currentView && store.router.currentView.path === '/' + item ? classes.selected : ''}
                            onClick={() => {
                              store.router.goTo(routes[item])
                            }}>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import store from '../../store'
+import API from '../../api/api'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -40,8 +41,24 @@ const styles = theme => ({
 @inject('store')
 @observer
 class LoginPage extends Component {
-  signIn = (e, a) => {
-    // console.log(e, a)
+
+  state = {
+    login: '',
+    password: ''
+  }
+
+  signIn = (e) => {
+    e.preventDefault()
+    const {login, password} = this.state
+    API.main.signIn({login, password}).then(res => {
+      localStorage.setItem('access_token', res.headers.Authorization)
+      window.location = '/'
+    }).catch(alert)
+  }
+
+  handleChange = (e) => {
+    const {target: {name, value}} = e
+    this.setState(currentState => ({...currentState, [name]: value}))
   }
 
   render () {
@@ -56,7 +73,7 @@ class LoginPage extends Component {
           <Typography component="h1" variant="h5">
             Вход в личный кабинет
           </Typography>
-          <form className={classes.form} method={'POST'} noValidate action={'/restapi/login'} onSubmit={this.signIn}>
+          <form className={classes.form} noValidate onSubmit={this.signIn}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -66,6 +83,8 @@ class LoginPage extends Component {
               name="login"
               autoComplete="login"
               autoFocus
+              value={this.state.login}
+              onChange={this.handleChange}
             />
             <TextField
               variant="outlined"
@@ -76,6 +95,8 @@ class LoginPage extends Component {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={this.state.password}
+              onChange={this.handleChange}
             />
             <Button
               type="submit"

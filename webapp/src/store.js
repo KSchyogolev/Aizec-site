@@ -79,15 +79,20 @@ class Store {
   @observable currentUser = {}
 
   @action
+  signIn (data) {
+    API.main.signIn(data).then(res => {
+      localStorage.setItem('access_token', res.headers.Authorization)
+    })
+  }
+
+  @action
   getUsers () {
     API.main.getAllUsers().then(res => this.users = res)
-    // this.users = users
   }
 
   @action
   getUser (userId) {
     API.main.getUser(userId).then(res => this.currentUser = res)
-    // this.currentUser = user
   }
 
   @action
@@ -97,10 +102,6 @@ class Store {
         this.users = [...this.users, res]
         resolve()
       }).catch(reject)
-      /*      setTimeout(() => {
-              this.users = [...this.users, data]
-              resolve()
-            }, 1000)*/
     })
   }
 
@@ -114,13 +115,6 @@ class Store {
         this.users = currentUsers
         resolve()
       }).catch(reject)
-      /*      setTimeout(() => {
-              const currentUsers = this.users
-              const index = currentUsers.findIndex(user => user.id === userId)
-              currentUsers[index] = data
-              this.users = currentUsers
-              resolve()
-            }, 1000)*/
     })
   }
 
@@ -134,13 +128,6 @@ class Store {
         this.users = currentUsers
         resolve()
       }).catch(reject)
-      /*      setTimeout(() => {
-              const currentUsers = this.users
-              const index = currentUsers.findIndex(user => user.id === userId)
-              currentUsers.splice(index, 1)
-              this.users = currentUsers
-              resolve()
-            }, 1000)*/
     })
   }
 }
