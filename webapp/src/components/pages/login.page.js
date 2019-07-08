@@ -43,14 +43,14 @@ const styles = theme => ({
 class LoginPage extends Component {
 
   state = {
-    login: '',
+    email: '',
     password: ''
   }
 
   signIn = (e) => {
     e.preventDefault()
-    const {login, password} = this.state
-    API.main.signIn({login, password}).then(res => {
+    const {email, password} = this.state
+    API.main.signIn({email, password}).then(res => {
       localStorage.setItem('access_token', res.headers.Authorization)
       window.location = '/'
     }).catch(alert)
@@ -78,10 +78,10 @@ class LoginPage extends Component {
               variant="outlined"
               margin="normal"
               fullWidth
-              id="login"
+              id="email"
               label="Логин"
-              name="login"
-              autoComplete="login"
+              name="email"
+              autoComplete="email"
               autoFocus
               value={this.state.login}
               onChange={this.handleChange}
