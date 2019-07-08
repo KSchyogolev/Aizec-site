@@ -4,7 +4,7 @@ import JWTDecode from 'jwt-decode'
 // axios.defaults.baseURL = 'http://176.99.9.4';
 
 axios.interceptors.request.use(reqConfig => {
-    reqConfig.headers.Authorization = localStorage.getItem('access_token')
+    reqConfig.headers.authorization = localStorage.getItem('access_token')
     return reqConfig
   },
   err => Promise.reject(err)
@@ -27,7 +27,7 @@ axios.interceptors.response.use(undefined, err => {
   if (err.response.config.url.includes('/restapi/login'))
     return Promise.reject(err)
 
-  if (err.response.status === 403) return forceLogout()
+  if (err.response.status === 403) return /*forceLogout()*/ console.log("LOGOUT")
   if (err.response.status !== 401) return Promise.reject(err)
 
   if (!isFetchingToken) {

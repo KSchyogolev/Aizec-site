@@ -81,7 +81,7 @@ class Store {
   @action
   signIn (data) {
     API.main.signIn(data).then(res => {
-      localStorage.setItem('access_token', res.headers.Authorization)
+      localStorage.setItem('access_token', res.headers.authorization)
     })
   }
 
