@@ -5,5 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable,
          jwt_revocation_strategy: JWTBlacklist
-
+  
+  has_and_belongs_to_many :courses
+  has_many :visits
+  has_many :lessons, through: :visits
 end

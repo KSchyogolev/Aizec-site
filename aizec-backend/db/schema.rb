@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_02_162242) do
+ActiveRecord::Schema.define(version: 2019_07_09_105537) do
+
+  create_table "courses", force: :cascade do |t|
+    t.string "info"
+    t.integer "cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "courses_users", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "course_id", null: false
+    t.index ["course_id", "user_id"], name: "index_courses_users_on_course_id_and_user_id"
+    t.index ["user_id", "course_id"], name: "index_courses_users_on_user_id_and_course_id"
+  end
 
   create_table "jwt_blacklist", force: :cascade do |t|
     t.string "jti", null: false
@@ -20,6 +34,17 @@ ActiveRecord::Schema.define(version: 2019_07_02_162242) do
   create_table "jwt_blacklists", force: :cascade do |t|
     t.string "jti", null: false
     t.index ["jti"], name: "index_jwt_blacklists_on_jti"
+  end
+
+  create_table "lessons", force: :cascade do |t|
+    t.datetime "start_time"
+    t.integer "duration"
+    t.string "synopsys"
+    t.string "homework"
+    t.integer "course_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_lessons_on_course_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -38,6 +63,20 @@ ActiveRecord::Schema.define(version: 2019_07_02_162242) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "visits", force: :cascade do |t|
+    t.string "status"
+    t.string "homework_comment"
+    t.string "teacher_comment"
+    t.string "homework_photos"
+    t.string "approve_status"
+    t.integer "user_id"
+    t.integer "lesson_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lesson_id"], name: "index_visits_on_lesson_id"
+    t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
 end
