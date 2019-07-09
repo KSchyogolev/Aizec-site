@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :visits
+  resources :lessons
+  resources :courses
   devise_for :users,
              path: '',
              path_names: {
