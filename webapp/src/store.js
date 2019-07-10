@@ -82,7 +82,7 @@ class Store {
   signIn (data) {
     return new Promise((resolve, reject) => {
       API.main.signIn(data).then(res => {
-        localStorage.setItem('access_token', res.headers.Authorization)
+        localStorage.setItem('access_token', res.headers.authorization)
         this.currentUser = res
         resolve()
       }).catch(reject)
