@@ -20,4 +20,28 @@ class ApplicationController < ActionController::API
       ]
     }, status: :bad_request
   end
+
+  def allow_authorized
+    unless @current_user.present?
+      head :unauthorized
+    end
+  end
+
+  def allow_admin
+    unless @current_user&.admin?
+      head :forbidden
+    end
+  end
+
+  def allow_teacher
+    unless @current_user&.teacher?
+      head :forbidden
+    end
+  end
+
+  def allow_current_user(entity_user_id)
+    unless @current_user&.admin? or @current_user&.id == entity_user_id
+      head :forbidden
+    end
+  end
 end

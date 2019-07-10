@@ -9,4 +9,16 @@ class User < ApplicationRecord
   has_and_belongs_to_many :courses
   has_many :visits
   has_many :lessons, through: :visits
+
+  def admin?
+    role == 'admin'
+  end
+
+  def teacher?
+    role == 'teacher'
+  end
+
+  def user?
+    role == 'user'
+  end
 end
