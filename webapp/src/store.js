@@ -79,9 +79,9 @@ class Store {
   @observable currentUser = {}
 
   @action
-  signIn (mail, password) {
+  signIn (data) {
     return new Promise((resolve, reject) => {
-      API.main.signIn({mail, password}).then(res => {
+      API.main.signIn(data).then(res => {
         localStorage.setItem('access_token', res.headers.Authorization)
         this.currentUser = res
         resolve()
