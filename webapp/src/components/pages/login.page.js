@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, withTheme } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import store from '../../store'
 import API from '../../api/api'
@@ -50,10 +50,9 @@ class LoginPage extends Component {
   signIn = (e) => {
     e.preventDefault()
     const {email, password} = this.state
-    API.main.signIn({email, password}).then(res => {
-      localStorage.setItem('access_token', res.headers.Authorization || res.headers.authorization)
+    store.signIn(email, password).then(res => {
       window.location = '/'
-    }).catch(alert)
+    }).catch(console.log)
   }
 
   handleChange = (e) => {
