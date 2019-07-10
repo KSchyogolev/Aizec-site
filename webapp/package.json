@@ -83,12 +83,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": {
-    "/restapi": {
-      "target": "http://innovate-school.com",
-      "secure": false
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",

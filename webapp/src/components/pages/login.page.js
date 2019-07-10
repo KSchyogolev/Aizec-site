@@ -51,7 +51,7 @@ class LoginPage extends Component {
     e.preventDefault()
     const {email, password} = this.state
     API.main.signIn({email, password}).then(res => {
-      localStorage.setItem('access_token', res.headers.Authorization)
+      localStorage.setItem('access_token', res.headers.Authorization || res.headers.authorization)
       window.location = '/'
     }).catch(alert)
   }

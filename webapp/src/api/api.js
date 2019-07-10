@@ -1,10 +1,10 @@
 import axios from 'axios'
 import JWTDecode from 'jwt-decode'
 
-// axios.defaults.baseURL = 'http://176.99.9.4';
+// axios.defaults.baseURL = 'http://innovate-school.com';
 
 axios.interceptors.request.use(reqConfig => {
-    reqConfig.headers.authorization = localStorage.getItem('access_token')
+    reqConfig.headers.Authorization = localStorage.getItem('access_token')
     return reqConfig
   },
   err => Promise.reject(err)
@@ -49,7 +49,7 @@ axios.interceptors.response.use(undefined, err => {
   return new Promise((resolve, reject) => {
     subscribeTokenRefresh((errRefreshing, newToken) => {
       if (errRefreshing) return reject(errRefreshing)
-      err.config.headers.authorization = newToken
+      err.config.headers.Authorization = newToken
       return resolve(axios(err.config))
     })
   })
