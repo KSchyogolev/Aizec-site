@@ -63,7 +63,7 @@ API.main.deleteUser = (userId) => del('restapi/users/' + userId)
 API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
 API.main.addUser = (data) => post('restapi/users', data)
 API.main.signIn = (data) => post('restapi/login', data)
-API.main.signOut = () => post('restapi/logout')
+API.main.signOut = () => del('restapi/logout')
 
 
 function get (url) {

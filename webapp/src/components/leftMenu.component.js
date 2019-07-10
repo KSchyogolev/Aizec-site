@@ -18,8 +18,12 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import MailIcon from '@material-ui/icons/Mail'
-
 import LogoutIcon from '@material-ui/icons/ExitToApp'
+import UserIcon from '@material-ui/icons/People'
+import FolderIcon from '@material-ui/icons/Folder'
+import FaceIcon from '@material-ui/icons/Face'
+import CalendarIcon from '@material-ui/icons/CalendarToday'
+import HomeWorkIcon from '@material-ui/icons/FileCopy'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -33,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: '#757575',
+    backgroundColor: '#464646',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -118,6 +122,22 @@ const translate = {
   users: 'Пользователи'
 }
 
+const getIcon = (page) => {
+  switch (page) {
+    case 'users':
+      return <UserIcon/>
+    case 'profile':
+      return <FaceIcon/>
+    case 'calendar':
+      return <CalendarIcon/>
+    case 'homework':
+      return <HomeWorkIcon/>
+    default:
+      return <FolderIcon/>
+  }
+
+}
+
 const LeftMenu = (props) => {
   const classes = useStyles()
   const theme = useTheme()
@@ -183,7 +203,7 @@ const LeftMenu = (props) => {
                            onClick={() => {
                              store.router.goTo(routes[item])
                            }}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
+            <ListItemIcon>{getIcon(item)}</ListItemIcon>
             <ListItemText primary={translate[item]}/>
           </ListItem>
         }) : null}
