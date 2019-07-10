@@ -79,9 +79,25 @@ class Store {
   @observable currentUser = {}
 
   @action
-  signIn (data) {
-    API.main.signIn(data).then(res => {
-      localStorage.setItem('access_token', res.headers.Authorization)
+  signIn (mail, password) {
+    return new Promise((resolve, reject) => {
+      API.main.signIn({mail, password}).then(res => {
+        localStorage.setItem('access_token', res.headers.Authorization)
+        this.currentUser = res
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  signOut () {
+    API.main.signOut().then(() => {
+      window.location = '/login'
+      localStorage.clear()
+    }).catch((err) => {
+      console.log(err)
+      window.location = '/login'
+      localStorage.clear()
     })
   }
 
@@ -130,6 +146,7 @@ class Store {
       }).catch(reject)
     })
   }
+
 }
 
 export default new Store()

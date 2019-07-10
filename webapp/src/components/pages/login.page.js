@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, withTheme } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import store from '../../store'
 import API from '../../api/api'
@@ -22,18 +22,28 @@ const styles = theme => ({
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    '& .Mui-focused': {
+      color: "#464646",
+      '& fieldset': {
+        borderColor: [["#464646"], '!important']
+      }
+    }
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: '#E64A19'
+    backgroundColor: '#FF5722'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#FF5722",
+    '&:hover': {
+      backgroundColor: "#E64A19"
+    }
   }
 })
 
@@ -50,10 +60,9 @@ class LoginPage extends Component {
   signIn = (e) => {
     e.preventDefault()
     const {email, password} = this.state
-    API.main.signIn({email, password}).then(res => {
-      localStorage.setItem('access_token', res.headers.Authorization || res.headers.authorization)
+    store.signIn({user: {email, password}}).then(res => {
       window.location = '/'
-    }).catch(alert)
+    }).catch(console.log)
   }
 
   handleChange = (e) => {
