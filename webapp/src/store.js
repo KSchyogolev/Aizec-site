@@ -112,19 +112,19 @@ class Store {
 
   @action
   getUsers () {
-    API.main.getAllUsers().then(res => this.users = res)
+    API.main.getAllUsers().then(res => this.users = res.data)
   }
 
   @action
   getUser (userId) {
-    API.main.getUser(userId).then(res => this.currentUser = res)
+    API.main.getUser(userId).then(res => this.currentUser = res.data)
   }
 
   @action
   addUser (data) {
     return new Promise((resolve, reject) => {
       API.main.addUser(data).then(res => {
-        this.users = [...this.users, res]
+        this.users = [...this.users, res.data]
         resolve()
       }).catch(reject)
     })
@@ -136,7 +136,7 @@ class Store {
       API.main.updateUser(userId, data).then(res => {
         const currentUsers = this.users
         const index = currentUsers.findIndex(user => user.id === userId)
-        currentUsers[index] = res
+        currentUsers[index] = res.data
         this.users = currentUsers
         resolve()
       }).catch(reject)
@@ -146,7 +146,7 @@ class Store {
   @action
   deleteUser (userId) {
     return new Promise((resolve, reject) => {
-      API.main.deleteUser(userId).then(res => {
+      API.main.deleteUser(userId).then(() => {
         const currentUsers = this.users
         const index = currentUsers.findIndex(user => user.id === userId)
         currentUsers.splice(index, 1)

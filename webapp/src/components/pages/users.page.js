@@ -63,24 +63,28 @@ class UsersPage extends Component {
           title="Пользователи"
           icons={tableIcons}
           columns={[
-            {title: "Логин", field: "login"},
             {title: "Имя", field: "first_name"},
             {title: "Фамилия", field: "second_name"},
             {title: "Пароль", field: "password"},
             {title: "Почта", field: "email"},
-            {title: "Телефон", field: "Phone"},
+            {title: "Телефон", field: "phone"},
             {title: "Информация", field: "bio"},
             {
               title: "Роль",
               field: "role",
-              lookup: {'admin': "Администрато", 'teacher': "Учитель", 'student': 'Ученик'}
+              lookup: {'admin': "Администратор", 'teacher': "Учитель", 'student': 'Ученик'}
             }
           ]}
           data={store.users}
+          options={{
+            pageSize: 10,
+            pageSizeOptions: [5, 10, 20]
+          }}
           editable={{
             onRowAdd: newData => new Promise((resolve, reject) => store.addUser(newData).then(resolve).catch(reject)),
             onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateUser(oldData.id, newData).then(() => {
               this.forceUpdate()
+              console.log(store.users)
               resolve()
             }).catch(reject)),
             onRowDelete: oldData => new Promise((resolve, reject) => store.deleteUser(oldData.id).then(() => {
