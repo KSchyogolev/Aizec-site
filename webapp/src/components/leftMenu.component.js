@@ -125,6 +125,12 @@ const translate = (str) => {
       return 'Профиль'
     case 'users' :
       return 'Пользователи'
+    case 'teacher' :
+      return 'Учитель'
+    case 'admin' :
+      return 'Администратор'
+    case 'student' :
+      return 'Ученик'
     default:
       return ''
   }
@@ -178,7 +184,7 @@ const LeftMenu = (props) => {
         </Typography>
         <div className={classes.rightAppContent}>
           <Typography>
-            {currentUser.first_name + ' ' + currentUser.second_name}
+            {currentUser.first_name + ' ' + currentUser.second_name + ' (' + translate(currentUser.role) + ')'}
           </Typography>
           <IconButton onClick={store.signOut}>
             <LogoutIcon/>
