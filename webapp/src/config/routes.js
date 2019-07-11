@@ -2,14 +2,14 @@ import React from 'react'
 import { Route } from 'mobx-router'
 import { ProfilePage, UsersPage, LoginPage } from '../components/pages'
 
-const checkForUserSignedIn = (fromState, toState, routerStore) => {
-  const {rootStore: {authStore}} = routerStore
-  if (authStore.user) {
-    return Promise.resolve()
-  } else {
-    // authStore.setSignInRedirect(toState);
-    // return Promise.reject(new RouterState('signin'));
-  }
+
+const userIsLoggedIn = (route, params, store) => {
+  return true
+  /*  const userIsLoggedIn = store.user
+  if (!userIsLoggedIn) {
+    window.location = '/login'
+    return false
+  }*/
 }
 
 const routes = {
@@ -19,23 +19,28 @@ const routes = {
   }),
   home: new Route({
     path: '/',
-    component: <div>HOME</div>
+    component: <div>HOME</div>,
+    beforeEnter: userIsLoggedIn
   }),
   homework: new Route({
     path: '/homework',
-    component: <div>HOMEWORK</div>
+    component: <div>HOMEWORK</div>,
+    beforeEnter: userIsLoggedIn
   }),
   calendar: new Route({
     path: '/calendar',
-    component: <div>CALENDAR</div>
+    component: <div>CALENDAR</div>,
+    beforeEnter: userIsLoggedIn
   }),
   profile: new Route({
     path: '/profile',
-    component: <ProfilePage/>
+    component: <ProfilePage/>,
+    beforeEnter: userIsLoggedIn
   }),
   users: new Route({
     path: '/users',
-    component: <UsersPage/>
+    component: <UsersPage/>,
+    beforeEnter: userIsLoggedIn
   })
 }
 
