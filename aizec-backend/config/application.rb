@@ -36,7 +36,7 @@ module AizecBackend
       allow do
         origins '*'
         resource '*', headers: :any,
-        expose: ["Authorization"], methods: [:get, :post, :options]
+        expose: ["Authorization"], methods: [:get, :post, :options, :delete, :put, :patch]
       end
     end
   end
