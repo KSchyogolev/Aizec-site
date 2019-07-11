@@ -3,24 +3,18 @@ import { Route } from 'mobx-router'
 import { ProfilePage, UsersPage, LoginPage } from '../components/pages'
 
 
-const userIsLoggedIn = (route, params, store) => {
-  return true
-  /*  const userIsLoggedIn = store.user
+const userIsLoggedIn = () => {
+  const userIsLoggedIn = localStorage.getItem('current_user')
+  console.log(userIsLoggedIn)
   if (!userIsLoggedIn) {
     window.location = '/login'
-    return false
-  }*/
+  }
 }
 
 const routes = {
   login: new Route({
     path: '/login',
     component: <LoginPage/>
-  }),
-  home: new Route({
-    path: '/',
-    component: <div>HOME</div>,
-    beforeEnter: userIsLoggedIn
   }),
   homework: new Route({
     path: '/homework',
@@ -41,7 +35,14 @@ const routes = {
     path: '/users',
     component: <UsersPage/>,
     beforeEnter: userIsLoggedIn
-  })
+  }),
+  default: new Route({
+    path: '/*',
+    beforeEnter: (a,b,store) => {
+      store.router.goTo(routes.profile)
+      return false
+    }
+  }),
 }
 
 export default routes
