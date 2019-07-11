@@ -68,7 +68,7 @@ API.main.signOut = () => del('restapi/logout')
 
 function get (url) {
   return new Promise((resolve, reject) =>
-    axios.get(url)
+    axios.get(url, {headers: {'Accept': 'application/json'}})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
