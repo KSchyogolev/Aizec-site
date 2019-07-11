@@ -74,6 +74,14 @@ const user = {
 
 class Store {
 
+  constructor() {
+    this.loadData()
+  }
+
+  loadData = () => {
+    this.currentUser = JSON.parse(localStorage.getItem('current_user') || '{}')
+  }
+
   @observable router = new RouterStore()
   @observable users = []
   @observable currentUser = {}
@@ -82,8 +90,9 @@ class Store {
   signIn (data) {
     return new Promise((resolve, reject) => {
       API.main.signIn(data).then(res => {
-        localStorage.setItem('access_token', res.headers.Authorization)
-        this.currentUser = res
+        localStorage.setItem('access_token', res.headers.authorization)
+        localStorage.setItem('current_user', JSON.stringify(res.data))
+        this.currentUser = res.data
         resolve()
       }).catch(reject)
     })
@@ -103,19 +112,19 @@ class Store {
 
   @action
   getUsers () {
-    API.main.getAllUsers().then(res => this.users = res)
+    API.main.getAllUsers().then(res => this.users = res.data)
   }
 
   @action
   getUser (userId) {
-    API.main.getUser(userId).then(res => this.currentUser = res)
+    API.main.getUser(userId).then(res => this.currentUser = res.data)
   }
 
   @action
   addUser (data) {
     return new Promise((resolve, reject) => {
       API.main.addUser(data).then(res => {
-        this.users = [...this.users, res]
+        this.users = [...this.users, res.data]
         resolve()
       }).catch(reject)
     })
@@ -127,7 +136,7 @@ class Store {
       API.main.updateUser(userId, data).then(res => {
         const currentUsers = this.users
         const index = currentUsers.findIndex(user => user.id === userId)
-        currentUsers[index] = res
+        currentUsers[index] = res.data
         this.users = currentUsers
         resolve()
       }).catch(reject)
@@ -137,7 +146,7 @@ class Store {
   @action
   deleteUser (userId) {
     return new Promise((resolve, reject) => {
-      API.main.deleteUser(userId).then(res => {
+      API.main.deleteUser(userId).then(() => {
         const currentUsers = this.users
         const index = currentUsers.findIndex(user => user.id === userId)
         currentUsers.splice(index, 1)

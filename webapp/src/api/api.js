@@ -27,7 +27,7 @@ axios.interceptors.response.use(undefined, err => {
   if (err.response.config.url.includes('/restapi/login'))
     return Promise.reject(err)
 
-  if (err.response.status === 403) return forceLogout()
+  if (err.response.status === 403) return console.log('LOGOUT')/*forceLogout()*/
   if (err.response.status !== 401) return Promise.reject(err)
 
   if (!isFetchingToken) {

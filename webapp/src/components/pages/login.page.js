@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withStyles, withTheme } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
+import routes from '../../config/routes'
 import store from '../../store'
 import API from '../../api/api'
 
@@ -61,7 +62,7 @@ class LoginPage extends Component {
     e.preventDefault()
     const {email, password} = this.state
     store.signIn({user: {email, password}}).then(res => {
-      window.location = '/'
+      store.router.goTo(routes.home)
     }).catch(console.log)
   }
 
