@@ -120,11 +120,11 @@ const translate = (str) => {
     case 'homework' :
       return 'Домашняя работа'
     case 'calendar' :
-      return 'Пользователи'
+      return 'Календарь'
     case 'profile' :
       return 'Профиль'
     case 'users' :
-      return 'Домашняя работа'
+      return 'Пользователи'
     default:
       return ''
   }

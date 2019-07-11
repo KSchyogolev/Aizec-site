@@ -5,10 +5,15 @@ import { ProfilePage, UsersPage, LoginPage } from '../components/pages'
 
 const userIsLoggedIn = () => {
   const userIsLoggedIn = localStorage.getItem('current_user')
-  console.log(userIsLoggedIn)
   if (!userIsLoggedIn) {
     window.location = '/login'
+    return false
   }
+}
+
+const toHomePage = (a,b,store) => {
+  store.router.goTo(routes.profile)
+  return false
 }
 
 const routes = {
@@ -38,10 +43,11 @@ const routes = {
   }),
   default: new Route({
     path: '/*',
-    beforeEnter: (a,b,store) => {
-      store.router.goTo(routes.profile)
-      return false
-    }
+    beforeEnter: toHomePage
+  }),
+  empty: new Route({
+    path: '/',
+    beforeEnter: toHomePage
   }),
 }
 
