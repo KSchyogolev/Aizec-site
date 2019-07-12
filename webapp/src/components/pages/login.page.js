@@ -62,7 +62,7 @@ class LoginPage extends Component {
     e.preventDefault()
     const {email, password} = this.state
     store.signIn({user: {email, password}}).then(res => {
-      store.router.goTo(routes.home)
+      store.router.goTo(routes.profile)
     }).catch(console.log)
   }
 

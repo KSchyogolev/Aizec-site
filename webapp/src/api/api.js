@@ -27,8 +27,7 @@ axios.interceptors.response.use(undefined, err => {
   if (err.response.config.url.includes('/restapi/login'))
     return Promise.reject(err)
 
-  if (err.response.status === 403) return console.log('LOGOUT')
-  /*forceLogout()*/
+  if (err.response.status === 403) return forceLogout()
   if (err.response.status !== 401) return Promise.reject(err)
 
   if (!isFetchingToken) {
@@ -67,17 +66,17 @@ API.main.signIn = (data) => post('restapi/login', data)
 API.main.signOut = () => del('restapi/logout')
 
 
-function get (url) {
+function get (url, type = 'application/json') {
   return new Promise((resolve, reject) =>
-    axios.get(url, {headers: {'Accept': 'application/json'}})
+    axios.get(url, {headers: {'Content-Type': type, 'Accept': type}})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
 }
 
-function del (url, data = '') {
+function del (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) =>
-    axios.delete(url, {data})
+    axios.delete(url, {data, headers: {'Content-Type': type, 'Accept': type}})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )

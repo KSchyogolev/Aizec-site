@@ -24,6 +24,14 @@ const styles = theme => ({
   }
 })
 
+const getValidPages = (role) => {
+  switch (role) {
+    case 'admin' : return ['profile', 'users', 'homework', 'calendar']
+    case 'teacher' : return ['profile', 'homework']
+    case 'student' : return ['profile']
+    default : return []
+  }
+}
 
 @inject('store')
 @observer
@@ -39,11 +47,11 @@ class App extends Component {
 
   render () {
     const {classes} = this.props
-    const {router} = store
+    const {router, currentUser} = store
     const isFullPage = router.currentView && router.currentView.path === '/login'
     return (
       <div className='App'>
-        {!isFullPage ? <LeftMenu pages={['profile', 'homework', 'calendar', 'users']} open={this.state.open}
+        {!isFullPage ? <LeftMenu pages={getValidPages(currentUser && currentUser.role)} open={this.state.open}
                                  setOpen={(isOpen) => this.handleOpenDrawer(isOpen)}/> : ''}
         <div className={classes.content}>
           <div className={classes.toolbar}/>

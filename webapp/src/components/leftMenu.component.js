@@ -115,11 +115,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const translate = {
-  homework: 'Домашняя работа',
-  calendar: 'Календарь',
-  profile: 'Профиль',
-  users: 'Пользователи'
+const translate = (str) => {
+  switch (str) {
+    case 'homework' :
+      return 'Домашняя работа'
+    case 'calendar' :
+      return 'Календарь'
+    case 'profile' :
+      return 'Профиль'
+    case 'users' :
+      return 'Пользователи'
+    case 'teacher' :
+      return 'Учитель'
+    case 'admin' :
+      return 'Администратор'
+    case 'student' :
+      return 'Ученик'
+    default:
+      return ''
+  }
 }
 
 const getIcon = (page) => {
@@ -143,6 +157,7 @@ const LeftMenu = (props) => {
   const theme = useTheme()
 
   const {currentUser} = store
+  const {currentView} = store.router
 
   return <div className={classes.root}>
     <CssBaseline/>
@@ -165,11 +180,11 @@ const LeftMenu = (props) => {
           <MenuIcon/>
         </IconButton>
         <Typography variant="h6" noWrap>
-          {translate[store.router.currentView.path.replace('/', '')]}
+          {currentView && currentView.path ? translate(currentView.path.replace('/', '')) : ''}
         </Typography>
         <div className={classes.rightAppContent}>
           <Typography>
-            {currentUser.first_name + ' ' + currentUser.second_name}
+            {currentUser.first_name + ' ' + currentUser.second_name + ' (' + translate(currentUser.role) + ')'}
           </Typography>
           <IconButton onClick={store.signOut}>
             <LogoutIcon/>
@@ -199,12 +214,12 @@ const LeftMenu = (props) => {
       <List>
         {props.pages ? props.pages.map((item, index) => {
           return <ListItem button key={index}
-                           className={store.router.currentView && store.router.currentView.path === '/' + item ? classes.selected : ''}
+                           className={currentView && currentView.path === '/' + item ? classes.selected : ''}
                            onClick={() => {
                              store.router.goTo(routes[item])
                            }}>
             <ListItemIcon>{getIcon(item)}</ListItemIcon>
-            <ListItemText primary={translate[item]}/>
+            <ListItemText primary={translate(item)}/>
           </ListItem>
         }) : null}
       </List>
