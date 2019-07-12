@@ -40,6 +40,15 @@ class LessonsController < ApplicationController
     @lesson.destroy
   end
 
+  def by_user
+    user_id = params[:user_id] || current_user&.id
+    if user_id.present?
+      @visits = User.find(user_id).visits
+    else
+      head :unauthorized
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson
