@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+  resources :lesson_infos
+  resources :lesson_types
+  resources :payments
+  resources :user_messages
+  resources :message_options
+  resources :photos
+  resources :messages
+  resources :user_groups
+  resources :groups
+  resources :clubs
+  resources :merches
   resources :visits
   resources :lessons
   resources :courses

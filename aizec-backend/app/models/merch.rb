@@ -1,0 +1,2 @@
+class Merch < ApplicationRecord
+end

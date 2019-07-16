@@ -10,20 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_10_124109) do
+ActiveRecord::Schema.define(version: 2019_07_16_142041) do
 
-  create_table "courses", force: :cascade do |t|
-    t.string "info"
-    t.integer "cost"
+  create_table "clubs", force: :cascade do |t|
+    t.string "name"
+    t.string "status", default: "active"
+    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "courses_users", id: false, force: :cascade do |t|
-    t.integer "user_id", null: false
+  create_table "clubs_courses", id: false, force: :cascade do |t|
+    t.integer "club_id", null: false
     t.integer "course_id", null: false
-    t.index ["course_id", "user_id"], name: "index_courses_users_on_course_id_and_user_id"
-    t.index ["user_id", "course_id"], name: "index_courses_users_on_user_id_and_course_id"
+    t.index ["club_id", "course_id"], name: "index_clubs_courses_on_club_id_and_course_id"
+  end
+
+  create_table "courses", force: :cascade do |t|
+    t.integer "cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "status"
+    t.string "name"
+    t.string "short_description"
+    t.string "full_description"
+    t.integer "cost_month"
+    t.string "type"
+    t.string "ancestry"
+    t.index ["ancestry"], name: "index_courses_on_ancestry"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.string "status", default: "active"
+    t.integer "club_id"
+    t.integer "course_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["club_id"], name: "index_groups_on_club_id"
+    t.index ["course_id"], name: "index_groups_on_course_id"
   end
 
   create_table "jwt_blacklist", force: :cascade do |t|
@@ -38,15 +63,113 @@ ActiveRecord::Schema.define(version: 2019_07_10_124109) do
     t.index ["jti"], name: "index_jwt_blacklists_on_jti"
   end
 
-  create_table "lessons", force: :cascade do |t|
-    t.datetime "start_time"
-    t.integer "duration"
+  create_table "lesson_infos", force: :cascade do |t|
+    t.string "short_description"
+    t.string "full_description"
     t.string "synopsys"
     t.string "homework"
-    t.integer "course_id"
+    t.integer "duration"
+    t.string "status"
+    t.integer "course_id", null: false
+    t.integer "lesson_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_lessons_on_course_id"
+    t.index ["course_id"], name: "index_lesson_infos_on_course_id"
+    t.index ["lesson_type_id"], name: "index_lesson_infos_on_lesson_type_id"
+  end
+
+  create_table "lesson_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "lessons", force: :cascade do |t|
+    t.datetime "start_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "group_id"
+    t.integer "lesson_info_id"
+    t.string "status", default: "closed"
+    t.index ["group_id"], name: "index_lessons_on_group_id"
+    t.index ["lesson_info_id"], name: "index_lessons_on_lesson_info_id"
+  end
+
+  create_table "merches", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "photo_path"
+    t.integer "cost", null: false
+    t.string "short_description"
+    t.string "full_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "message_options", force: :cascade do |t|
+    t.string "name"
+    t.integer "index"
+    t.integer "message_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_message_options_on_message_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "type"
+    t.string "status", default: "not_readen"
+    t.integer "user_id", null: false
+    t.string "to_entity_type"
+    t.integer "to_entity_id"
+    t.string "head_text"
+    t.string "full_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.integer "bonuses"
+    t.integer "cost"
+    t.string "status"
+    t.integer "user_id", null: false
+    t.integer "course_id"
+    t.integer "merch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_payments_on_course_id"
+    t.index ["merch_id"], name: "index_payments_on_merch_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
+  create_table "photos", force: :cascade do |t|
+    t.string "name"
+    t.string "path"
+    t.integer "message_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_photos_on_message_id"
+  end
+
+  create_table "user_groups", force: :cascade do |t|
+    t.datetime "payment_date"
+    t.string "status", default: "not_payed"
+    t.integer "user_id"
+    t.integer "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
+  end
+
+  create_table "user_messages", force: :cascade do |t|
+    t.integer "chosen_option"
+    t.string "status"
+    t.integer "user_id", null: false
+    t.integer "message_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_user_messages_on_message_id"
+    t.index ["user_id"], name: "index_user_messages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -63,6 +186,17 @@ ActiveRecord::Schema.define(version: 2019_07_10_124109) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "third_name"
+    t.string "parent_first_name"
+    t.string "parent_second_name"
+    t.string "parent_third_name"
+    t.string "status"
+    t.integer "bonus_count"
+    t.string "parent_relationship"
+    t.boolean "gender"
+    t.string "address"
+    t.string "identifier_type"
+    t.string "identifier_number"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -71,7 +205,6 @@ ActiveRecord::Schema.define(version: 2019_07_10_124109) do
     t.string "status"
     t.string "homework_comment"
     t.string "teacher_comment"
-    t.string "homework_photos"
     t.string "approve_status"
     t.integer "user_id"
     t.integer "lesson_id"
