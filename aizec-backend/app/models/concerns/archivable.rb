@@ -1,5 +1,4 @@
-module Archivable
-  extend ActiveSupport::Concern
+module Archivable extend ActiveSupport::Concern
 
   included do
     default_scope { where.not(status: "archived") }

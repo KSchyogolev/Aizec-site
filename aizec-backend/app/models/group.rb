@@ -6,5 +6,6 @@ class Group < ApplicationRecord
   validate :has_status, available_statuses: %w[archived active]
   
   include Archivable
+  include Receivable
 
 end

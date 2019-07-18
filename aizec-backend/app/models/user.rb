@@ -16,6 +16,7 @@ class User < ApplicationRecord
   after_initialize :default_values
   
   include Archivable
+  include Receivable
 
   def admin?
     role == 'admin'
@@ -27,6 +28,11 @@ class User < ApplicationRecord
 
   def user?
     role == 'user'
+  end
+
+  def messages
+    msgs = super.or(Message.where(to_entity_type: "all"))
+    msgs = msgs.or(Message.where(to_entity_type: "admin")) if admin?
   end
 
   private
