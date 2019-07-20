@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 })
 
-const getValidPages = (role) => {
+const getMenuPages = (role) => {
   switch (role) {
     case 'admin' : return ['profile', 'users', 'homework', 'calendar']
     case 'teacher' : return ['profile', 'homework']
@@ -48,10 +48,10 @@ class App extends Component {
   render () {
     const {classes} = this.props
     const {router, currentUser} = store
-    const isFullPage = router.currentView && router.currentView.path === '/login'
+    const isFullPage = router.currentView && (router.currentView.path === '/login' || router.currentView.path === '/registration')
     return (
       <div className='App'>
-        {!isFullPage ? <LeftMenu pages={getValidPages(currentUser && currentUser.role)} open={this.state.open}
+        {!isFullPage ? <LeftMenu pages={getMenuPages(currentUser && currentUser.role)} open={this.state.open}
                                  setOpen={(isOpen) => this.handleOpenDrawer(isOpen)}/> : ''}
         <div className={classes.content}>
           <div className={classes.toolbar}/>
