@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include ArchivableController
+
   before_action :set_user, only: [:show, :update, :destroy, :approve]
   before_action only: [:activate, :update] do
     allow_owner(params[:id])
@@ -6,7 +8,7 @@ class UsersController < ApplicationController
   before_action :allow_admin, only: [:create, :destroy, :approve]
 
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
-
+  
   # GET /users
   # GET /users.json
   def index
@@ -71,7 +73,7 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = User.unscoped.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

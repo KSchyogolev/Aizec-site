@@ -1,4 +1,6 @@
 class CoursesController < ApplicationController
+  include ArchivableController
+  
   before_action :set_course, only: [:show, :update, :destroy, :add_user, :remove_user]
 
   # GET /courses

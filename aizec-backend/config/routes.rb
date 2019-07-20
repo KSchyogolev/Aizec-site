@@ -1,19 +1,17 @@
 Rails.application.routes.draw do
-  resources :lesson_infos
-  resources :lesson_types
-  resources :payments
-  resources :user_messages
-  resources :message_options
-  resources :photos
-  resources :messages
-  resources :user_groups
-  resources :groups
-  resources :clubs
-  resources :merches
-  resources :visits
-  resources :lessons
-  resources :courses
-  resources :users
+  def archivable_routes(*args)
+    args.each do |resource|
+      get "#{resource}/archivated", to: "#{resource}#archivated_index"
+      get "#{resource}/with_archivated", to: "#{resource}#with_archivated_index"
+    end
+  end
+
+  resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
+    :message_options, :photos, :messages, :user_groups, :groups, :clubs, 
+    :merches, :visits, :lessons, :courses, :users)
+  
+  archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
+
   devise_for :users,
              path: '',
              path_names: {

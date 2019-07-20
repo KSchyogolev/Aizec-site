@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  include ArchivableController
+  
   before_action :set_group, only: [:show, :update, :destroy]
 
   # GET /groups

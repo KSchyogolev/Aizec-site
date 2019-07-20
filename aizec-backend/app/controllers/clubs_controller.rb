@@ -1,4 +1,6 @@
 class ClubsController < ApplicationController
+  include ArchivableController
+
   before_action :set_club, only: [:show, :update, :destroy]
 
   # GET /clubs

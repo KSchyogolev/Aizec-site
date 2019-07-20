@@ -1,4 +1,6 @@
 class LessonInfosController < ApplicationController
+  include ArchivableController
+  
   before_action :set_lesson_info, only: [:show, :update, :destroy]
 
   # GET /lesson_infos

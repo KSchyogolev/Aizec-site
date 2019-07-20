@@ -1,4 +1,6 @@
 class LessonsController < ApplicationController
+  include ArchivableController
+  
   before_action :set_lesson, only: [:show, :update, :destroy]
 
   # GET /lessons

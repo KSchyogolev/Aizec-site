@@ -1,4 +1,6 @@
 class PaymentsController < ApplicationController
+  include ArchivableController
+  
   before_action :set_payment, only: [:show, :update, :destroy]
 
   # GET /payments

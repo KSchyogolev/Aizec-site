@@ -1,4 +1,6 @@
 class MessagesController < ApplicationController
+  include ArchivableController
+  
   before_action :set_message, only: [:show, :update, :destroy]
 
   # GET /messages
