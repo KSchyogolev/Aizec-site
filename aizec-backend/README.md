@@ -387,7 +387,7 @@
 | Метод | Путь                      | Доступ | Принимает | Возвращает | Комментарий |
 |:-----:|:--------------------------|:------:|:----------|:-----------|:------------|
 | POST  | /users/create-unactivated | admin  |           |            |             |
-| PATCH | /users/:id/activate       | owner  |           |            |             |
+| PATCH | /users/activate       | owner  |           |            |             |
 | PATCH | /users/:id/approve        | admin  |           |            |             |
 | POST  | /users/create-admin       | admin  |           |            |             |
 | POST  | /users/create-teacher     | admin  |           |            |             |

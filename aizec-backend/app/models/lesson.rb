@@ -8,4 +8,11 @@ class Lesson < ApplicationRecord
   
   include Archivable
 
+  def open?
+    status == "open"
+  end
+
+  def closed? 
+    status == "closed"
+  end
 end

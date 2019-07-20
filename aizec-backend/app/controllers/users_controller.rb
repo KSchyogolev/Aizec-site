@@ -1,7 +1,10 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
-  before_action :allow_authorized, only: [:index]
-  before_action :allow_admin, only: [:create, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :approve]
+  before_action only: [:activate, :update] do
+    allow_owner(params[:id])
+  end
+  before_action :allow_admin, only: [:create, :destroy, :approve]
+
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
 
   # GET /users
@@ -19,6 +22,28 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+
+    if @user.save
+      render :show, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def activate
+    changed_status = user_params
+    changed_status[:status] = not_approved
+    changed_status[:id] = current_user.id
+    if @user.update(changed_status)
+      render :show, status: :ok, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+
+  def approve
+    @user.status = active
 
     if @user.save
       render :show, status: :created, location: @user
@@ -51,6 +76,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email)
+      params.require(:user).permit(:password, :password_confirmation, :first_name, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :parent_first_name, :parent_second_name, :parent_third_name, :parent_relationship, :status, :bonus_count, :gender, :address, :identifier_type, :identifier_number)
     end
 end

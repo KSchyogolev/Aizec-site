@@ -48,6 +48,6 @@ class VisitsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def visit_params
-      params.require(:visit).permit(:status, :homework_comment, :teacher_comment, :homework_photos, :approve_status, :user_id, :lesson_id)
+      params.require(:visit).permit(:status, :homework_comment, :teacher_comment, :approve_status, :user_id, :lesson_id)
     end
 end
