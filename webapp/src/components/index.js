@@ -1,5 +1,7 @@
-import LeftMenu  from './leftMenu.component.js'
+import LeftMenu  from './leftMenu.component'
+import ParentInput from  './parentInput.component'
 
 export {
-  LeftMenu
+  LeftMenu,
+  ParentInput
 }
