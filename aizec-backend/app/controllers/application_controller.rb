@@ -40,7 +40,7 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def allow_current_user(entity_user_id)
+  def allow_owner(entity_user_id)
     unless current_user&.admin? or current_user&.id == entity_user_id
       head :forbidden
     end

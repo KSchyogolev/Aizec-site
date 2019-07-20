@@ -6,9 +6,22 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          jwt_revocation_strategy: JWTBlacklist
   
-  has_and_belongs_to_many :courses
+  has_many :user_groups
+  has_many :groups, through: :user_groups
   has_many :visits
   has_many :lessons, through: :visits
+  has_many :user_messages
+  has_many :messages, through: :user_messages
+  has_many :payments
+  has_many :courses, through: :payments
+  has_many :merches, through: :payments
+
+  has_status %w[archived active not_activated not_approved]
+
+  after_initialize :default_values
+  
+  include Archivable
+  include Receivable
 
   def admin?
     role == 'admin'
@@ -21,4 +34,15 @@ class User < ApplicationRecord
   def user?
     role == 'user'
   end
+
+  def received_messages
+    msgs = super.or(Message.where(to_entity_type: "all"))
+    msgs = msgs.or(Message.where(to_entity_type: "admin")) if admin?
+  end
+
+  private
+    def default_values
+      self.status ||= "not_activated"
+    end
+
 end

@@ -1,5 +1,5 @@
 class CoursesController < ApplicationController
-  before_action :set_course, only: [:show, :update, :destroy]
+  before_action :set_course, only: [:show, :update, :destroy, :add_user, :remove_user]
 
   # GET /courses
   # GET /courses.json
@@ -38,6 +38,26 @@ class CoursesController < ApplicationController
   # DELETE /courses/1.json
   def destroy
     @course.destroy
+  end
+
+  def add_user
+    user = User.find(params[:user_id])
+    @course.users << user
+    @course.lessons.map { |lesson|  lesson.users << user }
+  end
+
+  def remove_user
+    @course.users.delete(params[:user_id])
+  end
+
+  def by_user
+    user_id = params[:user_id] || current_user&.id
+    if user_id.present?
+      @courses = User.find(user_id).courses
+      render :index, status: :ok, location: @course
+    else
+      head :unauthorized
+    end
   end
 
   private
