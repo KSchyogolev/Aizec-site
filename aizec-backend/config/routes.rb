@@ -24,6 +24,9 @@ Rails.application.routes.draw do
                registrations: 'registrations'
              }
 
+  get 'users/:id/approve', to: 'users#approve'
+  get 'users/activate', to: 'users#activate'
+
   get 'courses/:id/add_user/:user_id', to: 'courses#add_user'
   get 'courses/:id/remove_user/:user_id', to: 'courses#remove_user'
   get 'courses/by_user_id/:user_id', to: 'courses#by_user'

@@ -33,9 +33,9 @@ class UsersController < ApplicationController
   end
 
   def activate
+    @user = current_user
     changed_status = user_params
     changed_status[:status] = not_approved
-    changed_status[:id] = current_user.id
     if @user.update(changed_status)
       render :show, status: :ok, location: @user
     else
