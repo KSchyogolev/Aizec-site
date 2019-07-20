@@ -10,8 +10,13 @@ class User < ApplicationRecord
   has_many :groups, through: :user_groups
   has_many :visits
   has_many :lessons, through: :visits
+  has_many :user_messages
+  has_many :messages, through: :user_messages
+  has_many :payments
+  has_many :courses, through: :payments
+  has_many :merches, through: :payments
 
-  validate :has_status, available_statuses: %w[archived active not_activated not_approved]
+  has_status %w[archived active not_activated not_approved]
 
   after_initialize :default_values
   
@@ -30,7 +35,7 @@ class User < ApplicationRecord
     role == 'user'
   end
 
-  def messages
+  def received_messages
     msgs = super.or(Message.where(to_entity_type: "all"))
     msgs = msgs.or(Message.where(to_entity_type: "admin")) if admin?
   end

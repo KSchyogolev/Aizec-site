@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
   before_action :allow_authorized, only: [:index]
-  before_action :allow_admin, only: [:index]
+  before_action :allow_admin, only: [:create, :destroy]
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
 
   # GET /users

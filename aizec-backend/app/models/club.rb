@@ -1,8 +1,8 @@
 class Club < ApplicationRecord
   has_many :groups
-  has_many_and_belongs_to :course
+  has_and_belongs_to_many :course
   
-  validate :has_status, available_statuses: %w[archived active]
+  has_status %w[archived active]
   
   include Archivable
   include Receivable

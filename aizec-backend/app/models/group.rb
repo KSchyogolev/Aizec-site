@@ -3,7 +3,7 @@ class Group < ApplicationRecord
   belongs_to :course
   has_many :user_groups
   has_many :users, through: :user_groups
-  validate :has_status, available_statuses: %w[archived active]
+  has_status %w[archived active]
   
   include Archivable
   include Receivable

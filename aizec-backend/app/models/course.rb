@@ -6,7 +6,7 @@ class Course < ApplicationRecord
   has_ancestry
 
   validates :type, inclusion: { in: %w[intensive regular], message: "%{value} is not valid type." }
-  validate :has_status, available_statuses: %w[archived active]
+  has_status %w[archived active]
   
   include Archivable
   include Receivable
