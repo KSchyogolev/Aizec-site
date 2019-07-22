@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
+import { pages } from './config/config'
 import { withStyles, withTheme } from '@material-ui/core/styles'
 import { LeftMenu } from "./components"
 import routes from './config/routes'
@@ -25,12 +26,21 @@ const styles = theme => ({
 })
 
 const getMenuPages = (role) => {
-  switch (role) {
-    case 'admin' : return ['profile', 'users', 'homework', 'calendar']
-    case 'teacher' : return ['profile', 'homework']
-    case 'student' : return ['profile']
-    default : return []
+  if (!role) {
+    return []
   }
+
+
+  /*  switch (role) {
+      case 'admin' :
+        return ['profile', 'users', 'homework', 'calendar']
+      case 'teacher' :
+        return ['profile', 'homework']
+      case 'student' :
+        return ['profile']
+      default :
+        return []
+    }*/
 }
 
 @inject('store')
@@ -45,14 +55,16 @@ class App extends Component {
     this.setState({open: isOpen})
   }
 
-  render () {
+  render() {
     const {classes} = this.props
     const {router, currentUser} = store
     const isFullPage = router.currentView && (router.currentView.path === '/login' || router.currentView.path === '/registration')
     return (
       <div className='App'>
-        {!isFullPage ? <LeftMenu pages={getMenuPages(currentUser && currentUser.role)} open={this.state.open}
-                                 setOpen={(isOpen) => this.handleOpenDrawer(isOpen)}/> : ''}
+        {!isFullPage ?
+          <LeftMenu pages={currentUser && currentUser.role && pages[currentUser.role] ? pages[currentUser.role] : []}
+                    open={this.state.open}
+                    setOpen={(isOpen) => this.handleOpenDrawer(isOpen)}/> : ''}
         <div className={classes.content}>
           <div className={classes.toolbar}/>
           <MobxRouter/>
