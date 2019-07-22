@@ -21,6 +21,7 @@ gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 gem 'devise'
 gem 'devise-jwt'
 gem 'rack-cors'
+gem 'mail'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'

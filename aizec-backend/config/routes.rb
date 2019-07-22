@@ -6,11 +6,12 @@ Rails.application.routes.draw do
     end
   end
 
+  archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
+
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
     :message_options, :photos, :messages, :user_groups, :groups, :clubs, 
     :merches, :visits, :lessons, :courses, :users)
   
-  archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
 
   devise_for :users,
              path: '',
@@ -25,7 +26,8 @@ Rails.application.routes.draw do
              }
 
   get 'users/:id/approve', to: 'users#approve'
-  get 'users/activate', to: 'users#activate'
+  post 'users/activate', to: 'users#activate'
+  post 'users/create_by_email', to: 'users#create_by_email'
 
   get 'courses/:id/add_user/:user_id', to: 'courses#add_user'
   get 'courses/:id/remove_user/:user_id', to: 'courses#remove_user'

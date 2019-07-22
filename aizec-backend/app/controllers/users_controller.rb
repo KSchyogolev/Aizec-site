@@ -32,10 +32,23 @@ class UsersController < ApplicationController
     end
   end
 
+  def create_by_email
+    @user = User.new(params.require(:user).permit(:email))
+    generated_password = Devise.friendly_token.first(10)
+    @user.password = generated_password
+    @user.role = "user"
+    if @user.save
+      resp = UserMailer.with(user: @user, password: generated_password).activate_email.deliver_later
+      render :show, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
   def activate
     @user = current_user
     changed_status = user_params
-    changed_status[:status] = not_approved
+    changed_status[:status] = "not_approved"
     if @user.update(changed_status)
       render :show, status: :ok, location: @user
     else
@@ -45,7 +58,7 @@ class UsersController < ApplicationController
 
 
   def approve
-    @user.status = active
+    @user.status = "active"
 
     if @user.save
       render :show, status: :created, location: @user

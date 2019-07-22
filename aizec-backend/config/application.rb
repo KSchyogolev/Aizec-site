@@ -32,6 +32,19 @@ module AizecBackend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address:              'smtp.yandex.ru',
+      port:                 465,
+      user_name:            'admin@innovate-school.com',
+      password:             ENV['MAIL_PASSWORD'],
+      authentication:       'plain',
+      enable_starttls_auto: true,
+      tls: true 
+    }
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
