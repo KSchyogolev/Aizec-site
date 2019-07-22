@@ -10,15 +10,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-
-const ProfilePage = (props) => {
+const JournalPage = props => {
   const classes = useStyles()
   const {store} = props
   return (
     <div className={classes.root}>
+      JOURNAL
     </div>
   )
 
 }
 
-export default inject('store')(observer(ProfilePage))
+export default inject('store')(observer(JournalPage))

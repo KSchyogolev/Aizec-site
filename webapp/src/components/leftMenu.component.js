@@ -11,8 +11,10 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import DnsIcon from '@material-ui/icons/Dns'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ListItem from '@material-ui/core/ListItem'
+import Collapse from '@material-ui/core/Collapse'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
@@ -24,6 +26,9 @@ import FolderIcon from '@material-ui/icons/Folder'
 import FaceIcon from '@material-ui/icons/Face'
 import CalendarIcon from '@material-ui/icons/CalendarToday'
 import HomeWorkIcon from '@material-ui/icons/FileCopy'
+import SummaryIcon from '@material-ui/icons/FileCopy'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -112,6 +117,9 @@ const useStyles = makeStyles(theme => ({
       margin: 'auto',
       fontSize: 20
     }
+  },
+  nested: {
+    paddingLeft: 30
   }
 }))
 
@@ -131,6 +139,8 @@ const translate = (str) => {
       return 'Администратор'
     case 'student' :
       return 'Ученик'
+    case 'summary':
+      return 'Прогресс'
     default:
       return ''
   }
@@ -155,9 +165,48 @@ const getIcon = (page) => {
 const LeftMenu = (props) => {
   const classes = useStyles()
   const theme = useTheme()
-
   const {currentUser} = store
   const {currentView} = store.router
+
+  const [openPages, setOpenPages] = useState([])
+
+  const handleOpen = (name) => {
+    setOpenPages([...openPages, name])
+  }
+
+  const handleClose = (name) => {
+    const pages = [...openPages]
+    const index = openPages.indexOf(name)
+    if (index !== -1) {
+      pages.splice(index, 1)
+      setOpenPages(pages)
+    }
+  }
+
+  const drawListItem = (page, index, level) => {
+    const {subPages, name, label} = page
+    const isOpen = subPages.length && openPages.indexOf(name) !== -1
+    return !subPages.length ? <ListItem style={{'padding-left': 16 * level + 'px'}}
+                                        button key={index}
+                                        className={currentView && currentView.path === '/' + name ? classes.selected : ''}
+                                        onClick={() => store.router.goTo(routes[name])}>
+      <ListItemIcon>{getIcon(name)}</ListItemIcon>
+      <ListItemText primary={label}/>
+    </ListItem> : <>
+    <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)}>
+      <ListItemIcon>
+        <DnsIcon/>
+      </ListItemIcon>
+      <ListItemText primary={label}/>
+      {isOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+    </ListItem>
+    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding>
+        {subPages.map((item, index) => drawListItem(item, index, level + 1))}
+      </List>
+    </Collapse>
+    </>
+  }
 
   return <div className={classes.root}>
     <CssBaseline/>
@@ -212,16 +261,7 @@ const LeftMenu = (props) => {
       </div>
       <Divider/>
       <List>
-        {props.pages ? props.pages.map((item, index) => {
-          return <ListItem button key={index}
-                           className={currentView && currentView.path === '/' + item ? classes.selected : ''}
-                           onClick={() => {
-                             store.router.goTo(routes[item])
-                           }}>
-            <ListItemIcon>{getIcon(item)}</ListItemIcon>
-            <ListItemText primary={translate(item)}/>
-          </ListItem>
-        }) : null}
+        {props.pages ? props.pages.map((page, index) => drawListItem(page, index, 1)) : null}
       </List>
     </Drawer>
   </div>

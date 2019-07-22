@@ -10,15 +10,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-
-const ProfilePage = (props) => {
+const TablePage = props => {
   const classes = useStyles()
   const {store} = props
   return (
     <div className={classes.root}>
+      TABLE
     </div>
   )
 
 }
 
-export default inject('store')(observer(ProfilePage))
+export default inject('store')(observer(TablePage))
