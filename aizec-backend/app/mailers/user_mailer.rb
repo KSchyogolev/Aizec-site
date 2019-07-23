@@ -1,8 +1,21 @@
 class UserMailer < ApplicationMailer
   def activate_email
-    @user = params[:user]
     @password = params[:password]
-    @url  = 'http://innovate-school.com/login'
+    @user     = params[:user]
+    @url      = 'http://innovate-school.com/login'
     mail(to: @user.email, subject: 'Активация аккаунта')
+  end
+
+  def approve_email
+    @user = params[:user]
+    @url  = 'http://innovate-school.com/login'
+    mail(to: @user.email, subject: 'Ваш аккаунт активирован')
+  end
+
+  def check_message
+    @message = params[:message]    
+    if @message.to_entity_type == "admin"
+      mail(to: User.where(role: "admin").map(&:email).join(","), subject: 'Сообщение администратору')
+    end
   end
 end

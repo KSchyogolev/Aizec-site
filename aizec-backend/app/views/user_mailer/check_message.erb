@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p> Сообщение от <%= @message.user.first_name %> <%= @message.user.second_name %> </p>
+    <p><%= @message.head_text %> </p>
+    <p><%= @message.full_text %> </p>
+  </body>
+</html>

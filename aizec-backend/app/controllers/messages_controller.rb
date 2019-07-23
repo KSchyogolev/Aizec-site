@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
   include ArchivableController
-  
+
   before_action :set_message, only: [:show, :update, :destroy]
 
   # GET /messages
@@ -20,6 +20,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save
+      UserMailer.with(message: @message).check_message.deliver_later
       render :show, status: :created, location: @message
     else
       render json: @message.errors, status: :unprocessable_entity
