@@ -29,6 +29,7 @@ class ApplicationController < ActionController::API
   end
 
   def allow_admin
+    pp current_user&.admin?
     unless current_user&.admin?
       head :forbidden
     end

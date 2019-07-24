@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     @user.password = generated_password
     @user.role = "user"
     if @user.save
-      UserMailer.with(user: @user, password: generated_password).activate_email.deliver_later
+      UserMailer.with(user: @user, password: generated_password).activate_email.deliver_later!
       render :show, status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -61,8 +61,8 @@ class UsersController < ApplicationController
     @user.status = "active"
 
     if @user.save
-      UserMailer.with(user: @user).approve_email.deliver_later
-      render :show, status: :created, location: @user
+      UserMailer.with(user: @user).approve_email.deliver_later!
+      render :show, status: :ok, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
     end

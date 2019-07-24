@@ -22,6 +22,7 @@ gem 'devise'
 gem 'devise-jwt'
 gem 'rack-cors'
 gem 'mail'
+gem 'sidekiq'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
