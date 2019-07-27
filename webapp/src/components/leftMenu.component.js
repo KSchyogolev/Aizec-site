@@ -29,6 +29,7 @@ import HomeWorkIcon from '@material-ui/icons/FileCopy'
 import SummaryIcon from '@material-ui/icons/FileCopy'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -80,9 +81,9 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing(5) + 1,
+    width: 0,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7) + 1
+      width: 0
     }
   },
   toolbar: {
@@ -137,10 +138,12 @@ const translate = (str) => {
       return 'Учитель'
     case 'admin' :
       return 'Администратор'
-    case 'student' :
+    case 'user' :
       return 'Ученик'
     case 'summary':
       return 'Прогресс'
+    case 'offers':
+      return 'Предложения'
     default:
       return ''
   }
@@ -156,6 +159,8 @@ const getIcon = (page) => {
       return <CalendarIcon/>
     case 'homework':
       return <HomeWorkIcon/>
+    case 'offers':
+      return <AddShoppingCartIcon/>
     default:
       return <FolderIcon/>
   }

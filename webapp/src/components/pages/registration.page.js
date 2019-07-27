@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import store from '../../store'
-
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
@@ -47,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(1)
   },
   finalMessage: {
     padding: 40,
@@ -88,15 +86,10 @@ const Registration = props => {
   const classes = useStyles()
   const storedUser = localStorage.getItem('current_user')
   const initialUser = (storedUser && JSON.parse(storedUser)) || {}
-  const isRegistered = storedUser && storedUser.status === 'not_approved'
+  const isRegistered = initialUser && initialUser.status === 'not_approved'
+  initialUser.parents = [{}]
   const [activeStep, setActiveStep] = useState(isRegistered ? steps.length : 0)
   const [currentUser, setUser] = useState(initialUser)
-
-/*
-  useEffect(() => {
-    console.log(currentUser)
-  });
-*/
 
   const handleChange = (e) => {
     const {target: {name, value}} = e
@@ -104,9 +97,11 @@ const Registration = props => {
   }
 
   const handleNext = () => {
-    if(activeStep === steps.length - 1) {
-      props.store.updateUser('testId',currentUser).then(()=>{
+    if (activeStep === steps.length - 1) {
+      const parseParentUser = {...currentUser, parents: JSON.stringify(currentUser.parents)}
+      props.store.activateUser(parseParentUser).then(res => {
         setActiveStep(activeStep + 1)
+        localStorage.setItem('current_user', JSON.stringify(res))
       })
       return
     }

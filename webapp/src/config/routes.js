@@ -1,13 +1,17 @@
 import React from 'react'
 import { Route } from 'mobx-router'
-import { ProfilePage, UsersPage, LoginPage, RegistrationPage, TablePage, JournalPage } from '../components/pages'
+import {
+  ProfilePage,
+  UsersPage,
+  LoginPage,
+  RegistrationPage,
+  TablePage,
+  JournalPage,
+  OffersPage
+} from '../components/pages'
 
 const userIsRegistered = (user) => {
-   return !(user.role === 'student' && user.status !== 'active ')
-/*    for (let key in user) {
-      if (user[key] !== null && user[key] !== "")
-        return false
-    }*/
+  return !(user.role === 'user' && user.status === 'not_activated')
 }
 
 const userIsLoggedIn = () => {
@@ -31,6 +35,11 @@ const routes = {
   login: new Route({
     path: '/login',
     component: <LoginPage/>
+  }),
+  offers: new Route({
+    path: '/offers',
+    component: <OffersPage/>,
+    beforeEnter: userIsLoggedIn
   }),
   homework: new Route({
     path: '/homework',

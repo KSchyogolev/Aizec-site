@@ -8,6 +8,7 @@ import HomeworkPage from './homework.page'
 import JournalPage from './journal.page'
 import ReportPage from './report.page'
 import TablePage from './table.page'
+import OffersPage from './offers.page'
 
 export {
   ProfilePage,
@@ -19,5 +20,6 @@ export {
   HomeworkPage,
   JournalPage,
   ReportPage,
-  TablePage
+  TablePage,
+  OffersPage
 }

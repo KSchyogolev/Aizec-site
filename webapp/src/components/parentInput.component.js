@@ -29,7 +29,12 @@ const parentTypes = [
 ]
 
 const ParentInput = props => {
-  const {user, handleChange} = props
+  const {parent, number} = props
+
+  const handleChange = (e) => {
+    props.handleChange(e, number)
+  }
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -38,58 +43,58 @@ const ParentInput = props => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>
           <TextField
-            id="parent_first_name"
-            name="parent_first_name"
+            id="first_name"
+            name="first_name"
             label="Имя"
             fullWidth
             autoComplete="fname"
-            value={user.parent_first_name}
+            value={parent.first_name}
             onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            id="parent_second_name"
-            name="parent_second_name"
+            id="second_name"
+            name="second_name"
             label="Фамилия"
             fullWidth
             autoComplete="lname"
-            value={user.parent_second_name}
+            value={parent.second_name}
             onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            id="parent_third_name"
-            name="parent_third_name"
+            id="third_name"
+            name="third_name"
             label="Отчество"
             fullWidth
             autoComplete="sname"
-            value={user.parent_third_name}
+            value={parent.third_name}
             onChange={handleChange}
           />
         </Grid>
-{/*        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4}>
           <TextField
             id="date_birth"
             label="Дата рождения"
             type="date"
-            name="date_birth"
+            name="birthday"
             fullWidth
             InputLabelProps={{
               shrink: true
             }}
-            value={user.date_birth}
+            value={parent.birthday}
             onChange={handleChange}
           />
-        </Grid>*/}
+        </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
             id="phone"
             name="phone"
             label="Телефон"
             fullWidth
-            value={user.phone}
+            value={parent.phone}
             onChange={handleChange}
           />
         </Grid>
@@ -108,13 +113,13 @@ const ParentInput = props => {
             <InputLabel htmlFor="parent_relationship">Статус</InputLabel>
             <Select
               inputProps={{
-                name: 'parent_relationship',
+                name: 'relationship',
                 id: 'parent_relationship',
-                value: user.parent_relationship,
+                value: parent.relationship,
                 onChange:handleChange
               }}
             >
-              {parentTypes.map((item,index) => <MenuItem value={item.value}>{item.label}</MenuItem>)}
+              {parentTypes.map((item,index) => <MenuItem key={index} value={item.value}>{item.label}</MenuItem>)}
             </Select>
           </FormControl>
         </Grid>
@@ -125,12 +130,12 @@ const ParentInput = props => {
               inputProps={{
                 name: 'gender',
                 id: 'gender',
-                value: user.gender,
+                value: parent.gender,
                 onChange:handleChange
               }}
             >
-              <MenuItem value={true}>М</MenuItem>
-              <MenuItem value={false}>Ж</MenuItem>
+              <MenuItem value={true}>Мужской</MenuItem>
+              <MenuItem value={false}>Женский</MenuItem>
             </Select>
           </FormControl>
         </Grid>

@@ -13,11 +13,11 @@ axios.interceptors.request.use(reqConfig => {
 let isFetchingToken = false
 let tokenSubscribers = []
 
-function subscribeTokenRefresh (cb) {
+function subscribeTokenRefresh(cb) {
   tokenSubscribers.push(cb)
 }
 
-function forceLogout () {
+function forceLogout() {
   isFetchingToken = false
   localStorage.clear()
   window.location = '/login'
@@ -60,13 +60,17 @@ const API = {main: {}}
 API.main.getAllUsers = () => get('restapi/users')
 API.main.getUser = (userId) => get('restapi/users/' + userId)
 API.main.deleteUser = (userId) => del('restapi/users/' + userId)
+API.main.createByEmail = (data) => post('restapi/users/create_by_email', data)
+API.main.approveUser = (userId) => get('restapi/users/' + userId + '/approve')
+
+API.main.activate = (data) => post('restapi/users/activate', data)
 API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
 API.main.addUser = (data) => post('restapi/users', data)
 API.main.signIn = (data) => post('restapi/login', data)
 API.main.signOut = () => del('restapi/logout')
 
 
-function get (url, type = 'application/json') {
+function get(url, type = 'application/json') {
   return new Promise((resolve, reject) =>
     axios.get(url, {headers: {'Content-Type': type, 'Accept': type}})
       .then(response => resolve(response))
@@ -74,7 +78,7 @@ function get (url, type = 'application/json') {
   )
 }
 
-function del (url, data = '', type = 'application/json') {
+function del(url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) =>
     axios.delete(url, {data, headers: {'Content-Type': type, 'Accept': type}})
       .then(response => resolve(response))
@@ -82,7 +86,7 @@ function del (url, data = '', type = 'application/json') {
   )
 }
 
-function post (url, data = '', type = 'application/json') {
+function post(url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -95,7 +99,7 @@ function post (url, data = '', type = 'application/json') {
   })
 }
 
-function patch (url, data = '', type = 'application/json') {
+function patch(url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
     axios({
       method: 'patch',

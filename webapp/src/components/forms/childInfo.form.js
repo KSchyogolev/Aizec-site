@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 
 const ChildInfoForm = props => {
   const {user, handleChange} = props
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -50,20 +51,21 @@ const ChildInfoForm = props => {
             onChange={handleChange}
           />
         </Grid>
-        {/*<Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4}>
           <TextField
             id="dateBirth"
             label="Дата рождения"
             type="date"
             fullWidth
+            name='birthday'
             InputLabelProps={{
               shrink: true
             }}
-            value={user.first_name}
+            value={user.birthday}
             onChange={handleChange}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/*<Grid item xs={12} sm={4}>
           <FormControl fullWidth>
             <InputLabel htmlFor="place">Площадка</InputLabel>
             <Select
