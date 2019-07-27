@@ -2,12 +2,12 @@ class UsersController < ApplicationController
   include ArchivableController
 
   before_action :set_user, only: [:show, :update, :destroy, :approve]
-  before_action only: [:activate, :update] do
+  before_action only: [:update] do
     allow_owner(params[:id])
   end
   before_action :allow_admin, only: [:create, :destroy, :approve]
 
-  wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :role, :photo, :bio, :phone, :email]
+  wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents]
   
   # GET /users
   # GET /users.json
