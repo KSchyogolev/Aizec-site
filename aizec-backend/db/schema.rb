@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_16_142041) do
+ActiveRecord::Schema.define(version: 2019_07_27_093144) do
 
   create_table "clubs", force: :cascade do |t|
     t.string "name"
@@ -187,16 +187,12 @@ ActiveRecord::Schema.define(version: 2019_07_16_142041) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "third_name"
-    t.string "parent_first_name"
-    t.string "parent_second_name"
-    t.string "parent_third_name"
     t.string "status"
     t.integer "bonus_count"
-    t.string "parent_relationship"
     t.boolean "gender"
     t.string "address"
-    t.string "identifier_type"
-    t.string "identifier_number"
+    t.string "parents"
+    t.date "birthday"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
