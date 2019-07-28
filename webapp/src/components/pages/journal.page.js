@@ -15,7 +15,7 @@ const JournalPage = props => {
   const {store} = props
   return (
     <div className={classes.root}>
-      JOURNAL
+
     </div>
   )
 

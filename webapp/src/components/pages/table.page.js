@@ -15,7 +15,7 @@ const TablePage = props => {
   const {store} = props
   return (
     <div className={classes.root}>
-      TABLE
+
     </div>
   )
 

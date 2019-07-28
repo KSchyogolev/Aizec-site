@@ -54,7 +54,7 @@ export const pages = {
           subPages: []
         },
         {
-          name: 'reminders',
+          name: 'notifications',
           label: 'Напоминания',
           subPages: []
         },
@@ -110,59 +110,59 @@ export const pages = {
   ],
   user: [
     {
-      name: 'main',
+      name: 'mainUser',
       label: 'Главная',
       subPages: []
     },
     {
-      name: 'feed',
+      name: 'offersUser',
       label: 'Предложения',
       subPages: []
     },
     {
-      name: 'progress',
+      name: 'progressUser',
       label: 'Прогресс',
       subPages: [
         {
-          name: 'schedule',
+          name: 'scheduleUser',
           label: 'Расписание',
           subPages: []
         },
         {
-          name: 'homework',
+          name: 'homeworkUser',
           label: 'Домашняя работа',
           subPages: []
         },
         {
-          name: 'achievements',
+          name: 'achievementsUser',
           label: 'Достижения',
           subPages: []
         }
       ]
     },
     {
-      name: 'courses',
+      name: 'coursesUser',
       label: 'Курсы',
       subPages: [
-        {
-          name: 'regular.course',
+        /*{
+          name: 'regular.course.user',
           label: 'Регулярные',
           subPages: []
         },
         {
-          name: 'intense.course',
+          name: 'intense.course.user',
           label: 'Интенсивные',
           subPages: []
         },
         {
-          name: 'solo.course',
+          name: 'solo.course.user',
           label: 'Индивидуальные',
           subPages: []
-        }
+        }*/
       ]
     },
     {
-      name: 'letters',
+      name: 'lettersUser',
       label: 'Обращения',
       subPages: []
     }

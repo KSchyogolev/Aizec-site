@@ -16,6 +16,7 @@ class Store {
   @observable router = new RouterStore()
   @observable users = []
   @observable currentUser = {}
+  @observable allMessages = []
 
   @action
   signIn(data) {
@@ -43,7 +44,22 @@ class Store {
 
   @action
   getUsers() {
-    API.main.getAllUsers().then(res => this.users = res.data)
+    return new Promise((resolve, reject) => {
+      API.main.getAllUsers().then(res => {
+        this.users = res.data
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getMessages() {
+    return new Promise((resolve, reject) => {
+      API.main.getAllMessages().then(res => {
+        this.messages = res.data
+        resolve()
+      }).catch(reject)
+    })
   }
 
   @action

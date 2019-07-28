@@ -10,6 +10,16 @@ import {
   OffersPage
 } from '../components/pages'
 
+import {
+  AchievementUserPage,
+  CoursesUserPage,
+  HomeworkUserPage,
+  ScheduleUserPage,
+  MainUserPage,
+  OffersUserPage,
+  LettersUserPage
+} from '../components/pages/user'
+
 const userIsRegistered = (user) => {
   return !(user.role === 'user' && user.status === 'not_activated')
 }
@@ -35,6 +45,41 @@ const routes = {
   login: new Route({
     path: '/login',
     component: <LoginPage/>
+  }),
+  offersUser: new Route({
+    path: '/offersUser',
+    component: <OffersUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  achievementsUser: new Route({
+    path: '/achievementsUser',
+    component: <AchievementUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  coursesUser: new Route({
+    path: '/coursesUser',
+    component: <CoursesUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  homeworkUser: new Route({
+    path: '/homeworkUser',
+    component: <HomeworkUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  lettersUser: new Route({
+    path: '/lettersUser',
+    component: <LettersUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  mainUser: new Route({
+    path: '/mainUser',
+    component: <MainUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  scheduleUser: new Route({
+    path: '/scheduleUser',
+    component: <ScheduleUserPage/>,
+    beforeEnter: userIsLoggedIn
   }),
   offers: new Route({
     path: '/offers',

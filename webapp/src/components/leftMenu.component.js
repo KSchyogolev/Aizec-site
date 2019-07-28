@@ -24,12 +24,21 @@ import LogoutIcon from '@material-ui/icons/ExitToApp'
 import UserIcon from '@material-ui/icons/People'
 import FolderIcon from '@material-ui/icons/Folder'
 import FaceIcon from '@material-ui/icons/Face'
-import CalendarIcon from '@material-ui/icons/CalendarToday'
+import CalendarIcon from '@material-ui/icons/Event'
 import HomeWorkIcon from '@material-ui/icons/FileCopy'
 import SummaryIcon from '@material-ui/icons/FileCopy'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
+import NotificationIcon from '@material-ui/icons/NotificationImportant'
+import AssessmentIcon from '@material-ui/icons/Assessment'
+import AnnouncementIcon from '@material-ui/icons/Announcement'
+import LoyalotyIcon from '@material-ui/icons/Loyalty'
+import JournalIcon from '@material-ui/icons/ChromeReaderMode'
+import MainIcon from '@material-ui/icons/RecentActors'
+import LettersIcon from '@material-ui/icons/Textsms'
+import ScheduleIcon from '@material-ui/icons/Web'
+import CoursesIcon from '@material-ui/icons/School'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -121,6 +130,10 @@ const useStyles = makeStyles(theme => ({
   },
   nested: {
     paddingLeft: 30
+  },
+  tip: {
+    paddingTop: 3,
+    fontWeight: 900
   }
 }))
 
@@ -161,15 +174,40 @@ const getIcon = (page) => {
       return <HomeWorkIcon/>
     case 'offers':
       return <AddShoppingCartIcon/>
+    case 'notifications':
+      return <NotificationIcon/>
+    case 'letters':
+      return <AnnouncementIcon/>
+    case 'table':
+      return <AssessmentIcon/>
+    case 'bonuses':
+      return <LoyalotyIcon/>
+    case 'journal':
+      return <JournalIcon/>
+    case 'mainUser':
+      return <MainIcon/>
+    case 'homeworkUser':
+      return <HomeWorkIcon/>
+    case 'offersUser':
+      return <AddShoppingCartIcon/>
+    case 'lettersUser':
+      return <LettersIcon/>
+    case 'scheduleUser':
+      return <ScheduleIcon/>
+    case 'coursesUser':
+      return <CoursesIcon/>
+    case 'achievementsUser':
+      return <AddShoppingCartIcon/>
     default:
       return <FolderIcon/>
   }
 
 }
 
-const LeftMenu = (props) => {
+const LeftMenu = props => {
   const classes = useStyles()
   const theme = useTheme()
+  const {tips} = props
   const {currentUser} = store
   const {currentView} = store.router
 
@@ -197,6 +235,9 @@ const LeftMenu = (props) => {
                                         onClick={() => store.router.goTo(routes[name])}>
       <ListItemIcon>{getIcon(name)}</ListItemIcon>
       <ListItemText primary={label}/>
+      <Typography component='div'
+                  title={'Требуют подтвержения'}
+                  className={classes.tip}>{tips[name] ? tips[name] : ''}</Typography>
     </ListItem> : <>
     <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)}>
       <ListItemIcon>

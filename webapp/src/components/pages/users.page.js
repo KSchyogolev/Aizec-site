@@ -22,11 +22,10 @@ const UsersPage = props => {
   const {store} = props
   const classes = useStyles()
 
-  useEffect(() => {
+  /*useEffect(() => {
     store.getUsers()
   }, [])
-
-
+*/
   return (
     <div className={classes.root}>
       <MaterialTable
@@ -37,8 +36,6 @@ const UsersPage = props => {
           {title: "Фамилия", field: "second_name"},
           {title: "Пароль", field: "password"},
           {title: "Почта", field: "email"},
-          {title: "Телефон", field: "phone"},
-          {title: "Информация", field: "bio"},
           {
             title: "Роль",
             field: "role",
