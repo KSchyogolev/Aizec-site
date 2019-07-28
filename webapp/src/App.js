@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import { pages } from './config/config'
-import { withStyles, withTheme } from '@material-ui/core/styles'
+import { makeStyles, withTheme } from '@material-ui/core/styles'
 import { LeftMenu } from "./components"
 import routes from './config/routes'
 import store from './store'
@@ -11,7 +11,7 @@ import { MobxRouter, startRouter } from 'mobx-router'
 
 startRouter(routes, store)
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'flex',
     alignItems: 'center',
@@ -24,55 +24,48 @@ const styles = theme => ({
     padding: theme.spacing(3),
     minWidth: 600
   }
-})
+}))
 
-const getMenuPages = (role) => {
-  if (!role) {
-    return []
+
+const App = props => {
+  const classes = useStyles()
+  const {router, currentUser} = props.store
+  const isFullPage = router.currentView && (router.currentView.path === '/login' || router.currentView.path === '/registration')
+  const [open, setOpen] = useState(true)
+  const [notApprovedCount, setApprovedCount] = useState(0)
+
+  const getStatusCount = (users, status) => {
+    return users.filter(user => user.role === 'user' && user.status === status).length
   }
 
-
-  /*  switch (role) {
-      case 'admin' :
-        return ['profile', 'users', 'homework', 'calendar']
-      case 'teacher' :
-        return ['profile', 'homework']
-      case 'student' :
-        return ['profile']
-      default :
-        return []
-    }*/
-}
-
-@inject('store')
-@observer
-class App extends Component {
-
-  state = {
-    open: true
+  const handleOpenDrawer = (isOpen) => {
+    setOpen(isOpen)
   }
 
-  handleOpenDrawer = (isOpen) => {
-    this.setState({open: isOpen})
+  const setApprovedUsers = (count) => {
+    setApprovedCount(count)
   }
 
-  render() {
-    const {classes} = this.props
-    const {router, currentUser} = store
-    const isFullPage = router.currentView && (router.currentView.path === '/login' || router.currentView.path === '/registration')
-    return (
-      <div className='App'>
-        {!isFullPage ?
-          <LeftMenu pages={currentUser && currentUser.role && pages[currentUser.role] ? pages[currentUser.role] : []}
-                    open={this.state.open}
-                    setOpen={(isOpen) => this.handleOpenDrawer(isOpen)}/> : ''}
-        <div className={classes.content}>
-          <div className={classes.toolbar}/>
-          <MobxRouter/>
-        </div>
+  useEffect(() => {
+    store.getUsers().then(() => {
+      setApprovedUsers(getStatusCount(store.users, 'not_approved'))
+    })
+  }, [])
+
+  return (
+    <div className='App'>
+      {!isFullPage ?
+        <LeftMenu pages={currentUser && currentUser.role && pages[currentUser.role] ? pages[currentUser.role] : []}
+                  open={open}
+                  setOpen={(isOpen) => handleOpenDrawer(isOpen)}
+                  tips={{'users': notApprovedCount}}/> : ''}
+      <div className={classes.content}>
+        <div className={classes.toolbar}/>
+        <MobxRouter/>
       </div>
-    )
-  }
+    </div>
+  )
+
 }
 
-export default withStyles(styles)(withTheme(App))
+export default withTheme(inject('store')(observer(App)))
