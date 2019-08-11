@@ -515,8 +515,6 @@
 |  PUT   | /signup                                                                        |        |           |            |             |
 | DELETE | /signup                                                                        |        |           |            |             |
 |  POST  | /signup                                                                        |        |           |            |             |
-|  GET   | /users/:id/approve                                                             |        |           |            |             |
-|  POST  | /users/activate                                                                |        |           |            |             |
 |  POST  | /users/create_by_email                                                         |        |           |            |             |
 |  GET   | /users/:id/offers                                                              |        |           |            |             |
 |  GET   | /users/my-offers                                                               |        |           |            |             |
