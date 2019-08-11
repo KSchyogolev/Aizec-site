@@ -156,7 +156,7 @@
 | short_description | string                                |                                                                          |
 |  full_description | string                                |                                                                          |
 |        cost_month | [positive integer](#positive-integer) |                                                                          |
-|              type | [Course Type](#course-type)           |                                                                          |
+|              kind | [Course Type](#course-kind)           |                                                                          |
 |          ancestry | string                                | Показывает какой курс предшествует какому, посылай `parent_id` в джсонке |
 
 
@@ -321,10 +321,10 @@
 
 |  Название поля | Тип                           | Комментарий                                       |
 |---------------:|:------------------------------|:--------------------------------------------------|
-|           type | [Message Type](#message-type) |                                                   |
+|           kind | [Message Type](#message-kind) |                                                   |
 |         status | [Archivable](#archivable)     |                                                   |
 |        user_id | integer                       | Отправитель                                       |
-| to_entity_type | [Entity Type](#entity-type)   |                                                   |
+| to_entity_type | [Entity Type](#entity-kind)   |                                                   |
 |   to_entity_id | integer                       | id сущности из таблицы которая выбрана полем выше |
 |      head_text | string                        | Заголовок (скорей всего никогда не пригодится)    |
 |      full_text | string                        |                                                   |
@@ -385,10 +385,148 @@
 * `admin` 
 
 
-| Метод | Путь                      | Доступ | Принимает | Возвращает | Комментарий |
-|:-----:|:--------------------------|:------:|:----------|:-----------|:------------|
-| POST  | /users/create-unactivated | admin  |           |            |             |
-| PATCH | /users/activate       | owner  |           |            |             |
-| PATCH | /users/:id/approve        | admin  |           |            |             |
-| POST  | /users/create-admin       | admin  |           |            |             |
-| POST  | /users/create-teacher     | admin  |           |            |             |
+| Метод  | Путь                                                                           | Доступ | Принимает | Возвращает | Комментарий |
+|:------:|:-------------------------------------------------------------------------------|:------:|:----------|:-----------|:------------|
+|  POST  | /users/create-unactivated                                                      | admin  |           |            |             |
+| PATCH  | /users/activate                                                                | owner  |           |            |             |
+| PATCH  | /users/:id/approve                                                             | admin  |           |            |             |
+|  POST  | /users/create-admin                                                            | admin  |           |            |             |
+|  POST  | /users/create-teacher                                                          | admin  |           |            |             |
+|  GET   | /lesson_infos/archivated                                                       |        |           |            |             |
+|  GET   | /lesson_infos/with_archivated                                                  |        |           |            |             |
+|  GET   | /payments/archivated                                                           |        |           |            |             |
+|  GET   | /payments/with_archivated                                                      |        |           |            |             |
+|  GET   | /messages/archivated                                                           |        |           |            |             |
+|  GET   | /messages/with_archivated                                                      |        |           |            |             |
+|  GET   | /user_groups/archivated                                                        |        |           |            |             |
+|  GET   | /user_groups/with_archivated                                                   |        |           |            |             |
+|  GET   | /groups/archivated                                                             |        |           |            |             |
+|  GET   | /groups/with_archivated                                                        |        |           |            |             |
+|  GET   | /clubs/archivated                                                              |        |           |            |             |
+|  GET   | /clubs/with_archivated                                                         |        |           |            |             |
+|  GET   | /lessons/archivated                                                            |        |           |            |             |
+|  GET   | /lessons/with_archivated                                                       |        |           |            |             |
+|  GET   | /courses/archivated                                                            |        |           |            |             |
+|  GET   | /courses/with_archivated                                                       |        |           |            |             |
+|  GET   | /users/archivated                                                              |        |           |            |             |
+|  GET   | /users/with_archivated                                                         |        |           |            |             |
+|  GET   | /lesson_infos                                                                  |        |           |            |             |
+|  POST  | /lesson_infos                                                                  |        |           |            |             |
+|  GET   | /lesson_infos/:id                                                              |        |           |            |             |
+| PATCH  | /lesson_infos/:id                                                              |        |           |            |             |
+|  PUT   | /lesson_infos/:id                                                              |        |           |            |             |
+| DELETE | /lesson_infos/:id                                                              |        |           |            |             |
+|  GET   | /lesson_types                                                                  |        |           |            |             |
+|  POST  | /lesson_types                                                                  |        |           |            |             |
+|  GET   | /lesson_types/:id                                                              |        |           |            |             |
+| PATCH  | /lesson_types/:id                                                              |        |           |            |             |
+|  PUT   | /lesson_types/:id                                                              |        |           |            |             |
+| DELETE | /lesson_types/:id                                                              |        |           |            |             |
+|  GET   | /payments                                                                      |        |           |            |             |
+|  POST  | /payments                                                                      |        |           |            |             |
+|  GET   | /payments/:id                                                                  |        |           |            |             |
+| PATCH  | /payments/:id                                                                  |        |           |            |             |
+|  PUT   | /payments/:id                                                                  |        |           |            |             |
+| DELETE | /payments/:id                                                                  |        |           |            |             |
+|  GET   | /user_messages                                                                 |        |           |            |             |
+|  POST  | /user_messages                                                                 |        |           |            |             |
+|  GET   | /user_messages/:id                                                             |        |           |            |             |
+| PATCH  | /user_messages/:id                                                             |        |           |            |             |
+|  PUT   | /user_messages/:id                                                             |        |           |            |             |
+| DELETE | /user_messages/:id                                                             |        |           |            |             |
+|  GET   | /message_options                                                               |        |           |            |             |
+|  POST  | /message_options                                                               |        |           |            |             |
+|  GET   | /message_options/:id                                                           |        |           |            |             |
+| PATCH  | /message_options/:id                                                           |        |           |            |             |
+|  PUT   | /message_options/:id                                                           |        |           |            |             |
+| DELETE | /message_options/:id                                                           |        |           |            |             |
+|  GET   | /photos                                                                        |        |           |            |             |
+|  POST  | /photos                                                                        |        |           |            |             |
+|  GET   | /photos/:id                                                                    |        |           |            |             |
+| PATCH  | /photos/:id                                                                    |        |           |            |             |
+|  PUT   | /photos/:id                                                                    |        |           |            |             |
+| DELETE | /photos/:id                                                                    |        |           |            |             |
+|  GET   | /messages                                                                      |        |           |            |             |
+|  POST  | /messages                                                                      |        |           |            |             |
+|  GET   | /messages/:id                                                                  |        |           |            |             |
+| PATCH  | /messages/:id                                                                  |        |           |            |             |
+|  PUT   | /messages/:id                                                                  |        |           |            |             |
+| DELETE | /messages/:id                                                                  |        |           |            |             |
+|  GET   | /user_groups                                                                   |        |           |            |             |
+|  POST  | /user_groups                                                                   |        |           |            |             |
+|  GET   | /user_groups/:id                                                               |        |           |            |             |
+| PATCH  | /user_groups/:id                                                               |        |           |            |             |
+|  PUT   | /user_groups/:id                                                               |        |           |            |             |
+| DELETE | /user_groups/:id                                                               |        |           |            |             |
+|  GET   | /groups                                                                        |        |           |            |             |
+|  POST  | /groups                                                                        |        |           |            |             |
+|  GET   | /groups/:id                                                                    |        |           |            |             |
+| PATCH  | /groups/:id                                                                    |        |           |            |             |
+|  PUT   | /groups/:id                                                                    |        |           |            |             |
+| DELETE | /groups/:id                                                                    |        |           |            |             |
+|  GET   | /clubs                                                                         |        |           |            |             |
+|  POST  | /clubs                                                                         |        |           |            |             |
+|  GET   | /clubs/:id                                                                     |        |           |            |             |
+| PATCH  | /clubs/:id                                                                     |        |           |            |             |
+|  PUT   | /clubs/:id                                                                     |        |           |            |             |
+| DELETE | /clubs/:id                                                                     |        |           |            |             |
+|  GET   | /merches                                                                       |        |           |            |             |
+|  POST  | /merches                                                                       |        |           |            |             |
+|  GET   | /merches/:id                                                                   |        |           |            |             |
+| PATCH  | /merches/:id                                                                   |        |           |            |             |
+|  PUT   | /merches/:id                                                                   |        |           |            |             |
+| DELETE | /merches/:id                                                                   |        |           |            |             |
+|  GET   | /visits                                                                        |        |           |            |             |
+|  POST  | /visits                                                                        |        |           |            |             |
+|  GET   | /visits/:id                                                                    |        |           |            |             |
+| PATCH  | /visits/:id                                                                    |        |           |            |             |
+|  PUT   | /visits/:id                                                                    |        |           |            |             |
+| DELETE | /visits/:id                                                                    |        |           |            |             |
+|  GET   | /lessons                                                                       |        |           |            |             |
+|  POST  | /lessons                                                                       |        |           |            |             |
+|  GET   | /lessons/:id                                                                   |        |           |            |             |
+| PATCH  | /lessons/:id                                                                   |        |           |            |             |
+|  PUT   | /lessons/:id                                                                   |        |           |            |             |
+| DELETE | /lessons/:id                                                                   |        |           |            |             |
+|  GET   | /courses                                                                       |        |           |            |             |
+|  POST  | /courses                                                                       |        |           |            |             |
+|  GET   | /courses/:id                                                                   |        |           |            |             |
+| PATCH  | /courses/:id                                                                   |        |           |            |             |
+|  PUT   | /courses/:id                                                                   |        |           |            |             |
+| DELETE | /courses/:id                                                                   |        |           |            |             |
+|  GET   | /users                                                                         |        |           |            |             |
+|  POST  | /users                                                                         |        |           |            |             |
+|  GET   | /users/:id                                                                     |        |           |            |             |
+| PATCH  | /users/:id                                                                     |        |           |            |             |
+|  PUT   | /users/:id                                                                     |        |           |            |             |
+| DELETE | /users/:id                                                                     |        |           |            |             |
+|  GET   | /login                                                                         |        |           |            |             |
+|  POST  | /login                                                                         |        |           |            |             |
+| DELETE | /logout                                                                        |        |           |            |             |
+|  GET   | /password/new                                                                  |        |           |            |             |
+|  GET   | /password/edit                                                                 |        |           |            |             |
+| PATCH  | /password                                                                      |        |           |            |             |
+|  PUT   | /password                                                                      |        |           |            |             |
+|  POST  | /password                                                                      |        |           |            |             |
+|  GET   | /signup/cancel                                                                 |        |           |            |             |
+|  GET   | /signup/sign_up                                                                |        |           |            |             |
+|  GET   | /signup/edit                                                                   |        |           |            |             |
+| PATCH  | /signup                                                                        |        |           |            |             |
+|  PUT   | /signup                                                                        |        |           |            |             |
+| DELETE | /signup                                                                        |        |           |            |             |
+|  POST  | /signup                                                                        |        |           |            |             |
+|  POST  | /users/create_by_email                                                         |        |           |            |             |
+|  GET   | /users/:id/offers                                                              |        |           |            |             |
+|  GET   | /users/my-offers                                                               |        |           |            |             |
+|  GET   | /courses/:id/add_user/:user_id                                                 |        |           |            |             |
+|  GET   | /courses/:id/remove_user/:user_id                                              |        |           |            |             |
+|  GET   | /courses/by_user_id/:user_id                                                   |        |           |            |             |
+|  GET   | /courses/my_courses                                                            |        |           |            |             |
+|  GET   | /lessons/by_user_id/:user_id                                                   |        |           |            |             |
+|  GET   | /lessons/my_courses                                                            |        |           |            |             |
+|  GET   | /rails/active_storage/blobs/:signed_id/*filename                               |        |           |            |             |
+|  GET   | /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename |        |           |            |             |
+|  GET   | /rails/active_storage/disk/:encoded_key/*filename                              |        |           |            |             |
+|  PUT   | /rails/active_storage/disk/:encoded_token                                      |        |           |            |             |
+|  POST  | /rails/active_storage/direct_uploads                                           |        |           |            |             |
+
