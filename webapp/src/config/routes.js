@@ -21,7 +21,7 @@ import {
 } from '../components/pages/user'
 
 const userIsRegistered = (user) => {
-  return !(user.role === 'user' && user.status === 'not_activated')
+  return !(user.role === 'user' && user.status !== 'active')
 }
 
 const userIsLoggedIn = () => {
