@@ -169,7 +169,6 @@ export const pages = {
   ]
 }
 
-
 export const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref}/>),

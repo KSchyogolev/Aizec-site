@@ -48,13 +48,13 @@ body {
     position: fixed;
     left: 250px;
     right: 0;
-    top:0;
+    top: 0;
     bottom: 0;
     overflow: auto;
 }
 
 .content-view.full-page {
-    left: 0!important;
+    left: 0 !important;
 }
 
 ::-webkit-scrollbar {
@@ -75,16 +75,27 @@ body {
     background: rgba(106, 106, 106, 0.75);
 }
 
-.MuiButton-containedPrimary{
+.MuiButton-containedPrimary {
     background-color: var(--primary-color) !important;
 }
-.MuiButton-containedPrimary:hover{
+
+.MuiButton-containedPrimary:hover {
     background-color: var(--dark-primary) !important;
 }
 
-.MuiStepIcon-active{
+.MuiStepIcon-active {
     color: var(--primary-color) !important;;
 }
-.MuiStepIcon-completed{
+
+.MuiStepIcon-completed {
     color: var(--primary-color) !important;;
 }
+
+/*
+.Mui-focused {
+    color: #464646
+}
+.Mui-focused > fieldset {
+    border-color: #464646 !important;
+}
+*/

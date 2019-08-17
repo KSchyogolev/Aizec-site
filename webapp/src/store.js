@@ -2,10 +2,9 @@ import { action, observable } from 'mobx'
 import { RouterStore } from 'mobx-router'
 import API from './api/api'
 
-
 class Store {
 
-  constructor() {
+  constructor () {
     this.loadData()
   }
 
@@ -16,10 +15,17 @@ class Store {
   @observable router = new RouterStore()
   @observable users = []
   @observable currentUser = {}
-  @observable allMessages = []
+  @observable messages = [{
+    kind: 'offer',
+    full_text: 'asdas das das das asd asd',
+    head_text: 'Предложение'
+  }, {
+    kind: 'product', full_text: 'asdas das das das asd asd', head_text: 'Товар'
+  }
+    , {kind: 'course', full_text: 'asdas das das das asd asd', head_text: 'Курс'}]
 
   @action
-  signIn(data) {
+  signIn (data) {
     return new Promise((resolve, reject) => {
       API.main.signIn(data).then(res => {
         localStorage.setItem('access_token', res.headers.authorization)
@@ -31,7 +37,7 @@ class Store {
   }
 
   @action
-  signOut() {
+  signOut () {
     API.main.signOut().then(() => {
       window.location = '/login'
       localStorage.clear()
@@ -43,7 +49,7 @@ class Store {
   }
 
   @action
-  getUsers() {
+  getUsers () {
     return new Promise((resolve, reject) => {
       API.main.getAllUsers().then(res => {
         this.users = res.data
@@ -53,22 +59,22 @@ class Store {
   }
 
   @action
-  getMessages() {
+  getAllMessages () {
     return new Promise((resolve, reject) => {
       API.main.getAllMessages().then(res => {
-        this.messages = res.data
+        // this.messages = res.data
         resolve()
       }).catch(reject)
     })
   }
 
   @action
-  getUser(userId) {
+  getUser (userId) {
     API.main.getUser(userId).then(res => this.currentUser = res.data)
   }
 
   @action
-  addUser(data) {
+  addUser (data) {
     return new Promise((resolve, reject) => {
       API.main.addUser(data).then(res => {
         this.users = [...this.users, res.data]
@@ -78,7 +84,7 @@ class Store {
   }
 
   @action
-  updateUser(userId, data) {
+  updateUser (userId, data) {
     return new Promise((resolve, reject) => {
       API.main.updateUser(userId, data).then(res => {
         const currentUsers = [...this.users]
@@ -91,7 +97,7 @@ class Store {
   }
 
   @action
-  deleteUser(userId) {
+  deleteUser (userId) {
     return new Promise((resolve, reject) => {
       API.main.deleteUser(userId).then(() => {
         const currentUsers = [...this.users]
@@ -104,7 +110,7 @@ class Store {
   }
 
   @action
-  activateUser(data) {
+  activateUser (data) {
     return new Promise((resolve, reject) => {
       API.main.activate(data).then(res => {
         resolve(res.data)
@@ -113,7 +119,7 @@ class Store {
   }
 
   @action
-  approveUser(userId) {
+  approveUser (userId) {
     return new Promise((resolve, reject) => {
       API.main.approveUser(userId).then(res => {
         const currentUsers = [...this.users]
@@ -126,7 +132,7 @@ class Store {
   }
 
   @action
-  createByEmail(data) {
+  createByEmail (data) {
     return new Promise((resolve, reject) => {
       API.main.createByEmail(data).then(res => {
         this.users = [...this.users, res.data]
@@ -135,11 +141,47 @@ class Store {
     })
   }
 
+  @action
+  addMessage (data) {
+    return new Promise((resolve, reject) => {
+      API.main.addMessage(data).then(res => {
+        this.messages = [...this.messages, res.data]
+        resolve()
+      }).catch(reject)
+    })
+  }
 
   @action
-  setStore(field, value) {
+  deleteMessage (messageId) {
+    return new Promise((resolve, reject) => {
+      API.main.deleteMessage(messageId).then(() => {
+        const currentMessages = [...this.messages]
+        const index = currentMessages.findIndex(item => item.id === messageId)
+        currentMessages.splice(index, 1)
+        this.messages = currentMessages
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  updateMessage (messageId, data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateUser(messageId, data).then(res => {
+        const currentMessages = [...this.messages]
+        const index = currentMessages.findIndex(item => item.id === messageId)
+        currentMessages[index] = res.data
+        this.users = currentMessages
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  setStore (field, value) {
     this[field] = value
   }
+
 }
 
 export default new Store()

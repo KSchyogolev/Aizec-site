@@ -63,6 +63,11 @@ API.main.deleteUser = (userId) => del('restapi/users/' + userId)
 API.main.createByEmail = (data) => post('restapi/users/create_by_email', data)
 API.main.approveUser = (userId) => get('restapi/users/' + userId + '/approve')
 
+API.main.addMessage = (data) => post('restapi/messages', data)
+API.main.getAllMessages = () => get('restapi/messages')
+API.main.deleteMessage = (messageId) => del('restapi/messages/' + messageId)
+API.main.updateMessage = (messageId, data) => patch('restapi/messages/' + messageId, data)
+
 API.main.activate = (data) => post('restapi/users/activate', data)
 API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
 API.main.addUser = (data) => post('restapi/users', data)
