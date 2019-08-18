@@ -4,8 +4,8 @@ class Message < ApplicationRecord
   has_many :users, through: :message_users
 
   has_status %w[archived active]
-  validates :to_entity_type, inclusion: { in: %w[admin user club group course all visit], message: "%{value} is not valid entity type." }
-  validates :message_type, inclusion: { in: %w[report homework notification achivement poll skip offer], message: "%{value} is not valid message type." }
+  validates :to_entity_type, inclusion: { in: %w[admin user club group course all visit], message: "%{value} is not valid entity kind." }
+  validates :kind, inclusion: { in: %w[report homework notification achivement poll skip offer], message: "%{value} is not valid message kind." }
   
   include Archivable
 
