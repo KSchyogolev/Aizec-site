@@ -230,7 +230,8 @@ const LeftMenu = props => {
     const {subPages, name, label} = page
     const isOpen = subPages.length && openPages.indexOf(name) !== -1
     return !subPages.length ? <ListItem style={{'padding-left': 16 * level + 'px'}}
-                                        button key={index}
+                                        button
+                                        key={index}
                                         className={currentView && currentView.path === '/' + name ? classes.selected : ''}
                                         onClick={() => store.router.goTo(routes[name])}>
       <ListItemIcon>{getIcon(name)}</ListItemIcon>
@@ -239,7 +240,7 @@ const LeftMenu = props => {
                   title={'Требуют подтвержения'}
                   className={classes.tip}>{tips[name] ? tips[name] : ''}</Typography>
     </ListItem> : <>
-    <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)}>
+    <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)} key={index}>
       <ListItemIcon>
         <DnsIcon/>
       </ListItemIcon>

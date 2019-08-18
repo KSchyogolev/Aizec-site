@@ -1,6 +1,6 @@
-import OffersDialog  from './createOffers.dialog'
+import MessageDialog  from './message.dialog'
 
 
 export {
-  OffersDialog
+  MessageDialog
 }

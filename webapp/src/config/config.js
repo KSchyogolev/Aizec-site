@@ -110,13 +110,13 @@ export const pages = {
   ],
   user: [
     {
-      name: 'mainUser',
-      label: 'Главная',
+      name: 'offersUser',
+      label: 'Предложения',
       subPages: []
     },
     {
-      name: 'offersUser',
-      label: 'Предложения',
+      name: 'mainUser',
+      label: 'Главная',
       subPages: []
     },
     {
@@ -168,7 +168,6 @@ export const pages = {
     }
   ]
 }
-
 
 export const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),

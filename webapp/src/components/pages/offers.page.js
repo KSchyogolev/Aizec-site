@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import MaterialTable from "material-table"
-import { tableIcons } from '../../config/config'
+import { MessageDialog } from '../dialogs/'
+import MaterialTable from 'material-table'
+
 import Button from '@material-ui/core/Button'
+import TableBody from '@material-ui/core/TableBody'
+import Table from '@material-ui/core/Table'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
 import Typography from '@material-ui/core/Typography'
-import { OffersDialog } from '../dialogs/'
+import IconButton from '@material-ui/core/IconButton'
+
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 
 import AddIcon from '@material-ui/icons/Add'
 
@@ -17,59 +26,80 @@ const useStyles = makeStyles(theme => ({
   leftIcon: {
     marginRight: theme.spacing(1)
   },
-  controlHeader:{
+  controlHeader: {
     marginBottom: 15,
-    display:'flex',
+    display: 'flex',
     flexDirection: 'row-reverse'
+  },
+  actionCell: {
+    padding: 0
   }
 }))
 
-
 const OffersPage = props => {
-  const [offersDialogIsOpen, setOffersDialogVisible] = useState(false)
+  const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
+  const [currentMessage, setCurrentMessage] = useState({})
   const classes = useStyles()
   const {store} = props
 
-  const openOffersDialog = () => setOffersDialogVisible(true)
-  const closeOffersDialog = () => setOffersDialogVisible(false)
+  useEffect(() => {
+    store.getAllMessages()
+  }, [store.messages && store.messages.length])
+
+  const saveMessage = () => {
+    store.addMessage(currentMessage)
+  }
+
+  const handleChange = (name, value) => {
+    setCurrentMessage({...currentMessage, [name]: value})
+  }
+
+  const openMessageDialog = (message) => {
+    setMessageDialogVisible(true)
+    setCurrentMessage(message || {kind: 'offer'})
+  }
+  const closeMessageDialog = () => setMessageDialogVisible(false)
 
   return (
     <div className={classes.root}>
       <Typography component='div' className={classes.controlHeader}>
-        <Button variant="contained" color="primary" className={classes.addButton} onClick={openOffersDialog}>
+        <Button variant="contained" color="primary" className={classes.addButton} onClick={() => openMessageDialog()}>
           <AddIcon className={classes.leftIcon}/> Добавить предложение
         </Button>
       </Typography>
-      <OffersDialog handleClose={closeOffersDialog} open={offersDialogIsOpen}/>
-      <MaterialTable
-        title="Предложения"
-        icons={tableIcons}
-        columns={[
-          {title: "Заголовок", field: "Name"},
-          {title: "Текст", field: "text"},
-          {
-            title: "Тип",
-            field: "type",
-            lookup: {'bonus': "Бонус", 'course': "Курс", 'merch': 'Товар'}
-          }
-        ]}
-        data={store.messages}
-        options={{
-          pageSize: 10,
-          pageSizeOptions: [10, 20, 50]
-        }}
-        editable={{
-          onRowAdd: newData => new Promise((resolve, reject) => {
-            if (newData.role === 'user') {
-              store.createByEmail(newData).then(resolve).catch(reject)
-              return
-            }
-            store.addUser(newData).then(resolve).catch(reject)
-          }),
-          onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateUser(oldData.id, newData).then(resolve).catch(reject)),
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteUser(oldData.id).then(resolve).catch(reject))
-        }}
-      />
+      <div>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Тип</TableCell>
+              <TableCell align="left">Заголовок</TableCell>
+              <TableCell align="left">Текст</TableCell>
+              <TableCell align="left"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {store.messages && store.messages.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell align="left">{row.kind}</TableCell>
+                <TableCell align="left">{row.head_text}</TableCell>
+                <TableCell align="left">{row.full_text}</TableCell>
+                <TableCell align="right" className={classes.actionCell}>
+                  <IconButton aria-label="edit" className={classes.margin} onClick={() => openMessageDialog(row)}>
+                    <EditIcon fontSize="small"/>
+                  </IconButton>
+                  <IconButton aria-label="delete" className={classes.margin} onClick={() => {store.deleteMessage(row.id)}}>
+                    <DeleteIcon fontSize="small"/>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <MessageDialog handleClose={closeMessageDialog} handleSave={saveMessage} message={currentMessage}
+                     handleChange={handleChange}
+                     open={messageDialogIsOpen}
+                     types={['offer', 'product', 'course']}/>
     </div>
   )
 
