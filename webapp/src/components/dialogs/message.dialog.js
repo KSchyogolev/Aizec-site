@@ -40,8 +40,8 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
     {name: 'Товар', value: 'product'},
     {name: 'Предложение', value: 'offer'}
   ].filter(item => types.indexOf(item.value) !== -1)
-
   const handleChangeType = (e) => handleChange('kind', e.target.value)
+  const isEdit = !!message.id
 
   const getFormByType = (type) => {
     let contentBody = ''
@@ -72,6 +72,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
         <FormControl className={classes.typeSelect}>
           <InputLabel htmlFor="age-simple">Тип предложения</InputLabel>
           <Select
+            disabled={isEdit}
             value={message.kind}
             onChange={handleChangeType}
             inputProps={{

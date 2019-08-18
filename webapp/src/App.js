@@ -50,6 +50,7 @@ const App = props => {
     store.getUsers().then(() => {
       setApprovedUsers(getStatusCount(store.users, 'not_approved'))
     })
+
   }, [])
 
   return (

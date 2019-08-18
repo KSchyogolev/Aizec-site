@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row-reverse'
   },
   actionCell: {
-    padding: 0
+    padding: 0,
+    minWidth: 110
   }
 }))
 
@@ -42,12 +43,19 @@ const OffersPage = props => {
   const classes = useStyles()
   const {store} = props
 
+  const messageKinds = {
+    offer: 'Предложение'
+  }
+
   useEffect(() => {
     store.getAllMessages()
   }, [store.messages && store.messages.length])
 
   const saveMessage = () => {
-    store.addMessage(currentMessage)
+    let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage, to_entity_type: 'all'})
+    savePromise().then(res => {
+      closeMessageDialog()
+    })
   }
 
   const handleChange = (name, value) => {
@@ -56,7 +64,7 @@ const OffersPage = props => {
 
   const openMessageDialog = (message) => {
     setMessageDialogVisible(true)
-    setCurrentMessage(message || {kind: 'offer'})
+    setCurrentMessage(message || {})
   }
   const closeMessageDialog = () => setMessageDialogVisible(false)
 
@@ -80,14 +88,15 @@ const OffersPage = props => {
           <TableBody>
             {store.messages && store.messages.map((row, index) => (
               <TableRow key={index}>
-                <TableCell align="left">{row.kind}</TableCell>
+                <TableCell align="left">{messageKinds[row.kind]}</TableCell>
                 <TableCell align="left">{row.head_text}</TableCell>
                 <TableCell align="left">{row.full_text}</TableCell>
                 <TableCell align="right" className={classes.actionCell}>
                   <IconButton aria-label="edit" className={classes.margin} onClick={() => openMessageDialog(row)}>
                     <EditIcon fontSize="small"/>
                   </IconButton>
-                  <IconButton aria-label="delete" className={classes.margin} onClick={() => {store.deleteMessage(row.id)}}>
+                  <IconButton aria-label="delete" className={classes.margin}
+                              onClick={() => {store.deleteMessage(row.id)}}>
                     <DeleteIcon fontSize="small"/>
                   </IconButton>
                 </TableCell>

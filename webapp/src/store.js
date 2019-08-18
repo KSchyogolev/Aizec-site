@@ -13,16 +13,13 @@ class Store {
   }
 
   @observable router = new RouterStore()
+
   @observable users = []
+  @observable groups = []
+  @observable courses = []
+  @observable clubs = []
+  @observable messages = []
   @observable currentUser = {}
-  @observable messages = [{
-    kind: 'offer',
-    full_text: 'asdas das das das asd asd',
-    head_text: 'Предложение'
-  }, {
-    kind: 'product', full_text: 'asdas das das das asd asd', head_text: 'Товар'
-  }
-    , {kind: 'course', full_text: 'asdas das das das asd asd', head_text: 'Курс'}]
 
   @action
   signIn (data) {
@@ -62,7 +59,7 @@ class Store {
   getAllMessages () {
     return new Promise((resolve, reject) => {
       API.main.getAllMessages().then(res => {
-        // this.messages = res.data
+        this.messages = res.data
         resolve()
       }).catch(reject)
     })
@@ -144,7 +141,7 @@ class Store {
   @action
   addMessage (data) {
     return new Promise((resolve, reject) => {
-      API.main.addMessage(data).then(res => {
+      API.main.addMessage({message: {...data, status: 'active', user_id: this.currentUser.id}}).then(res => {
         this.messages = [...this.messages, res.data]
         resolve()
       }).catch(reject)
@@ -167,11 +164,11 @@ class Store {
   @action
   updateMessage (messageId, data) {
     return new Promise((resolve, reject) => {
-      API.main.updateUser(messageId, data).then(res => {
+      API.main.updateMessage(messageId, data).then(res => {
         const currentMessages = [...this.messages]
         const index = currentMessages.findIndex(item => item.id === messageId)
         currentMessages[index] = res.data
-        this.users = currentMessages
+        this.messages = currentMessages
         resolve()
       }).catch(reject)
     })
