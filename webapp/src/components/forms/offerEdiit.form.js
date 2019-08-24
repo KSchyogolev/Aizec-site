@@ -3,14 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { EntityInput } from '../inputs'
 
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputLabel from '@material-ui/core/InputLabel'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,7 +44,6 @@ const OfferEditForm = ({message = {}, onChange = () => {}}) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            id="outlined-name"
             label="Заголовок"
             className={classes.textField}
             value={head_text}
@@ -66,7 +58,6 @@ const OfferEditForm = ({message = {}, onChange = () => {}}) => {
         <Grid item xs={12} sm={12} md={12}>
           <TextField
             multiline
-            id="outlined-name"
             label="Описание"
             className={classes.textField}
             value={full_text}

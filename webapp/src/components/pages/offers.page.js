@@ -3,14 +3,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import { MessageDialog } from '../dialogs/'
 import MaterialTable from 'material-table'
-
+import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import TableBody from '@material-ui/core/TableBody'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -53,7 +52,7 @@ const OffersPage = props => {
 
   const saveMessage = () => {
     let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage, to_entity_type: 'all'})
-    savePromise().then(res => {
+    savePromise().then(() => {
       closeMessageDialog()
     })
   }

@@ -157,6 +157,10 @@ const translate = (str) => {
       return 'Прогресс'
     case 'offers':
       return 'Предложения'
+    case 'reminders':
+      return 'Напоминания'
+    case 'courses':
+      return 'Напоминания'
     default:
       return ''
   }
@@ -174,7 +178,7 @@ const getIcon = (page) => {
       return <HomeWorkIcon/>
     case 'offers':
       return <AddShoppingCartIcon/>
-    case 'notifications':
+    case 'reminders':
       return <NotificationIcon/>
     case 'letters':
       return <AnnouncementIcon/>
@@ -184,6 +188,8 @@ const getIcon = (page) => {
       return <LoyalotyIcon/>
     case 'journal':
       return <JournalIcon/>
+    case 'courses':
+      return <CoursesIcon/>
     case 'mainUser':
       return <MainIcon/>
     case 'homeworkUser':

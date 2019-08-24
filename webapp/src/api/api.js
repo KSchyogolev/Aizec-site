@@ -68,6 +68,11 @@ API.main.getAllMessages = () => get('restapi/messages')
 API.main.deleteMessage = (messageId) => del('restapi/messages/' + messageId)
 API.main.updateMessage = (messageId, data) => patch('restapi/messages/' + messageId, data)
 
+API.main.addCourse = (data) => post('restapi/courses', data)
+API.main.getAllCourses = () => get('restapi/courses')
+API.main.deleteCourse = (id) => del('restapi/courses/' + id)
+API.main.updateCourse = (id, data) => patch('restapi/courses/' + id, data)
+
 API.main.activate = (data) => post('restapi/users/activate', data)
 API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
 API.main.addUser = (data) => post('restapi/users', data)

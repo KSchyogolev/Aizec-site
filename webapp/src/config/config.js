@@ -54,7 +54,7 @@ export const pages = {
           subPages: []
         },
         {
-          name: 'notifications',
+          name: 'reminders',
           label: 'Напоминания',
           subPages: []
         },

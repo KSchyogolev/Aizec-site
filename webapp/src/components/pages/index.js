@@ -9,6 +9,7 @@ import JournalPage from './journal.page'
 import ReportPage from './report.page'
 import TablePage from './table.page'
 import OffersPage from './offers.page'
+import RemindersPage from './reminders.page'
 
 export {
   ProfilePage,
@@ -21,5 +22,6 @@ export {
   JournalPage,
   ReportPage,
   TablePage,
-  OffersPage
+  OffersPage,
+  RemindersPage
 }
