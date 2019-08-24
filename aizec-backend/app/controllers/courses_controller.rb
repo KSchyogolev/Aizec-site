@@ -20,6 +20,10 @@ class CoursesController < ApplicationController
     @course = Course.new(course_params)
     
     if @course.save
+      if params[:course][:dependent_on].present?
+        linkedCourse = Course.find(params[:course][:dependent_on])
+        linkedCourse.courses << @course
+      end
       render :show, status: :created, location: @course
     else
       render json: @course.errors, status: :unprocessable_entity
