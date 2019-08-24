@@ -7,7 +7,9 @@ import {
   RegistrationPage,
   TablePage,
   JournalPage,
-  OffersPage
+  OffersPage,
+  CoursesPage,
+  RemindersPage
 } from '../components/pages'
 
 import {
@@ -49,6 +51,16 @@ const routes = {
   offersUser: new Route({
     path: '/offersUser',
     component: <OffersUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  courses: new Route({
+    path: '/courses',
+    component: <CoursesPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  reminders: new Route({
+    path: '/reminders',
+    component: <RemindersPage/>,
     beforeEnter: userIsLoggedIn
   }),
   achievementsUser: new Route({

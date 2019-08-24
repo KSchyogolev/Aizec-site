@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { OfferEditForm } from '../forms'
+import { OfferEditForm, CourseEditForm } from '../forms'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -40,8 +40,8 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
     {name: 'Товар', value: 'product'},
     {name: 'Предложение', value: 'offer'}
   ].filter(item => types.indexOf(item.value) !== -1)
-
   const handleChangeType = (e) => handleChange('kind', e.target.value)
+  const isEdit = !!message.id || types.length === 1
 
   const getFormByType = (type) => {
     let contentBody = ''
@@ -50,7 +50,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
         contentBody = 'bonus'
         break
       case 'course' :
-        contentBody = 'course'
+        contentBody = <CourseEditForm onChange={handleChange} course={message}/>
         break
       case 'product' :
         contentBody = 'product'
@@ -72,7 +72,8 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
         <FormControl className={classes.typeSelect}>
           <InputLabel htmlFor="age-simple">Тип предложения</InputLabel>
           <Select
-            value={message.kind}
+            disabled={isEdit}
+            value={types.length === 1 ? types[0] : message.kind}
             onChange={handleChangeType}
             inputProps={{
               name: 'offer-type',
@@ -83,7 +84,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
         </FormControl>
       </DialogTitle>
       <DialogContent dividers>
-        {getFormByType(message.kind)}
+        {getFormByType(types.length === 1 ? types[0] : message.kind)}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

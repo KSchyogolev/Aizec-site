@@ -13,16 +13,40 @@ class Store {
   }
 
   @observable router = new RouterStore()
+
   @observable users = []
+  @observable groups = []
+  @observable courses = []
+  @observable clubs = []
+  @observable messages = []
   @observable currentUser = {}
-  @observable messages = [{
-    kind: 'offer',
-    full_text: 'asdas das das das asd asd',
-    head_text: 'Предложение'
-  }, {
-    kind: 'product', full_text: 'asdas das das das asd asd', head_text: 'Товар'
+
+
+  @action
+  setStore (field, value) {
+    this[field] = value
   }
-    , {kind: 'course', full_text: 'asdas das das das asd asd', head_text: 'Курс'}]
+
+  @action
+  removeInStore (field, id) {
+    const currentArray = [...this[field]]
+    const index = currentArray.findIndex(item => item.id === id)
+    currentArray.splice(index, 1)
+    this[field] = currentArray
+  }
+
+  @action
+  updateInStore (field, id, data) {
+    const currentArray = [...this[field]]
+    const index = currentArray.findIndex(item => item.id === id)
+    currentArray[index] = data
+    this[field] = currentArray
+  }
+
+  @action
+  addInStore (field, value) {
+    this[field] = [...this[field], value]
+  }
 
   @action
   signIn (data) {
@@ -52,7 +76,7 @@ class Store {
   getUsers () {
     return new Promise((resolve, reject) => {
       API.main.getAllUsers().then(res => {
-        this.users = res.data
+        this.setStore('users', res.data)
         resolve()
       }).catch(reject)
     })
@@ -62,7 +86,7 @@ class Store {
   getAllMessages () {
     return new Promise((resolve, reject) => {
       API.main.getAllMessages().then(res => {
-        // this.messages = res.data
+        this.setStore('messages', res.data)
         resolve()
       }).catch(reject)
     })
@@ -77,7 +101,7 @@ class Store {
   addUser (data) {
     return new Promise((resolve, reject) => {
       API.main.addUser(data).then(res => {
-        this.users = [...this.users, res.data]
+        this.addInStore('users', res.data)
         resolve()
       }).catch(reject)
     })
@@ -87,10 +111,7 @@ class Store {
   updateUser (userId, data) {
     return new Promise((resolve, reject) => {
       API.main.updateUser(userId, data).then(res => {
-        const currentUsers = [...this.users]
-        const index = currentUsers.findIndex(user => user.id === userId)
-        currentUsers[index] = res.data
-        this.users = currentUsers
+        this.updateInStore('users', userId, res.data)
         resolve()
       }).catch(reject)
     })
@@ -100,10 +121,7 @@ class Store {
   deleteUser (userId) {
     return new Promise((resolve, reject) => {
       API.main.deleteUser(userId).then(() => {
-        const currentUsers = [...this.users]
-        const index = currentUsers.findIndex(user => user.id === userId)
-        currentUsers.splice(index, 1)
-        this.users = currentUsers
+        this.removeInStore('users', userId)
         resolve()
       }).catch(reject)
     })
@@ -122,10 +140,7 @@ class Store {
   approveUser (userId) {
     return new Promise((resolve, reject) => {
       API.main.approveUser(userId).then(res => {
-        const currentUsers = [...this.users]
-        const index = currentUsers.findIndex(user => user.id === userId)
-        currentUsers[index] = res.data
-        this.users = currentUsers
+        this.updateInStore('users', userId, res.data)
         resolve()
       }).catch(reject)
     })
@@ -144,8 +159,8 @@ class Store {
   @action
   addMessage (data) {
     return new Promise((resolve, reject) => {
-      API.main.addMessage(data).then(res => {
-        this.messages = [...this.messages, res.data]
+      API.main.addMessage({message: {...data, status: 'active', user_id: this.currentUser.id}}).then(res => {
+        this.addInStore('messages', res.data)
         resolve()
       }).catch(reject)
     })
@@ -155,10 +170,7 @@ class Store {
   deleteMessage (messageId) {
     return new Promise((resolve, reject) => {
       API.main.deleteMessage(messageId).then(() => {
-        const currentMessages = [...this.messages]
-        const index = currentMessages.findIndex(item => item.id === messageId)
-        currentMessages.splice(index, 1)
-        this.messages = currentMessages
+        this.removeInStore('messages', messageId)
         resolve()
       }).catch(reject)
     })
@@ -167,19 +179,51 @@ class Store {
   @action
   updateMessage (messageId, data) {
     return new Promise((resolve, reject) => {
-      API.main.updateUser(messageId, data).then(res => {
-        const currentMessages = [...this.messages]
-        const index = currentMessages.findIndex(item => item.id === messageId)
-        currentMessages[index] = res.data
-        this.users = currentMessages
+      API.main.updateMessage(messageId, data).then(res => {
+        this.updateInStore('messages', messageId, res.data)
         resolve()
       }).catch(reject)
     })
   }
 
   @action
-  setStore (field, value) {
-    this[field] = value
+  addCourse (data) {
+    return new Promise((resolve, reject) => {
+      API.main.addCourse({course: {...data, status: 'active', user_id: this.currentUser.id}}).then(res => {
+        this.addInStore('courses', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  deleteCourse (messageId) {
+    return new Promise((resolve, reject) => {
+      API.main.deleteMessage(messageId).then(() => {
+        this.removeInStore('courses', messageId)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  updateCourse (courseId, data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateMessage(courseId, data).then(res => {
+        this.updateInStore('courses', courseId, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getAllCourses () {
+    return new Promise((resolve, reject) => {
+      API.main.getAllCourses().then(res => {
+        this.setStore('courses', res.data)
+        resolve()
+      }).catch(reject)
+    })
   }
 
 }
