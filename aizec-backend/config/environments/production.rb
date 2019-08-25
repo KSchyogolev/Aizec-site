@@ -1,6 +1,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   config.action_mailer.default_url_options = { :host => 'innovate-school.com', port: 80 }
+  Rails.application.routes.default_url_options[:host] = 'innovate-school.com'
 
   # Code is not reloaded between requests.
   config.cache_classes = true
