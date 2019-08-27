@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   include ArchivableController
   
-  before_action :set_group, only: [:show, :update, :destroy]
+  before_action :set_group, only: [:show, :update, :destroy, :add_user]
 
   # GET /groups
   # GET /groups.json
@@ -24,6 +24,17 @@ class GroupsController < ApplicationController
     else
       render json: @group.errors, status: :unprocessable_entity
     end
+  end
+
+  def add_user
+    user = User.find(params[:user_id])
+    @group.users << user
+    render :show, status: :ok, location: @group
+  end
+
+
+  def remove_user
+    @course.users.delete(params[:user_id])
   end
 
   # PATCH/PUT /groups/1

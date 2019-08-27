@@ -28,9 +28,13 @@ Rails.application.routes.draw do
   get 'users/:id/approve', to: 'users#approve'
   post 'users/activate', to: 'users#activate'
   post 'users/create_by_email', to: 'users#create_by_email'
+  get 'users/:id/offers', to: 'users#offers'
+  get 'users/my-offers', to: 'users#offers'
 
   get 'courses/:id/add_user/:user_id', to: 'courses#add_user'
   get 'courses/:id/remove_user/:user_id', to: 'courses#remove_user'
+  get 'groups/:id/add_user/:user_id', to: 'groups#add_user'
+  get 'groups/:id/remove_user/:user_id', to: 'groups#remove_user'
   get 'courses/by_user_id/:user_id', to: 'courses#by_user'
   get 'courses/my_courses', to: 'courses#by_user'
 

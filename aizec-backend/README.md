@@ -518,6 +518,8 @@
 |  POST  | /users/create_by_email                                                         |        |           |            |             |
 |  GET   | /users/:id/offers                                                              |        |           |            |             |
 |  GET   | /users/my-offers                                                               |        |           |            |             |
+|  GET   | get 'groups/:id/add_user/:user_id'                                             |        |           |            |             |
+|  GET   | get 'groups/:id/remove_user/:user_id'                                          |        |           |            |             |
 |  GET   | /courses/:id/add_user/:user_id                                                 |        |           |            |             |
 |  GET   | /courses/:id/remove_user/:user_id                                              |        |           |            |             |
 |  GET   | /courses/by_user_id/:user_id                                                   |        |           |            |             |
