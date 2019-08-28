@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
   include ArchivableController
   
-  before_action :set_group, only: [:show, :update, :destroy, :add_user]
+  before_action :set_group, only: [:show, :update, :destroy, :add_user, :remove_user]
 
   # GET /groups
   # GET /groups.json
