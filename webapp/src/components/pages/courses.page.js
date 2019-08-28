@@ -5,7 +5,6 @@ import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import { MessageDialog } from '../dialogs/'
 
-import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
@@ -68,18 +67,24 @@ const CoursesPage = props => {
         title="Курсы"
         icons={tableIcons}
         columns={[
-          {title: 'Название', field: 'name', filtering: false},
-          {title: 'Описание', field: 'short_description', filtering: false},
+          {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Полное описание', field: 'full_description', filtering: false},
           {title: 'Стоимость', field: 'cost', filtering: false},
           {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},
           {
             title: 'Тип',
             field: 'kind',
-            lookup: {'intensive': 'Интенсивный', 'regular ': 'Регулярный', 'individual': 'Индивидуальный'}
+            lookup: {'intensive': 'Интенсивный', 'regular': 'Регулярный', 'individual': 'Индивидуальный'}
           }
         ]}
         data={store.courses}
+        actions={[
+          {
+            icon: tableIcons.Edit,
+            tooltip: 'Редактировать',
+            onClick: (event, rowData) => openMessageDialog(rowData)
+          }
+        ]}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
@@ -90,7 +95,7 @@ const CoursesPage = props => {
           onRowDelete: oldData => new Promise((resolve, reject) => store.deleteCourse(oldData.id).then(resolve).catch(reject))
         }}
       />
-      <MessageDialog handleClose={closeMessageDialog} handleSave={saveCourse} message={{}}
+      <MessageDialog handleClose={closeMessageDialog} handleSave={saveCourse} message={currentCourse}
                      handleChange={handleChange}
                      open={messageDialogIsOpen}
                      types={['course']}/>

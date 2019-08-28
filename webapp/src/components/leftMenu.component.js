@@ -161,6 +161,8 @@ const translate = (str) => {
       return 'Напоминания'
     case 'courses':
       return 'Напоминания'
+    case 'table':
+      return 'Ведомость'
     default:
       return ''
   }

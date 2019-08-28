@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import { makeStyles } from '@material-ui/core/styles'
-import MaterialTable from "material-table"
+import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import IconButton from '@material-ui/core/IconButton'
 
 import ApproveUserIcon from '@material-ui/icons/HowToReg'
-
 
 const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: '100%',
     margin: '15px'
   },
-  actionButton:{
+  actionButton: {
     padding: '0!important'
   }
 }))
@@ -32,28 +31,35 @@ const UsersPage = props => {
         title="Пользователи"
         icons={tableIcons}
         columns={[
-          {title: "Имя", field: "first_name"},
-          {title: "Фамилия", field: "second_name"},
-          {title: "Пароль", field: "password"},
-          {title: "Почта", field: "email"},
-          {
-            title: "Роль",
-            field: "role",
-            lookup: {'admin': "Администратор", 'teacher': "Учитель", 'user': 'Ученик'}
-          },
           {
             title: '',
             field: 'approve',
+            filtering: false,
+            cellStyle: {
+              width: 40
+            },
             render: rowData => rowData.status === 'not_approved' ?
-              <IconButton className={classes.actionButton} onClick={() => store.approveUser(rowData.id)} title={'Подтвердить пользователя'}>
+              <IconButton className={classes.actionButton} onClick={() => store.approveUser(rowData.id)}
+                          title={'Подтвердить пользователя'}>
                 <ApproveUserIcon/>
               </IconButton> : ''
+          },
+          {title: 'Имя', field: 'first_name', filtering: false},
+          {title: 'Фамилия', field: 'second_name', filtering: false},
+          {title: 'Пароль', field: 'password', filtering: false},
+          {title: 'Почта', field: 'email', filtering: false},
+          {
+            title: 'Роль',
+            field: 'role',
+            lookup: {'admin': 'Администратор', 'teacher': 'Учитель', 'user': 'Ученик'}
           }
         ]}
         data={store.users}
         options={{
           pageSize: 10,
-          pageSizeOptions: [10, 20, 50]
+          actionsColumnIndex: -1,
+          pageSizeOptions: [10, 20, 50],
+          filtering: true
         }}
         editable={{
           onRowAdd: newData => new Promise((resolve, reject) => {
@@ -70,6 +76,5 @@ const UsersPage = props => {
     </div>
   )
 }
-
 
 export default inject('store')(observer(UsersPage))

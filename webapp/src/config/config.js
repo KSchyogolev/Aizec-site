@@ -88,22 +88,22 @@ export const pages = {
   ],
   teacher: [
     {
-      name: 'list',
+      name: 'listTeacher',
       label: 'Ведомость',
       subPages: []
     },
     {
-      name: 'journal',
+      name: 'journalTeacher',
       label: 'Журнал',
       subPages: []
     },
     {
-      name: 'homework',
+      name: 'homeworkTeacher',
       label: 'Домашняя работа',
       subPages: []
     },
     {
-      name: 'reports',
+      name: 'reportsTeacher',
       label: 'Сообщить руководству',
       subPages: []
     }

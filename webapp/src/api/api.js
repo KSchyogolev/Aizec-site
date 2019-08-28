@@ -57,6 +57,11 @@ axios.interceptors.response.use(undefined, err => {
 
 const API = {main: {}}
 
+API.main.getAllObjects = (objects) => get('restapi/' + objects)
+API.main.deleteObject = (objects, id) => del('restapi/' + objects + '/' + id)
+API.main.updateObject = (objects, id, data) => patch('restapi/' + objects + '/' + id, data)
+API.main.addObject = (objects, data) => post('restapi/' + objects, data)
+
 API.main.getAllUsers = () => get('restapi/users')
 API.main.getUser = (userId) => get('restapi/users/' + userId)
 API.main.deleteUser = (userId) => del('restapi/users/' + userId)
@@ -72,12 +77,22 @@ API.main.addCourse = (data) => post('restapi/courses', data)
 API.main.getAllCourses = () => get('restapi/courses')
 API.main.deleteCourse = (id) => del('restapi/courses/' + id)
 API.main.updateCourse = (id, data) => patch('restapi/courses/' + id, data)
+API.main.getCurrentCourses = (userId) => get('restapi/courses/by_user_id/' + userId)
+
+API.main.getAllClubs = () => get('restapi/clubs')
+API.main.deleteClub = (id) => del('restapi/clubs' + id)
+API.main.updateClub = (id, data) => patch('restapi/clubs' + id, data)
+API.main.addClub = (data) => post('restapi/clubs', data)
 
 API.main.activate = (data) => post('restapi/users/activate', data)
 API.main.updateUser = (userId, data) => patch('restapi/users/' + userId, data)
 API.main.addUser = (data) => post('restapi/users', data)
 API.main.signIn = (data) => post('restapi/login', data)
 API.main.signOut = () => del('restapi/logout')
+
+API.main.getGroup = (groupId) => get('restapi/groups/' + groupId)
+API.main.addUserToGroup = (groupId, userId) => get('restapi/groups/' + groupId + '/add_user/' + userId)
+API.main.removeUserFromGroup = (groupId, userId) => get('restapi/groups/' + groupId + '/remove_user/' + userId)
 
 function get (url, type = 'application/json') {
   return new Promise((resolve, reject) =>

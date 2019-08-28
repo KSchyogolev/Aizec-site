@@ -20,7 +20,7 @@ class Store {
   @observable clubs = []
   @observable messages = []
   @observable currentUser = {}
-
+  @observable currentGroup = {}
 
   @action
   setStore (field, value) {
@@ -197,10 +197,10 @@ class Store {
   }
 
   @action
-  deleteCourse (messageId) {
+  deleteCourse (courseId) {
     return new Promise((resolve, reject) => {
-      API.main.deleteMessage(messageId).then(() => {
-        this.removeInStore('courses', messageId)
+      API.main.deleteCourse(courseId).then(() => {
+        this.removeInStore('courses', courseId)
         resolve()
       }).catch(reject)
     })
@@ -209,7 +209,7 @@ class Store {
   @action
   updateCourse (courseId, data) {
     return new Promise((resolve, reject) => {
-      API.main.updateMessage(courseId, data).then(res => {
+      API.main.updateCourse(courseId, data).then(res => {
         this.updateInStore('courses', courseId, res.data)
         resolve()
       }).catch(reject)
@@ -222,6 +222,124 @@ class Store {
       API.main.getAllCourses().then(res => {
         this.setStore('courses', res.data)
         resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getCurrentCourses () {
+    return new Promise((resolve, reject) => {
+      API.main.getCurrentCourses(this.currentUser.id).then(res => {
+        this.setStore('currentCourses', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getAllClubs () {
+    return new Promise((resolve, reject) => {
+      API.main.getAllClubs().then(res => {
+        this.setStore('clubs', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  addClub (data) {
+    return new Promise((resolve, reject) => {
+      API.main.addClub({club: data}).then(res => {
+        this.addInStore('clubs', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  deleteClub (id) {
+    return new Promise((resolve, reject) => {
+      API.main.deleteClub(id).then(() => {
+        this.removeInStore('clubs', id)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  updateClub (id, data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateClub(id, data).then(res => {
+        this.updateInStore('clubs', id, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getAll (field) {
+    return new Promise((resolve, reject) => {
+      API.main.getAllObjects(field).then(res => {
+        this.setStore(field, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  addTo (field, name, data) {
+    return new Promise((resolve, reject) => {
+      API.main.addObject(field, {[name]: data}).then(res => {
+        this.addInStore(field, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  deleteFrom (field, id) {
+    return new Promise((resolve, reject) => {
+      API.main.deleteObject(field, id).then(() => {
+        this.removeInStore(field, id)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  updateIn (field, id, data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateObject(field, id, data).then(res => {
+        this.updateInStore(field, id, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getGroup (groupId) {
+    return new Promise((resolve, reject) => {
+      API.main.getGroup(groupId).then(res => {
+        this.setStore('currentGroup', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  addUserToGroup (groupId, userId) {
+    return new Promise((resolve, reject) => {
+      API.main.addUserToGroup(groupId, userId).then(res => {
+        resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  removeUserFromGroup (groupId, userId) {
+    return new Promise((resolve, reject) => {
+      API.main.removeUserFromGroup(groupId, userId).then(res => {
+        resolve(res.data)
       }).catch(reject)
     })
   }

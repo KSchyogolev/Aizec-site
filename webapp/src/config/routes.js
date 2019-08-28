@@ -1,5 +1,13 @@
 import React from 'react'
 import { Route } from 'mobx-router'
+
+import {
+  HomeworkTeacherPage,
+  JournalTeacherPage,
+  ListTeacherPage,
+  ReportsTeacherPage
+} from '../components/pages/teacher'
+
 import {
   ProfilePage,
   UsersPage,
@@ -51,6 +59,26 @@ const routes = {
   offersUser: new Route({
     path: '/offersUser',
     component: <OffersUserPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  journalTeacher: new Route({
+    path: '/journalTeacher',
+    component: <JournalTeacherPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  reportsTeacher: new Route({
+    path: '/reportsTeacher',
+    component: <ReportsTeacherPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  listTeacher: new Route({
+    path: '/listTeacher',
+    component: <ListTeacherPage/>,
+    beforeEnter: userIsLoggedIn
+  }),
+  homeworkTeacher: new Route({
+    path: '/homeworkTeacher',
+    component: <HomeworkTeacherPage/>,
     beforeEnter: userIsLoggedIn
   }),
   courses: new Route({
