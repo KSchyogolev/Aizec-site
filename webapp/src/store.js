@@ -330,6 +330,10 @@ class Store {
   addUserToGroup (groupId, userId) {
     return new Promise((resolve, reject) => {
       API.main.addUserToGroup(groupId, userId).then(res => {
+        const group = this.groups.find(item => item.id === groupId)
+        const user = this.users.find(item => item.id === userId)
+        group.users = [...group.users, user]
+        this.updateInStore('groups', groupId, group)
         resolve(res.data)
       }).catch(reject)
     })
@@ -339,6 +343,10 @@ class Store {
   removeUserFromGroup (groupId, userId) {
     return new Promise((resolve, reject) => {
       API.main.removeUserFromGroup(groupId, userId).then(res => {
+        const group = this.groups.find(item => item.id === groupId)
+        const userIndex = group.users.findIndex(item => item.id === userId)
+        group.users.splice(userIndex, 1)
+        this.updateInStore('groups', groupId, group)
         resolve(res.data)
       }).catch(reject)
     })
