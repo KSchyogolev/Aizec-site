@@ -48,7 +48,7 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
     value: 'individual'
   }]
 
-  const {name, short_description, full_description, cost_month, kind = courseTypes[0].value, cost, ancestry} = course
+  const {name, short_description, full_description, cost_month, kind, cost, ancestry} = course
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -62,8 +62,8 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <FormControl variant="outlined" className={classes.formControl}>
+        <Grid item xs={6} sm={3}>
+          <FormControl variant="outlined" className={classes.formControl} fullWidth>
             <InputLabel htmlFor="course-kind" ref={inputLabel}>
               Тип
             </InputLabel>
@@ -78,8 +78,8 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
           <TextField
             label="Название"
             className={classes.textField}
-            value={name}
-            name={'name'}
+            value={short_description}
+            name={'short_description'}
             onChange={handleChange}
             margin="normal"
             variant="outlined"
@@ -124,18 +124,6 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
           />
         </Grid>
         <Grid item xs={12} sm={6}></Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            label="Короткое описание"
-            className={classes.textField}
-            value={short_description}
-            name={'short_description'}
-            onChange={handleChange}
-            margin="normal"
-            variant="outlined"
-            fullWidth
-          />
-        </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <TextField
             multiline

@@ -91,6 +91,10 @@ body {
     color: var(--primary-color) !important;;
 }
 
+.MuiOutlinedInput-input {
+    padding: 18.5px 14px!important;
+}
+
 /*
 .Mui-focused {
     color: #464646

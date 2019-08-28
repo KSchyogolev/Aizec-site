@@ -163,7 +163,7 @@ const components = {
   ValueContainer
 }
 
-const MultiSearchInput = ({label, items, handleChange, values}) => {
+const MultiSearchInput = ({label, items, handleChange, values, multi = true}) => {
   const classes = useStyles()
   const theme = useTheme()
 
@@ -196,7 +196,7 @@ const MultiSearchInput = ({label, items, handleChange, values}) => {
           components={components}
           value={values}
           onChange={handleChange}
-          isMulti
+          isMulti={multi}
         />
       </NoSsr>
     </div>

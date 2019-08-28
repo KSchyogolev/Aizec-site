@@ -36,6 +36,11 @@ const EntityInput = props => {
           value: item.id,
           label: item.second_name + ' ' + item.first_name + ' ' + item.third_name
         }))
+      case ('club'):
+        return store.clubs.map(item => ({
+          value: item.id,
+          label: item.name
+        }))
       default :
         return []
     }
