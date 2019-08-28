@@ -34,7 +34,7 @@ class GroupsController < ApplicationController
 
 
   def remove_user
-    @course.users.delete(params[:user_id])
+    @group.users.delete(params[:user_id])
   end
 
   # PATCH/PUT /groups/1
