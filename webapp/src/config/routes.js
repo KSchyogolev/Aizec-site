@@ -34,14 +34,19 @@ const userIsRegistered = (user) => {
   return !(user.role === 'user' && user.status !== 'active')
 }
 
-const userIsLoggedIn = () => {
+const userIsLoggedIn = (role) => {
   const currentUser = localStorage.getItem('current_user')
   if (!currentUser) {
     window.location = '/login'
     return false
   }
-  if (window.location.pathname !== '/registration' && !userIsRegistered(JSON.parse(currentUser))) {
+  const user = JSON.parse(currentUser)
+  if (window.location.pathname !== '/registration' && !userIsRegistered(user)) {
     window.location = '/registration'
+    return false
+  }
+  if (role && role !== user.role) {
+    window.location = '/'
     return false
   }
 }
@@ -59,107 +64,107 @@ const routes = {
   offersUser: new Route({
     path: '/offersUser',
     component: <OffersUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   journalTeacher: new Route({
     path: '/journalTeacher',
     component: <JournalTeacherPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('teacher')
   }),
   reportsTeacher: new Route({
     path: '/reportsTeacher',
     component: <ReportsTeacherPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('teacher')
   }),
   listTeacher: new Route({
     path: '/listTeacher',
     component: <ListTeacherPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('teacher')
   }),
   homeworkTeacher: new Route({
     path: '/homeworkTeacher',
     component: <HomeworkTeacherPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('teacher')
   }),
   courses: new Route({
     path: '/courses',
     component: <CoursesPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   reminders: new Route({
     path: '/reminders',
     component: <RemindersPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   achievementsUser: new Route({
     path: '/achievementsUser',
     component: <AchievementUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   coursesUser: new Route({
     path: '/coursesUser',
     component: <CoursesUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   homeworkUser: new Route({
     path: '/homeworkUser',
     component: <HomeworkUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   lettersUser: new Route({
     path: '/lettersUser',
     component: <LettersUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   mainUser: new Route({
     path: '/mainUser',
     component: <MainUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   scheduleUser: new Route({
     path: '/scheduleUser',
     component: <ScheduleUserPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   offers: new Route({
     path: '/offers',
     component: <OffersPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   homework: new Route({
     path: '/homework',
     component: <div>HOMEWORK</div>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   table: new Route({
     path: '/table',
     component: <TablePage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   journal: new Route({
     path: '/journal',
     component: <JournalPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   calendar: new Route({
     path: '/calendar',
     component: <div>CALENDAR</div>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   profile: new Route({
     path: '/profile',
     component: <ProfilePage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn()
   }),
   users: new Route({
     path: '/users',
     component: <UsersPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   registration: new Route({
     path: '/registration',
     component: <RegistrationPage/>,
-    beforeEnter: userIsLoggedIn
+    beforeEnter: () => userIsLoggedIn()
   }),
   default: new Route({
     path: '/*',
