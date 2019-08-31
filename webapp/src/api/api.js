@@ -94,6 +94,8 @@ API.main.getGroup = (groupId) => get('restapi/groups/' + groupId)
 API.main.addUserToGroup = (groupId, userId) => get('restapi/groups/' + groupId + '/add_user/' + userId)
 API.main.removeUserFromGroup = (groupId, userId) => get('restapi/groups/' + groupId + '/remove_user/' + userId)
 
+API.main.getCurrentOffers = () => get('restapi/users/my-offers')
+
 function get (url, type = 'application/json') {
   return new Promise((resolve, reject) =>
     axios.get(url, {headers: {'Content-Type': type, 'Accept': type}})

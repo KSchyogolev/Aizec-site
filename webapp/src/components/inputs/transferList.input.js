@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto'
   },
   paper: {
-    height: 800,
+    height: 600,
     overflow: 'auto'
   },
   button: {
@@ -28,6 +28,10 @@ const useStyles = makeStyles(theme => ({
   },
   searchInput: {
     marginBottom: 15
+  },
+  rowIcon:{
+    color: '#757575',
+    display: 'flex'
   }
 }))
 
@@ -70,6 +74,7 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
           return (
             <ListItem key={index} role="listitem" button onClick={() => handleClickItem(item, isLeft)}>
               <ListItemText id={labelId} primary={item.label}/>
+              <div className={classes.rowIcon}>{item.icon}</div>
             </ListItem>
           )
         })}

@@ -15,6 +15,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import TeacherIcon from '@material-ui/icons/School'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,12 +40,12 @@ const GroupUsersDialog = ({handleClose, open, group, store}) => {
 
   const getUsersList = (items = []) => items.map(item => ({
     id: item.id,
-    label: item.first_name + ' ' + item.seconf_name + '(' + item.email + ')',
-    mark: item.type === 'teacher'
+    label: item.first_name + ' ' + item.second_name + '(' + item.email + ')',
+    icon: item.role === 'teacher' ? <TeacherIcon/> : null
   }))
 
   const filterIncluded = (allItems, items) => allItems.filter(item => items.findIndex(grpItem => item.id === grpItem.id) === -1)
-  const allUsers = getUsersList(store.users)
+  const allUsers = getUsersList(store.users.filter(item => item.role !== 'admin'))
   let leftList = getUsersList(group.users)
   let rightList = filterIncluded(allUsers, leftList)
 

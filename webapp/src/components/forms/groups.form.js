@@ -5,6 +5,7 @@ import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import { MultiSearchInput } from '../inputs'
 import { GroupUsersDialog } from '../dialogs'
+import { tableLocalization } from '../../config/config'
 
 import GroupIcon from '@material-ui/icons/Group'
 import Button from '@material-ui/core/Button'
@@ -20,7 +21,7 @@ const label = {
   course_id: 'Курс'
 }
 
-const GroupsForm = props => {
+const LessonsForm = props => {
   const classes = useStyles()
   const {store} = props
   const [usersDialogIsOpen, setUsersDialogVisible] = useState(false)
@@ -71,25 +72,7 @@ const GroupsForm = props => {
           pageSizeOptions: [10, 20, 50],
           actionsColumnIndex: -1
         }}
-        localization={{
-          pagination: {
-            labelDisplayedRows: '{from}-{to} из {count}',
-            labelRowsSelect: 'строк'
-          },
-          header: {
-            actions: ''
-          },
-          body: {
-            emptyDataSourceMessage: 'Нет записей',
-            filterRow: {
-              filterTooltip: 'Филтр'
-            }
-          },
-          toolbar: {
-            searchTooltip: 'Поиск',
-            searchPlaceholder: 'Поиск'
-          }
-        }}
+        localization={tableLocalization}
         actions={[
           {
             icon: () => <GroupIcon/>,
@@ -108,4 +91,4 @@ const GroupsForm = props => {
   )
 }
 
-export default inject('store')(observer(GroupsForm))
+export default inject('store')(observer(LessonsForm))

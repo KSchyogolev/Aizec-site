@@ -42,10 +42,12 @@ const UsersPage = props => {
               <IconButton className={classes.actionButton} onClick={() => store.approveUser(rowData.id)}
                           title={'Подтвердить пользователя'}>
                 <ApproveUserIcon/>
-              </IconButton> : ''
+              </IconButton> : '',
+            editComponent: () => null
           },
           {title: 'Имя', field: 'first_name', filtering: false},
           {title: 'Фамилия', field: 'second_name', filtering: false},
+          {title: 'Отчество', field: 'third_name', filtering: false},
           {title: 'Пароль', field: 'password', filtering: false},
           {title: 'Почта', field: 'email', filtering: false},
           {

@@ -18,7 +18,11 @@ class Store {
   @observable groups = []
   @observable courses = []
   @observable clubs = []
+  @observable lessons = []
+  @observable currentOffers = []
+  @observable lesson_infos = []
   @observable messages = []
+  @observable lesson_types = []
   @observable currentUser = {}
   @observable currentGroup = {}
 
@@ -289,7 +293,7 @@ class Store {
   @action
   addTo (field, name, data) {
     return new Promise((resolve, reject) => {
-      API.main.addObject(field, {[name]: data}).then(res => {
+      API.main.addObject(field, {[name]: {...data, status: data.status || 'active'}}).then(res => {
         this.addInStore(field, res.data)
         resolve()
       }).catch(reject)
@@ -348,6 +352,16 @@ class Store {
         group.users.splice(userIndex, 1)
         this.updateInStore('groups', groupId, group)
         resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getCurrentOffers () {
+    return new Promise((resolve, reject) => {
+      API.main.getCurrentOffers().then(res => {
+        this.setStore('currentOffers', res.data)
+        resolve()
       }).catch(reject)
     })
   }

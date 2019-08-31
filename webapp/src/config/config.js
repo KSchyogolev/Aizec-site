@@ -188,3 +188,23 @@ export const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref}/>),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 }
+
+export const tableLocalization = {
+  pagination: {
+    labelDisplayedRows: '{from}-{to} из {count}',
+    labelRowsSelect: 'строк'
+  },
+  header: {
+    actions: ''
+  },
+  body: {
+    emptyDataSourceMessage: 'Нет записей',
+    filterRow: {
+      filterTooltip: 'Филтр'
+    }
+  },
+  toolbar: {
+    searchTooltip: 'Поиск',
+    searchPlaceholder: 'Поиск'
+  }
+}

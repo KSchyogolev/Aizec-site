@@ -160,7 +160,7 @@ const translate = (str) => {
     case 'reminders':
       return 'Напоминания'
     case 'courses':
-      return 'Напоминания'
+      return 'Курсы'
     case 'table':
       return 'Ведомость'
     default:
@@ -209,7 +209,6 @@ const getIcon = (page) => {
     default:
       return <FolderIcon/>
   }
-
 }
 
 const LeftMenu = props => {
