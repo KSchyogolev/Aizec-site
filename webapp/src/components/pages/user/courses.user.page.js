@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
 import { tableIcons } from '../../../config/config'
 import { MessageDialog } from '../../dialogs/'
-
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
@@ -42,8 +41,8 @@ const CoursesPage = props => {
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Полное описание', field: 'full_description', filtering: false},
-          {title: 'Стоимость', field: 'cost', filtering: false},
-          {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},
+          {title: 'Стоимость', field: 'cost', filtering: false, type: 'numeric'},
+          {title: 'Стоимость в месяц', field: 'cost_month', filtering: false, type: 'numeric'},
           {
             title: 'Тип',
             field: 'kind',
@@ -70,7 +69,7 @@ const CoursesPage = props => {
               filterTooltip: 'Филтр'
             }
           },
-          toolbar:{
+          toolbar: {
             searchTooltip: 'Поиск',
             searchPlaceholder: 'Поиск'
           }

@@ -7,13 +7,19 @@ import { MultiSearchInput } from '../inputs'
 import { GroupUsersDialog } from '../dialogs'
 import { tableLocalization } from '../../config/config'
 import { LessonsDialog } from '../dialogs'
-
+import TextField from '@material-ui/core/TextField'
+import Input from '@material-ui/core/Input'
 import LessonsIcon from '@material-ui/icons/Filter5'
 import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles(theme => ({
   root: {
     // margin: '15px'
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200
   }
 }))
 
@@ -48,9 +54,29 @@ const LessonsForm = props => {
         columns={[
           {title: 'Название', field: 'short_description', type: 'text', filtering: false},
           {title: 'Описание', field: 'full_description', type: 'text', filtering: false},
-          {title: 'Конспект', field: 'synopsys', type: 'text', filtering: false},
-          {title: 'Домашнее задание', field: 'homework', type: 'text', filtering: false},
-          {title: 'Продолжительность', field: 'duration', type: 'number', filtering: false},
+          {
+            title: 'Конспект', field: 'synopsys', type: 'text', filtering: false,
+            editComponent: props => <TextField
+              multiline
+              value={props.value}
+              onChange={e => props.onChange(e.target.value)}
+              className={classes.textField}
+              margin="normal"
+            />
+          },
+          {
+            title: 'Домашнее задание',
+            field: 'homework',
+            filtering: false,
+            editComponent: props => <TextField
+              multiline
+              value={props.value}
+              onChange={e => props.onChange(e.target.value)}
+              className={classes.textField}
+              margin="normal"
+            />
+          },
+          {title: 'Продолжительность', field: 'duration', type: 'numeric', filtering: false},
           {
             title: 'Предмет',
             field: 'lesson_type_id',
@@ -60,7 +86,7 @@ const LessonsForm = props => {
                                 values={{value: props.value, label: lessonTypesMap[props.value]}} label={'Предмет'}
                                 items={lessonTypeItems}/>),
             lookup: lessonTypesMap,
-            customFilterAndSearch: (term, rowData) =>  !term.length || term.indexOf(rowData.lesson_type_id.toString()) !== -1
+            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(rowData.lesson_type_id.toString()) !== -1
           },
           {
             title: 'Курс',
@@ -71,7 +97,7 @@ const LessonsForm = props => {
                                 values={{value: props.value, label: coursesMap[props.value]}} label={'Курс'}
                                 items={coursesItems}/>),
             lookup: coursesMap,
-            customFilterAndSearch: (term, rowData) =>  !term.length || term.indexOf(rowData.course_id.toString()) !== -1
+            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(rowData.course_id.toString()) !== -1
           }
         ]}
         data={store.lesson_infos}
@@ -95,7 +121,7 @@ const LessonsForm = props => {
           onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('lesson_infos', oldData.id).then(resolve).catch(reject))
         }}
       />
-      <LessonsDialog handleClose={closeLessonsDialog} open={lessonsDialogIsOpen} lesson_info={currentLessonInfo}/>
+      <LessonsDialog handleClose={closeLessonsDialog} open={lessonsDialogIsOpen} lesson={currentLessonInfo}/>
     </div>
   )
 }

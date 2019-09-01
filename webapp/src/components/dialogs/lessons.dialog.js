@@ -30,15 +30,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const LessonsDialog = ({handleClose, open, lesson_info, store}) => {
+const LessonsDialog = ({handleClose, open, lesson, store}) => {
   const classes = useStyles()
-
-
-  const groupsItems = lesson_info.groups ? lesson_info.groups.map(item => ({label: item.name, value: item.id})) : []
+  let lesson_info = store.lesson_infos.find(item => item.id === lesson.id)
+  const groupsItems = lesson_info && lesson_info.groups ? lesson_info.groups.map(item => ({
+    label: item.name,
+    value: item.id
+  })) : []
   const groupsMap = groupsItems.reduce((res, item) => ({...res, [item.value]: item.label}), {})
-
-
-
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}>
@@ -67,7 +66,7 @@ const LessonsDialog = ({handleClose, open, lesson_info, store}) => {
               lookup: {'closed': 'Закрыт', 'open': 'Открыт'}
             }
           ]}
-          data={lesson_info.lessons}
+          data={lesson_info && lesson_info.lessons}
           options={{
             pageSize: 10,
             pageSizeOptions: [10, 20, 50],
@@ -75,9 +74,35 @@ const LessonsDialog = ({handleClose, open, lesson_info, store}) => {
           }}
           localization={tableLocalization}
           editable={{
-            onRowAdd: newData => new Promise((resolve, reject) => store.addTo('lessons', 'lesson', {...newData, lesson_info_id: lesson_info.id}).then(resolve).catch(reject)),
-            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('lessons', oldData.id, newData).then(resolve).catch(reject)),
-            onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('lessons', oldData.id).then(resolve).catch(reject))
+            onRowAdd: newData => new Promise((resolve, reject) => store.addTo('lessons', 'lesson', {
+              ...newData,
+              lesson_info_id: lesson_info.id
+            }).then((res) => {
+              store.updateInStore('lesson_infos', lesson_info.id, {
+                ...lesson_info, lessons: [...lesson_info.lessons, res]
+              })
+              resolve()
+            }).catch(reject)),
+            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('lessons', oldData.id, newData).then((res) => {
+              const currentLessonInfo = store.lesson_infos.find(item => item.id === res.lesson_info_id)
+              const currentArray = [...currentLessonInfo.lessons]
+              const index = currentArray.findIndex(item => item.id === res.id)
+              currentArray[index] = res
+              store.updateInStore('lesson_infos', lesson_info.id, {
+                ...lesson_info, lessons: currentArray
+              })
+              resolve()
+            }).catch(reject)),
+            onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('lessons', oldData.id).then((res) => {
+              const currentLessonInfo = store.lesson_infos.find(item => item.id === lesson_info.id)
+              const currentArray = [...currentLessonInfo.lessons]
+              const index = currentArray.findIndex(item => item.id === oldData.id)
+              currentArray.splice(index, 1)
+              store.updateInStore('lesson_infos', lesson_info.id, {
+                ...lesson_info, lessons: currentArray
+              })
+              resolve()
+            }).catch(reject))
           }}
         />
       </DialogContent>

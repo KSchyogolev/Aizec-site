@@ -95,6 +95,8 @@ API.main.addUserToGroup = (groupId, userId) => get('restapi/groups/' + groupId +
 API.main.removeUserFromGroup = (groupId, userId) => get('restapi/groups/' + groupId + '/remove_user/' + userId)
 
 API.main.getCurrentOffers = () => get('restapi/users/my-offers')
+API.main.getUserLessons = (userId) => get('restapi/lessons/by_user_id/' + userId)
+// API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 function get (url, type = 'application/json') {
   return new Promise((resolve, reject) =>

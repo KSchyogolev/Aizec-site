@@ -163,6 +163,8 @@ const translate = (str) => {
       return 'Курсы'
     case 'table':
       return 'Ведомость'
+    case 'scheduleUser':
+      return 'Расписание'
     default:
       return ''
   }
