@@ -4,7 +4,7 @@ class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :update, :destroy, :add_user, :remove_user]
   
   has_many_methods_for Course
-  
+
   # GET /courses
   # GET /courses.json
   def index
@@ -45,16 +45,6 @@ class CoursesController < ApplicationController
   # DELETE /courses/1.json
   def destroy
     @course.destroy
-  end
-
-  def add_user
-    user = User.find(params[:user_id])
-    @course.users << user
-    @course.lessons.map { |lesson|  lesson.users << user }
-  end
-
-  def remove_user
-    @course.users.delete(params[:user_id])
   end
 
   def by_user
