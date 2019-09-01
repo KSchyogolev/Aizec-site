@@ -4,7 +4,17 @@ class LessonInfosController < ApplicationController
   before_action :set_lesson_info, only: [:show, :update, :destroy]
 
   has_many_methods_for LessonInfo
-  
+
+
+  def by_user
+    user_id = params[:user_id] || current_user&.id
+    if user_id.present?
+      @lesson_infos = User.find(user_id).courses.flat_map(&lesson_infos)
+    else
+      head :unauthorized
+    end
+  end
+
   # GET /lesson_infos
   # GET /lesson_infos.json
   def index

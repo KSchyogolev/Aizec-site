@@ -55,8 +55,8 @@ server "176.99.9.4",
   roles: %w{app db web},
   ssh_options: {
     user: "root", # overrides user setting above
-    keys: %w(/Users/vladchuprin/Downloads/aizec.pem),
+    #keys: %w(/Users/vladchuprin/Downloads/aizec.pem),
     forward_agent: true,
-    auth_methods: %w(publickey)
-    # password: "please use keys"
+    auth_methods: %w(password),
+    password: "Thiep8Cahng4"
   }

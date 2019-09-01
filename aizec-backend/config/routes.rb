@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
           get "#{in_name}/:id/add_#{out_name}/:#{out_name}_id", to: "#{in_name}#add_#{out_name}"
           get "#{in_name}/:id/remove_#{out_name}/:#{out_name}_id", to: "#{in_name}#remove_#{out_name}"
+          get "#{in_name}/:id/#{assoc.plural_name}", to: "#{in_name}##{assoc.plural_name}"
         end
       end
     end
