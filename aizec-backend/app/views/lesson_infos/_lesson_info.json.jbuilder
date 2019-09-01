@@ -3,3 +3,6 @@ json.url lesson_info_url(lesson_info, format: :json)
 json.lessons do 
   json.array! lesson_info.lessons, partial: "lessons/lesson", as: :lesson
 end
+json.groups do 
+  json.array! lesson_info.course.groups, partial: "groups/group", as: :group
+end
