@@ -16,12 +16,12 @@ const OffersUserPage = (props) => {
   const {store} = props
 
   useEffect(() => {
-    store.getAllMessages()
-  }, [store.messages && store.messages.length])
+    store.getCurrentOffers()
+  }, [store.currentOffers && store.currentOffers.length])
 
   return (
     <Grid container spacing={3}>
-      {store.messages.map((message,index) => <Grid item xs={12} sm={6} key={index}>
+      {store.currentOffers.map((message,index) => <Grid item xs={12} sm={6} key={index}>
         <MessageWidget {...message}/>
       </Grid>)}
     </Grid>
