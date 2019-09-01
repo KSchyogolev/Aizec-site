@@ -19,12 +19,15 @@ class Store {
   @observable courses = []
   @observable clubs = []
   @observable lessons = []
-  @observable currentOffers = []
+  @observable offers = []
   @observable lesson_infos = []
   @observable messages = []
   @observable lesson_types = []
   @observable currentUser = {}
   @observable currentGroup = {}
+  @observable currentEvents = {}
+  @observable currentLessons = []
+  @observable currentOffers = []
 
   @action
   setStore (field, value) {
@@ -295,7 +298,7 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.addObject(field, {[name]: {...data, status: data.status || 'active'}}).then(res => {
         this.addInStore(field, res.data)
-        resolve()
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -303,9 +306,9 @@ class Store {
   @action
   deleteFrom (field, id) {
     return new Promise((resolve, reject) => {
-      API.main.deleteObject(field, id).then(() => {
+      API.main.deleteObject(field, id).then((res) => {
         this.removeInStore(field, id)
-        resolve()
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -315,7 +318,8 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.updateObject(field, id, data).then(res => {
         this.updateInStore(field, id, res.data)
-        resolve()
+        console.log('RESOLVE')
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -352,6 +356,26 @@ class Store {
         group.users.splice(userIndex, 1)
         this.updateInStore('groups', groupId, group)
         resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getUserLessons (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserLessons(userId).then(res => {
+        this.setStore('currentLessons', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getUserEvents (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserEvents(userId).then(res => {
+        this.setStore('currentEvents', res.data)
+        resolve()
       }).catch(reject)
     })
   }
