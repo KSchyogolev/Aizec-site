@@ -6,6 +6,22 @@ Rails.application.routes.draw do
     end
   end
 
+  def has_many_routes(*args)
+    args.each do |model|
+      model.reflect_on_all_associations.each do |assoc|
+        if assoc.is_a? ActiveRecord::Reflection::HasManyReflection or assoc.is_a? ActiveRecord::Reflection::ThroughReflection
+          in_name = model.name.pluralize.downcase
+          out_name = assoc.plural_name.singularize
+
+          get "#{in_name}/:id/add_#{out_name}/:#{out_name}_id", to: "#{in_name}#add_#{out_name}"
+          get "#{in_name}/:id/remove_#{out_name}/:#{out_name}_id", to: "#{in_name}#remove_#{out_name}"
+        end
+      end
+    end
+  end
+
+  has_many_routes(Group, Course, Club, LessonInfo, LessonType, Lesson, Merch, Message, User)
+
   archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
 
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
@@ -31,12 +47,16 @@ Rails.application.routes.draw do
   get 'users/:id/offers', to: 'users#offers'
   get 'users/my-offers', to: 'users#offers'
 
-  get 'courses/:id/add_user/:user_id', to: 'courses#add_user'
-  get 'courses/:id/remove_user/:user_id', to: 'courses#remove_user'
-  get 'groups/:id/add_user/:user_id', to: 'groups#add_user'
-  get 'groups/:id/remove_user/:user_id', to: 'groups#remove_user'
+  # get 'courses/:id/add_user/:user_id', to: 'courses#add_user'
+  # get 'courses/:id/remove_user/:user_id', to: 'courses#remove_user'
+  # get 'groups/:id/add_user/:user_id', to: 'groups#add_user'
+  # get 'groups/:id/remove_user/:user_id', to: 'groups#remove_user'
   get 'courses/by_user_id/:user_id', to: 'courses#by_user'
   get 'courses/my_courses', to: 'courses#by_user'
+
+  # get 'courses/:id/add_group/:group_id', to: 'courses#add_group'
+  # get 'courses/:id/remove_group/:group_id', to: 'courses#remove_group'
+  
 
   get 'lessons/by_user_id/:user_id', to: 'lessons#by_user'
   get 'lessons/my_courses', to: 'lessons#by_user'

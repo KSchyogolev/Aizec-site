@@ -2,7 +2,9 @@ class CoursesController < ApplicationController
   include ArchivableController
   
   before_action :set_course, only: [:show, :update, :destroy, :add_user, :remove_user]
-
+  
+  has_many_methods_for Course
+  
   # GET /courses
   # GET /courses.json
   def index

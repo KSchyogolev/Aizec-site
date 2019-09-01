@@ -46,4 +46,19 @@ class ApplicationController < ActionController::API
       head :forbidden
     end
   end
+
+  def self.has_many_methods_for model
+    model.reflect_on_all_associations.each do |assoc|
+      if assoc.is_a? ActiveRecord::Reflection::HasManyReflection or assoc.is_a? ActiveRecord::Reflection::ThroughReflection
+        define_method("add_#{assoc.plural_name.singularize}") do 
+          model.find(params[:id]).send(assoc.plural_name) << assoc.klass.find(params["#{assoc.plural_name.singularize}_id"])
+          render :show, status: :ok, location: model.find(params[:id])
+        end
+
+        define_method("remove_#{assoc.plural_name.singularize}") do 
+          model.find(params[:id]).send(assoc.plural_name).delete(params["#{assoc.plural_name.singularize}_id"])
+        end
+      end
+    end
+  end
 end

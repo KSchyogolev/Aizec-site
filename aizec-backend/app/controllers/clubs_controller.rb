@@ -3,6 +3,8 @@ class ClubsController < ApplicationController
 
   before_action :set_club, only: [:show, :update, :destroy]
 
+  has_many_methods_for Club
+  
   # GET /clubs
   # GET /clubs.json
   def index

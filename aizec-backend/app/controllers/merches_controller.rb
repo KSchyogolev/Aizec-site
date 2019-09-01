@@ -1,6 +1,8 @@
 class MerchesController < ApplicationController
   before_action :set_merch, only: [:show, :update, :destroy]
 
+  has_many_methods_for Merch
+
   # GET /merches
   # GET /merches.json
   def index

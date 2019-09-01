@@ -9,6 +9,8 @@ class UsersController < ApplicationController
 
   wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents]
   
+  has_many_methods_for User
+  
   # GET /users
   # GET /users.json
   def index
@@ -66,6 +68,20 @@ class UsersController < ApplicationController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
+  end
+
+  def offers
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    relevant_course = Course.get_relevant_to_user(user)
+    messages = [
+        user.groups, 
+        user.clubs,
+        user.courses
+      ].flatten.map{ |receivable| receivable.received_messages.where(kind: 'offer') } + 
+      Message.where(to_entity_type: 'all', kind: 'offer')
+    @render_entities = (messages.flatten + relevant_course).sort_by(&:created_at)
   end
 
   # PATCH/PUT /users/1

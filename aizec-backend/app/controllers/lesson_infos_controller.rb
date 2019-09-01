@@ -3,6 +3,8 @@ class LessonInfosController < ApplicationController
   
   before_action :set_lesson_info, only: [:show, :update, :destroy]
 
+  has_many_methods_for LessonInfo
+  
   # GET /lesson_infos
   # GET /lesson_infos.json
   def index

@@ -1,5 +1,7 @@
 class LessonTypesController < ApplicationController
   before_action :set_lesson_type, only: [:show, :update, :destroy]
+  
+  has_many_methods_for LessonType
 
   # GET /lesson_types
   # GET /lesson_types.json

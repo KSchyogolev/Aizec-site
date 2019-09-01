@@ -25,17 +25,9 @@ class GroupsController < ApplicationController
       render json: @group.errors, status: :unprocessable_entity
     end
   end
+  
+  has_many_methods_for Group
 
-  def add_user
-    user = User.find(params[:user_id])
-    @group.users << user
-    render :show, status: :ok, location: @group
-  end
-
-
-  def remove_user
-    @group.users.delete(params[:user_id])
-  end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
