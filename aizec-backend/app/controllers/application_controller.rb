@@ -58,6 +58,11 @@ class ApplicationController < ActionController::API
         define_method("remove_#{assoc.plural_name.singularize}") do 
           model.find(params[:id]).send(assoc.plural_name).delete(params["#{assoc.plural_name.singularize}_id"])
         end
+
+        define_method(assoc.plural_name) do
+          instance_variable_set("@" + assoc.plural_name, model.find(params[:id]).send(assoc.plural_name))
+          render :template => "#{assoc.plural_name}/index", formats: [:json]
+        end
       end
     end
   end
