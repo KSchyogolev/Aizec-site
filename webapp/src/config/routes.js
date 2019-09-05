@@ -17,7 +17,8 @@ import {
   JournalPage,
   OffersPage,
   CoursesPage,
-  RemindersPage
+  RemindersPage,
+  CalendarPage
 } from '../components/pages'
 
 import {
@@ -148,7 +149,7 @@ const routes = {
   }),
   calendar: new Route({
     path: '/calendar',
-    component: <div>CALENDAR</div>,
+    component: <CalendarPage/>,
     beforeEnter: () => userIsLoggedIn('admin')
   }),
   profile: new Route({

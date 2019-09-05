@@ -103,3 +103,7 @@ body {
     border-color: #464646 !important;
 }
 */
+
+.MuiIconButton-root {
+    padding: 9px !important;
+}

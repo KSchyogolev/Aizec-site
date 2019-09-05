@@ -11,15 +11,27 @@ import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import LessonsIcon from '@material-ui/icons/Filter5'
 import Button from '@material-ui/core/Button'
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
+import WorkIcon from '@material-ui/icons/Work'
+import MoreIcon from '@material-ui/icons/MoreHoriz'
 
 const useStyles = makeStyles(theme => ({
   root: {
     // margin: '15px'
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200
+  },
+  description: {
+        padding: 20,
+        backgroundColor: '#e7f4f9'
+  },
+  tableShortIcons:{
+    '& .MuiIconButton-root' : {
+      padding: '10px !important'
+    }
   }
 }))
 
@@ -49,6 +61,7 @@ const LessonsForm = props => {
   return (
     <div className={classes.root}>
       <MaterialTable
+        className={classes.tableShortIcons}
         title="Занятия"
         icons={tableIcons}
         columns={[
@@ -56,6 +69,7 @@ const LessonsForm = props => {
           {title: 'Описание', field: 'full_description', type: 'text', filtering: false},
           {
             title: 'Конспект', field: 'synopsys', type: 'text', filtering: false,
+            render: () => <MoreIcon/>,
             editComponent: props => <TextField
               multiline
               value={props.value}
@@ -68,6 +82,7 @@ const LessonsForm = props => {
             title: 'Домашнее задание',
             field: 'homework',
             filtering: false,
+            render: () => <MoreIcon/>,
             editComponent: props => <TextField
               multiline
               value={props.value}
@@ -80,7 +95,7 @@ const LessonsForm = props => {
           {
             title: 'Предмет',
             field: 'lesson_type_id',
-            render: rowData => <div>{lessonTypesMap[rowData.lesson_type_id]}</div>,
+            render: rowData => lessonTypesMap[rowData.lesson_type_id],
             editComponent: props => (
               <MultiSearchInput multi={false} handleChange={e => props.onChange(e.value)}
                                 values={{value: props.value, label: lessonTypesMap[props.value]}} label={'Предмет'}
@@ -91,7 +106,7 @@ const LessonsForm = props => {
           {
             title: 'Курс',
             field: 'course_id',
-            render: rowData => <div>{coursesMap[rowData.course_id]}</div>,
+            render: rowData => coursesMap[rowData.course_id],
             editComponent: props => (
               <MultiSearchInput multi={false} handleChange={e => props.onChange(e.value)}
                                 values={{value: props.value, label: coursesMap[props.value]}} label={'Курс'}
@@ -101,6 +116,30 @@ const LessonsForm = props => {
           }
         ]}
         data={store.lesson_infos}
+        detailPanel={[
+          {
+            tooltip: 'Конспект',
+            render: rowData => {
+              return (
+                <div className={classes.description}>
+                  {rowData.synopsys}
+                </div>
+              )
+            }
+          },
+          {
+            icon: () => <WorkOutlineIcon/>,
+            openIcon: () => <WorkIcon/>,
+            tooltip: 'Домашнее задание',
+            render: rowData => {
+              return (
+                <div className={classes.description}>
+                  {rowData.homework}
+                </div>
+              )
+            }
+          }
+        ]}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],

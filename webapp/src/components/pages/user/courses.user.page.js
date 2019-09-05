@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   description :{
     padding: 20,
-    backgroundColor: '#f1f1f1'
+    backgroundColor: '#e7f4f9'
   }
 }))
 
@@ -70,6 +70,7 @@ const CoursesPage = props => {
             }
           }
         ]}
+        onRowClick={(event, rowData, togglePanel) => togglePanel()}
         localization={{
           pagination: {
             labelDisplayedRows: '{from}-{to} из {count}',

@@ -26,8 +26,8 @@ const HomeworkUserPage = (props) => {
   const {store} = props
 
   const onChangeFileHandler = (e, lessonId) => {
-    const file = e.target.files[0]
-    store.uploadHomework(file).then(res => {
+    const files = e.target.files
+    store.uploadHomework(files).then(res => {
       console.log('SUCCESS')
     })
   }

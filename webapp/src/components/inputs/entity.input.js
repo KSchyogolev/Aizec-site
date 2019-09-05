@@ -41,6 +41,16 @@ const EntityInput = props => {
           value: item.id,
           label: item.name
         }))
+      case ('group'):
+        return store.groups.map(item => ({
+          value: item.id,
+          label: item.name
+        }))
+      case ('course'):
+        return store.courses.map(item => ({
+          value: item.id,
+          label: item.short_description
+        }))
       default :
         return []
     }
@@ -92,8 +102,7 @@ const EntityInput = props => {
 
   const handleChangeMulti = (value) => {
     setValues(value)
-    //TODO remove [0] after update BE for multiple ids
-    handleChange({target: {name: 'to_entity_id', value: value && value.length ? value.map(item => item.value)[0] : null}})
+    handleChange({target: {name: 'to_entity_id', value: value && value.length ? value.map(item => item.value) : null}})
   }
 
   const classes = useStyles()

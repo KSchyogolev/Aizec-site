@@ -44,7 +44,10 @@ const useStyles = makeStyles(theme => ({
     margin: '30px 0px'
   },
   parentMedia: {
-    height: '6em'
+    height: '5em'
+  },
+  parentsForm: {
+    marginTop: 150
   }
 }))
 
@@ -113,10 +116,10 @@ const MainUserPage = (props) => {
               <div>{user.birthday}</div>
             </div>
           </Typography>
-          {user.parents ? <Typography>
+          {user.parents ? <Typography className={classes.parentsForm}>
             {/*<Typography variant="h5" component="h2">Представители</Typography>*/}
             <Grid container spacing={3}>
-              {JSON.parse(user.parents).map(item => <Grid item xs={6} sm={3}>
+              {JSON.parse(user.parents).map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
                 <ParentCard parent={item}/>
               </Grid>)}
             </Grid>

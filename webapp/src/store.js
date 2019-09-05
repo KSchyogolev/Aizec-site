@@ -403,9 +403,20 @@ class Store {
   }
 
   @action
-  uploadHomework (data) {
+  uploadHomework (files) {
     return new Promise((resolve, reject) => {
-      API.main.uploadHomework(data).then(() => {
+      const formData = new FormData()
+
+      formData.append('message[kind]', 'homework')
+      formData.append('message[to_entity_type]', 'admin')
+      formData.append('message[status]', 'active')
+      formData.append('message[head_text]', 's')
+      formData.append('message[full_text]', 's')
+      formData.append('message[user_id]', this.currentUser.id)
+      for (let i = 0; i < files.length; i++)
+        formData.append('message[photos][]', files[i])
+
+      API.main.uploadHomework(formData).then(() => {
         resolve()
       }).catch(reject)
     })
