@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing(1)
+  },
+  description :{
+    padding: 20,
+    backgroundColor: '#f1f1f1'
   }
 }))
 
@@ -31,7 +35,7 @@ const CoursesPage = props => {
 
   useEffect(() => {
     store.getCurrentCourses()
-  })
+  }, [store.currentCourses.length])
 
   return (
     <div className={classes.root}>
@@ -40,7 +44,6 @@ const CoursesPage = props => {
         icons={tableIcons}
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
-          {title: 'Полное описание', field: 'full_description', filtering: false},
           {title: 'Стоимость', field: 'cost', filtering: false, type: 'numeric'},
           {title: 'Стоимость в месяц', field: 'cost_month', filtering: false, type: 'numeric'},
           {
@@ -55,6 +58,18 @@ const CoursesPage = props => {
           pageSizeOptions: [10, 20, 50],
           filtering: true
         }}
+        detailPanel={[
+          {
+            tooltip: 'Описание',
+            render: rowData => {
+              return (
+                <div className={classes.description}>
+                  {rowData.full_description}
+                </div>
+              )
+            }
+          }
+        ]}
         localization={{
           pagination: {
             labelDisplayedRows: '{from}-{to} из {count}',

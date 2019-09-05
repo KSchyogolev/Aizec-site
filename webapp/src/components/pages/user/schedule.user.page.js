@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-
+import Paper from '@material-ui/core/Paper'
 import { ScheduleWidget } from '../../widgets'
 
 const useStyles = makeStyles(theme => ({
@@ -36,10 +36,11 @@ const getEndFromDuration = (start, durationMin) => {
 
 const getEvents = (list = []) => {
   return list.map(item => {
+    const {start_time, lesson_info} = item
     return {
-      startDate: item.start_time,
-      endDate: getEndFromDuration(item.start_time, 200),
-      title: 'Урок'
+      startDate: start_time,
+      endDate: getEndFromDuration(start_time, lesson_info.duration),
+      title: lesson_info.short_description
     }
   })
 }
@@ -54,7 +55,9 @@ const ScheduleUserPage = (props) => {
 
   return (
     <div className={classes.root}>
-      <ScheduleWidget events={getEvents(store.currentLessons.length ? store.currentLessons : testEvents)}/>
+      <Paper>
+        <ScheduleWidget events={getEvents(store.currentLessons)}/>
+      </Paper>
     </div>
   )
 

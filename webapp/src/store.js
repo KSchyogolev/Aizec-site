@@ -28,6 +28,8 @@ class Store {
   @observable currentEvents = {}
   @observable currentLessons = []
   @observable currentOffers = []
+  @observable currentCourses = []
+  @observable currentVisits = []
 
   @action
   setStore (field, value) {
@@ -62,7 +64,7 @@ class Store {
         localStorage.setItem('access_token', res.headers.authorization)
         localStorage.setItem('current_user', JSON.stringify(res.data))
         this.currentUser = res.data
-        resolve()
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -381,10 +383,29 @@ class Store {
   }
 
   @action
+  getUserVisits (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserVisits(userId).then(res => {
+        this.setStore('currentVisits', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
   getCurrentOffers () {
     return new Promise((resolve, reject) => {
       API.main.getCurrentOffers().then(res => {
         this.setStore('currentOffers', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  uploadHomework (data) {
+    return new Promise((resolve, reject) => {
+      API.main.uploadHomework(data).then(() => {
         resolve()
       }).catch(reject)
     })

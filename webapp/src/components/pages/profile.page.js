@@ -9,12 +9,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-
 const ProfilePage = (props) => {
   const classes = useStyles()
   const {store} = props
   return (
     <div className={classes.root}>
+
     </div>
   )
 
