@@ -83,6 +83,14 @@ body {
     background-color: var(--dark-primary) !important;
 }
 
+.MuiFab-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.MuiFab-primary:hover {
+    background-color: var(--dark-primary) !important;
+}
+
 .MuiStepIcon-active {
     color: var(--primary-color) !important;;
 }
@@ -94,6 +102,8 @@ body {
 .MuiOutlinedInput-input {
     padding: 18.5px 14px!important;
 }
+
+
 
 /*
 .Mui-focused {

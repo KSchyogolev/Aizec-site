@@ -21,10 +21,11 @@ const UsersPage = props => {
   const {store} = props
   const classes = useStyles()
 
-  /*useEffect(() => {
+  useEffect(() => {
     store.getUsers()
   }, [])
-*/
+
+
   return (
     <div className={classes.root}>
       <MaterialTable

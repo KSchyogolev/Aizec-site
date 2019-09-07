@@ -61,6 +61,7 @@ const LessonsDialog = ({handleClose, open, lesson, store}) => {
               title: 'Группа',
               field: 'group_id',
               render: rowData => <div>{groupsMap[rowData.group_id]}</div>,
+              editable: 'onAdd',
               editComponent: props => {
                 return <MultiSearchInput multi={false} handleChange={e => props.onChange(e.value)}
                                          values={{value: props.value, label: groupsMap[props.value]}} label={'Группа'}
