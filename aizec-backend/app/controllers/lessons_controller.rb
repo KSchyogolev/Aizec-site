@@ -47,7 +47,9 @@ class LessonsController < ApplicationController
   def by_user
     user_id = params[:user_id] || current_user&.id
     if user_id.present?
-      @visits = User.find(user_id).visits
+      # @visits = User.find(user_id).visits
+      @lessons = User.find(user_id).groups.flat_map(&lessons)
+      render :index, status: :ok
     else
       head :unauthorized
     end
