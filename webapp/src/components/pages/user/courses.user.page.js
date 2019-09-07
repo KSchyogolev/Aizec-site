@@ -23,9 +23,12 @@ const useStyles = makeStyles(theme => ({
   leftIcon: {
     marginRight: theme.spacing(1)
   },
-  description :{
+  description: {
+    fontWeight: 600,
     padding: 20,
-    backgroundColor: '#e7f4f9'
+/*    '-webkit-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',
+    '-moz-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',*/
+    'box-shadow': 'inset 0px 0px 30px -35px rgba(0,0,0,0.75)'
   }
 }))
 

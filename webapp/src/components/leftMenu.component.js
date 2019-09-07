@@ -180,6 +180,8 @@ const getIcon = (page) => {
       return <CalendarIcon/>
     case 'homework':
       return <HomeWorkIcon/>
+    case 'homeworkTeacher':
+      return <HomeWorkIcon/>
     case 'offers':
       return <AddShoppingCartIcon/>
     case 'reminders':
@@ -188,9 +190,13 @@ const getIcon = (page) => {
       return <AnnouncementIcon/>
     case 'table':
       return <AssessmentIcon/>
+    case 'listTeacher':
+      return <AssessmentIcon/>
     case 'bonuses':
       return <LoyalotyIcon/>
     case 'journal':
+      return <JournalIcon/>
+    case 'journalTeacher':
       return <JournalIcon/>
     case 'courses':
       return <CoursesIcon/>
@@ -201,6 +207,8 @@ const getIcon = (page) => {
     case 'offersUser':
       return <AddShoppingCartIcon/>
     case 'lettersUser':
+      return <LettersIcon/>
+    case 'reportsTeacher':
       return <LettersIcon/>
     case 'scheduleUser':
       return <ScheduleIcon/>

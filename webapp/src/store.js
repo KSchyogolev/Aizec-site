@@ -30,6 +30,13 @@ class Store {
   @observable currentOffers = []
   @observable currentCourses = []
   @observable currentVisits = []
+  @observable lessonVisits = []
+
+  @observable notification = {
+    show: false,
+    message: '',
+    variant: ''
+  }
 
   @action
   setStore (field, value) {
@@ -392,6 +399,17 @@ class Store {
     })
   }
 
+
+  @action
+  getLessonVisits (lessonId) {
+    return new Promise((resolve, reject) => {
+      API.main.getLessonVisits(lessonId).then(res => {
+        this.setStore('lessonVisits', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
   @action
   getCurrentOffers () {
     return new Promise((resolve, reject) => {
@@ -403,16 +421,18 @@ class Store {
   }
 
   @action
-  uploadHomework (files) {
+  uploadHomework (files, visitId) {
     return new Promise((resolve, reject) => {
       const formData = new FormData()
 
       formData.append('message[kind]', 'homework')
-      formData.append('message[to_entity_type]', 'admin')
+      formData.append('message[to_entity_type]', 'visit')
       formData.append('message[status]', 'active')
       formData.append('message[head_text]', 's')
       formData.append('message[full_text]', 's')
+      formData.append('message[to_entity_id]', visitId)
       formData.append('message[user_id]', this.currentUser.id)
+
       for (let i = 0; i < files.length; i++)
         formData.append('message[photos][]', files[i])
 
@@ -421,6 +441,18 @@ class Store {
       }).catch(reject)
     })
   }
+
+  @action
+  showNotification (variant, message) {
+    this.setStore('notification', {variant, message, show: true})
+  }
+
+  @action
+  closeNotification = () => {
+    return this.setStore('notification', {...this.notification, show: false})
+  }
+
+
 
 }
 

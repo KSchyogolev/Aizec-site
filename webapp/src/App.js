@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import { pages } from './config/config'
 import { makeStyles, withTheme } from '@material-ui/core/styles'
-import { LeftMenu } from "./components"
+import { LeftMenu } from './components'
 import routes from './config/routes'
 import store from './store'
 import './App.css'
 import { MobxRouter, startRouter } from 'mobx-router'
 
+import { NotificationMessage } from './components'
 
 startRouter(routes, store)
 
@@ -26,13 +27,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-
 const App = props => {
   const classes = useStyles()
   const {router, currentUser} = props.store
   const isFullPage = router.currentView && (router.currentView.path === '/login' || router.currentView.path === '/registration')
   const [open, setOpen] = useState(true)
   const [notApprovedCount, setApprovedCount] = useState(0)
+  const [notifMessage, setNotifMessage] = useState({variant: '', message: ''})
+  const [showNotification, toggleVisibleNotification] = useState(false)
 
   const getStatusCount = (users, status) => {
     return users.filter(user => user.role === 'user' && user.status === status).length
@@ -47,11 +49,11 @@ const App = props => {
   }
 
   useEffect(() => {
-    if(currentUser.role === 'admin') {
+/*    if (currentUser.role === 'admin') {
       store.getUsers().then(() => {
         setApprovedUsers(getStatusCount(store.users, 'not_approved'))
       })
-    }
+    }*/
   }, [])
 
   return (
@@ -65,6 +67,8 @@ const App = props => {
         <div className={classes.toolbar}/>
         <MobxRouter/>
       </div>
+      <NotificationMessage isOpen={store.notification.show} handleClose={store.closeNotification} variant={store.notification.variant}
+                           message={store.notification.message}/>
     </div>
   )
 

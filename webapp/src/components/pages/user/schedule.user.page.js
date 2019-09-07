@@ -36,11 +36,11 @@ const getEndFromDuration = (start, durationMin) => {
 
 const getEvents = (list = []) => {
   return list.map(item => {
-    const {start_time, lesson_info} = item
+    const {start_time, duration, short_description} = item
     return {
       startDate: start_time,
-      endDate: getEndFromDuration(start_time, lesson_info.duration),
-      title: lesson_info.short_description
+      endDate: getEndFromDuration(start_time, duration || 10),
+      title: short_description || 'Урок'
     }
   })
 }
