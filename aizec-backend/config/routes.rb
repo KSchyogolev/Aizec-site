@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   def receivable(*args)
     args.each do |resource|
       get "#{resource}/:id/messages", to: "#{resource}#messages"
+      get "#{resource}/:id/messages/:message_kind", to: "#{resource}#messages"
     end
   end
 
