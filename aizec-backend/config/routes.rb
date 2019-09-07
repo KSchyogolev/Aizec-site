@@ -6,6 +6,12 @@ Rails.application.routes.draw do
     end
   end
 
+  def receivable(*args)
+    args.each do |resource|
+      get "#{resource}/:id/messages", to: "#{resource}#messages"
+    end
+  end
+
   def has_many_routes(*args)
     args.each do |model|
       model.reflect_on_all_associations.each do |assoc|
@@ -24,6 +30,8 @@ Rails.application.routes.draw do
   has_many_routes(Group, Course, Club, LessonInfo, LessonType, Lesson, Merch, Message, User)
 
   archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
+
+  receivable :clubs, :courses, :groups, :users, :visits
 
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
     :message_options, :photos, :messages, :user_groups, :groups, :clubs, 

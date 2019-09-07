@@ -599,4 +599,9 @@
 |  GET   | /rails/active_storage/disk/:encoded_key/*filename                              |        |           |            |             |
 |  PUT   | /rails/active_storage/disk/:encoded_token                                      |        |           |            |             |
 |  POST  | /rails/active_storage/direct_uploads                                           |        |           |            |             |
-
+|  GET   | /clubs/:id/messages                                                            |        |           |            |             |
+|  GET   | /courses/:id/messages                                                          |        |           |            |             |
+|  GET   | /groups/:id/messages                                                           |        |           |            |             |
+|  GET   | /users/:id/messages                                                            |        |           |            |             |
+|  GET   | /visits/:id/messages                                                           |        |           |            |             |
+               

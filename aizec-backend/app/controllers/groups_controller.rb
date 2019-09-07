@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
   include ArchivableController
+  include ReceivableController
+  
   
   before_action :set_group, only: [:show, :update, :destroy, :add_user, :remove_user]
 

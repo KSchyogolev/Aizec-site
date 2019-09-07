@@ -1,4 +1,6 @@
 class VisitsController < ApplicationController
+  include ReceivableController
+  
   before_action :set_visit, only: [:show, :update, :destroy]
 
   # GET /visits

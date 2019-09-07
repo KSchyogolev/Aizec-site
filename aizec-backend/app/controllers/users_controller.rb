@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
   include ArchivableController
+  include ReceivableController
+  
 
   before_action :set_user, only: [:show, :update, :destroy, :approve]
   before_action only: [:update] do
