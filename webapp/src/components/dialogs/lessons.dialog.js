@@ -21,6 +21,8 @@ import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import { tableLocalization } from '../../config/config'
 
+const moment = require('moment')
+
 const useStyles = makeStyles(theme => ({
   root: {
     // margin: '15px'
@@ -49,7 +51,12 @@ const LessonsDialog = ({handleClose, open, lesson, store}) => {
           title=""
           icons={tableIcons}
           columns={[
-            {title: 'Дата и время', field: 'start_time', type: 'datetime'},
+            {
+              title: 'Дата и время',
+              field: 'start_time',
+              type: 'datetime',
+              render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+            },
             {
               title: 'Группа',
               field: 'group_id',

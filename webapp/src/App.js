@@ -47,9 +47,11 @@ const App = props => {
   }
 
   useEffect(() => {
-    store.getUsers().then(() => {
-      setApprovedUsers(getStatusCount(store.users, 'not_approved'))
-    })
+    if(currentUser.role === 'admin') {
+      store.getUsers().then(() => {
+        setApprovedUsers(getStatusCount(store.users, 'not_approved'))
+      })
+    }
   }, [])
 
   return (

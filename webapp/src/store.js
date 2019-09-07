@@ -28,6 +28,8 @@ class Store {
   @observable currentEvents = {}
   @observable currentLessons = []
   @observable currentOffers = []
+  @observable currentCourses = []
+  @observable currentVisits = []
 
   @action
   setStore (field, value) {
@@ -62,7 +64,7 @@ class Store {
         localStorage.setItem('access_token', res.headers.authorization)
         localStorage.setItem('current_user', JSON.stringify(res.data))
         this.currentUser = res.data
-        resolve()
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -381,10 +383,40 @@ class Store {
   }
 
   @action
+  getUserVisits (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserVisits(userId).then(res => {
+        this.setStore('currentVisits', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
   getCurrentOffers () {
     return new Promise((resolve, reject) => {
       API.main.getCurrentOffers().then(res => {
         this.setStore('currentOffers', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  uploadHomework (files) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData()
+
+      formData.append('message[kind]', 'homework')
+      formData.append('message[to_entity_type]', 'admin')
+      formData.append('message[status]', 'active')
+      formData.append('message[head_text]', 's')
+      formData.append('message[full_text]', 's')
+      formData.append('message[user_id]', this.currentUser.id)
+      for (let i = 0; i < files.length; i++)
+        formData.append('message[photos][]', files[i])
+
+      API.main.uploadHomework(formData).then(() => {
         resolve()
       }).catch(reject)
     })

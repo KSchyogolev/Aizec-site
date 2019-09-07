@@ -48,7 +48,11 @@ const OffersPage = props => {
 
   useEffect(() => {
     store.getAllMessages()
-  }, [store.messages && store.messages.length])
+    store.getAll('courses')
+    store.getAll('groups')
+    store.getAll('users')
+    store.getAll('clubs')
+  }, [])
 
   const saveMessage = () => {
     let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage, to_entity_type: 'all'})

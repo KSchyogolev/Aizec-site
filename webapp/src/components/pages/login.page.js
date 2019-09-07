@@ -25,9 +25,9 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     '& .Mui-focused': {
-      color: "#464646",
+      color: '#464646',
       '& fieldset': {
-        borderColor: [["#464646"], '!important']
+        borderColor: [['#464646'], '!important']
       }
     }
   },
@@ -41,13 +41,12 @@ const styles = theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: "#FF5722",
+    backgroundColor: '#FF5722',
     '&:hover': {
-      backgroundColor: "#E64A19"
+      backgroundColor: '#E64A19'
     }
   }
 })
-
 
 @inject('store')
 @observer
@@ -62,7 +61,19 @@ class LoginPage extends Component {
     e.preventDefault()
     const {email, password} = this.state
     store.signIn({user: {email, password}}).then(res => {
-      store.router.goTo(routes.profile)
+      switch (res.role) {
+        case 'user' :
+          store.router.goTo(routes.offersUser)
+          break
+        case 'teacher' :
+          store.router.goTo(routes.journalTeacher)
+          break
+        case 'admin' :
+          store.router.goTo(routes.profile)
+          break
+        default:
+          store.router.goTo(routes.profile)
+      }
     }).catch(console.log)
   }
 
@@ -123,6 +134,5 @@ class LoginPage extends Component {
     )
   }
 }
-
 
 export default withStyles(styles)(LoginPage)

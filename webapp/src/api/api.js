@@ -96,7 +96,10 @@ API.main.removeUserFromGroup = (groupId, userId) => get('restapi/groups/' + grou
 
 API.main.getCurrentOffers = () => get('restapi/users/my-offers')
 API.main.getUserLessons = (userId) => get('restapi/lessons/by_user_id/' + userId)
+API.main.getUserVisits = (userId) => get('restapi/users/' + userId + '/visits')
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
+API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
+// API.main.uploadHomework = (data) => put('restapi/messages.json', data, 'multipart/form-data')
 
 function get (url, type = 'application/json') {
   return new Promise((resolve, reject) =>
@@ -126,6 +129,7 @@ function post (url, data = '', type = 'application/json') {
       .catch(error => reject(error.response))
   })
 }
+
 
 function patch (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) => {
