@@ -10,7 +10,7 @@ class Visit < ApplicationRecord
 
   private 
     def default_values
-      status ||= 'null' 
-      approve_status ||= 'null'
+      status = 'null' if status.blank?
+      approve_status = 'null' if approve_status.blank?
     end
 end
