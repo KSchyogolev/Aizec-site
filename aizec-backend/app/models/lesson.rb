@@ -23,7 +23,7 @@ class Lesson < ApplicationRecord
   def create_visits
     # return nil unless group.present?
     group.users.each do |user|
-      Visit.create user_id: user.id, lesson_id: id
+      Visit.create!  user_id: user.id, lesson_id: id
     end
   end
 
