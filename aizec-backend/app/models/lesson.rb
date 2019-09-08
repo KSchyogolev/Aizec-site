@@ -24,7 +24,7 @@ class Lesson < ApplicationRecord
     return nil unless lessons.present? 
     return nil unless user.present? 
     group.users.each do |user|
-      user.lessons << self
+      Visit.create user_id: user.id lesson_id: id
     end
   end
 
@@ -32,7 +32,7 @@ class Lesson < ApplicationRecord
     return nil unless lessons.present? 
     return nil unless user.present? 
     group.users.each do |user|
-      user.lessons.delete self
+      Visit.create user_id: user.id lesson_id: id
     end
   end
 end

@@ -13,7 +13,9 @@ class Group < ApplicationRecord
   def create_visits(user)
     return nil unless lessons.present? 
     return nil unless user.present? 
-    user.lessons << lessons
+    lessons.each do |lesson|
+      Visit.create user_id: user.id lesson_id: lesson.id
+    end
   end
 
   def destroy_visits(user)
