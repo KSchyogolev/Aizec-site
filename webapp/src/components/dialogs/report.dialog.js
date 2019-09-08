@@ -17,7 +17,10 @@ import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // margin: '15px'
+    // padding: '15px'
+  },
+  content: {
+    padding: '15px'
   },
 }))
 
@@ -42,11 +45,11 @@ const ReportDialog = ({handleClose, open, ...props}) => {
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}>
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'} className={classes.root}>
       <DialogTitle id="form-dialog-title">
         Сообщение администратору
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers className={classes.content}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
