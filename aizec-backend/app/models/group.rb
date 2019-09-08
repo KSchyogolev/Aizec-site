@@ -14,7 +14,7 @@ class Group < ApplicationRecord
     return nil unless lessons.present? 
     return nil unless user.present? 
     lessons.each do |lesson|
-      Visit.create user_id: user.id lesson_id: lesson.id
+      Visit.create user_id: user.id, lesson_id: lesson.id
     end
   end
 
