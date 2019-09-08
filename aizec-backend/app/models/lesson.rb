@@ -21,7 +21,7 @@ class Lesson < ApplicationRecord
 
   private
   def create_visits
-    return nil unless lessons.present? 
+    return nil unless group.present? 
     return nil unless user.present? 
     group.users.each do |user|
       Visit.create user_id: user.id, lesson_id: id
@@ -29,7 +29,7 @@ class Lesson < ApplicationRecord
   end
 
   def destroy_visits
-    return nil unless lessons.present? 
+    return nil unless group.present? 
     return nil unless user.present? 
     group.users.each do |user|
       user.lessons.delete self
