@@ -31,6 +31,10 @@ class Store {
   @observable currentCourses = []
   @observable currentVisits = []
   @observable lessonVisits = []
+  @observable loading = {
+    currentOffers: false
+  }
+
 
   @observable notification = {
     show: false,
@@ -412,11 +416,16 @@ class Store {
 
   @action
   getCurrentOffers () {
+    this.setLoading('currentOffers', true)
     return new Promise((resolve, reject) => {
-      API.main.getCurrentOffers().then(res => {
+      API.main.getCurrentOffers(this.currentUser.id).then(res => {
         this.setStore('currentOffers', res.data)
+        this.setLoading('currentOffers', false)
         resolve()
-      }).catch(reject)
+      }).catch((err) =>{
+        this.setLoading('currentOffers', false)
+        reject(err)
+      })
     })
   }
 
@@ -453,6 +462,19 @@ class Store {
   }
 
 
+  @action
+  getHomework = (visitId) => {
+    return new Promise((resolve, reject) => {
+      API.main.getHomework(visitId).then(res => {
+        resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  setLoading = (filed, val) => {
+    this.loading[filed] = val
+  }
 
 }
 

@@ -18,7 +18,8 @@ import {
   OffersPage,
   CoursesPage,
   RemindersPage,
-  CalendarPage
+  CalendarPage,
+  ReportsPage
 } from '../components/pages'
 
 import {
@@ -90,6 +91,11 @@ const routes = {
   courses: new Route({
     path: '/courses',
     component: <CoursesPage/>,
+    beforeEnter: () => userIsLoggedIn('admin')
+  }),
+  reports: new Route({
+    path: '/reports',
+    component: <ReportsPage/>,
     beforeEnter: () => userIsLoggedIn('admin')
   }),
   reminders: new Route({

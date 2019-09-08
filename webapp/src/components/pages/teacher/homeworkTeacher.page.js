@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationMessage from '../../notification.component'
 import { HomeworkControlDialog } from '../../dialogs'
+const moment = require('moment')
 
 const visits = [{
   id: 24,
@@ -71,7 +72,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   },
   description: {
-    fontWeight: 600,
+    fontStyle: 'italic',
     padding: 10,
     display: 'flex',
     // border: '1px solid #b9b9b9'
@@ -95,6 +96,9 @@ const useStyles = makeStyles(theme => ({
   text: {
     padding: 10,
     marginLeft: 10
+  },
+  blue: {
+    color: '#507ab4'
   }
 }))
 
@@ -174,8 +178,15 @@ const HomeworkTeacherPage = (props) => {
         title="Занятия"
         icons={tableIcons}
         columns={[
+          {
+            title: 'Дата и время',
+            field: 'start_time',
+            type: 'datetime',
+            render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+          },
+          {title: 'Предмет', field: 'lesson_type', filtering: false},
           {title: 'Название', field: 'short_description', filtering: false},
-          {title: 'Полное описание', field: 'full_description', filtering: false}
+          {title: 'Полное описание', field: 'full_description', filtering: false},
         ]}
         detailPanel={[
           {
@@ -211,7 +222,7 @@ const HomeworkTeacherPage = (props) => {
         }}
         actions={[
           {
-            icon: () => <AssignmentIcon/>,
+            icon: () => <AssignmentIcon className={classes.blue}/>,
             tooltip: 'Проверка ДЗ',
             onClick: (e, rowData) => showDialog(rowData)
           }

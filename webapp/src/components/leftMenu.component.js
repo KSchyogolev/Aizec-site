@@ -186,7 +186,7 @@ const getIcon = (page) => {
       return <AddShoppingCartIcon/>
     case 'reminders':
       return <NotificationIcon/>
-    case 'letters':
+    case 'reports':
       return <AnnouncementIcon/>
     case 'table':
       return <AssessmentIcon/>

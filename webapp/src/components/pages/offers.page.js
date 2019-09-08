@@ -55,7 +55,7 @@ const OffersPage = props => {
   }, [])
 
   const saveMessage = () => {
-    let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage, to_entity_type: 'all'})
+    let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage})
     savePromise().then(() => {
       closeMessageDialog()
     })
@@ -89,7 +89,7 @@ const OffersPage = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {store.messages && store.messages.map((row, index) => (
+            {store.messages && store.messages.filter(item => item.kind === 'offer').map((row, index) => (
               <TableRow key={index}>
                 <TableCell align="left">{messageKinds[row.kind]}</TableCell>
                 <TableCell align="left">{row.head_text}</TableCell>

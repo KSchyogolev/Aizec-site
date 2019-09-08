@@ -62,6 +62,7 @@ const EntityInput = props => {
   const getValues = (ids) => initOptions.filter(item => ids.indexOf(item.value) !== -1)
 
   //TODO remove array after BE update
+  // const [values, setValues] = useState(getValues([entity_id]))
   const [values, setValues] = useState(getValues([entity_id]))
 
   React.useEffect(() => {
@@ -95,14 +96,16 @@ const EntityInput = props => {
   const onChangeType = (e) => {
     const {value: type} = e.target
     setType(type)
-    setValues([])
+    setValues(null)
     setSuggestions(getStoreItems(type))
     handleChange(e)
   }
 
   const handleChangeMulti = (value) => {
+    console.log(value)
     setValues(value)
-    handleChange({target: {name: 'to_entity_id', value: value && value.length ? value.map(item => item.value) : null}})
+    // handleChange({target: {name: 'to_entity_id', value: value && value.length ? value.map(item => item.value) : null}})
+    handleChange({target: {name: 'to_entity_id', value: value && value.value}})
   }
 
   const classes = useStyles()
@@ -118,7 +121,7 @@ const EntityInput = props => {
         </Select>
       </FormControl>
       {type && type !== 'all' &&
-      <MultiSearchInput handleChange={handleChangeMulti} values={values} label={labels[type]} items={suggestions}/>}
+      <MultiSearchInput handleChange={handleChangeMulti} values={values} label={labels[type]} items={suggestions} multi={false}/>}
     </div>
   )
 }

@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import { ReportDialog } from '../../dialogs'
 import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import { tableIcons, tableLocalization } from '../../../config/config'
-import AddIcon from '@material-ui/icons/Email'
+import { tableIcons } from '../../config/config'
+import { tableLocalization } from '../../config/config'
 
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    margin: '15px'
-  },
+  root: {},
   addButton: {
     display: 'flex'
   },
@@ -31,68 +26,71 @@ const useStyles = makeStyles(theme => ({
     minWidth: 110
   },
   description: {
-    fontStyle: 'italic',
+    // fontStyle: 'italic',
     padding: 10,
     display: 'flex',
     backgroundColor: 'whitesmoke'
   },
   text: {
-    /*    padding: 10,
-        marginLeft: 10,
-        margin: 'auto 20px',
-        '&:before': {
-          content: '""',
-          position: 'absolute',
-          bottom: -7,
-          left: 10,
-          borderLeft: '15px solid #F5F6F7',
-          borderBottom: '8px solid transparent'
-        }*/
+    padding: 10,
+    marginLeft: 10,
+    margin: 'auto 20px'
   }
-
 }))
 
-const LettersUserPage = (props) => {
+const roleName = {
+  admin: 'Администратор',
+  teacher: 'Учитель',
+  user: 'Ученик'
+}
+
+const ReportsPage = props => {
   const classes = useStyles()
-  const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
-  const [currentMessage, setCurrentMessage] = useState({})
   const {store} = props
 
   const messageKinds = {
     offer: 'Предложение'
   }
 
-  useEffect(() => {
-    //TODO get request for personal messages
-    store.getAllMessages()
-  }, [])
+  const mapUsers = store.users.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+  const mapGroups = store.groups.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
-  const openMessageDialog = (message) => {
-    setMessageDialogVisible(true)
-    setCurrentMessage(message || {})
-  }
-  const closeMessageDialog = () => setMessageDialogVisible(false)
+  console.log(mapUsers, mapGroups)
+  useEffect(() => {
+    store.getAllMessages()
+    store.getAll('groups')
+    store.getAll('users')
+  }, [])
 
   return (
     <div className={classes.root}>
-      <Typography component='div' className={classes.controlHeader}>
-        <Button variant="contained" color="primary" className={classes.addButton} onClick={() => openMessageDialog()}>
-          <AddIcon className={classes.leftIcon}/>
-          Сообщение администратору
-        </Button>
-      </Typography>
       <MaterialTable
         className={classes.tableShortIcons}
-        title="Мои обращения"
+        title="Обращения"
         icons={tableIcons}
         columns={[
           {title: 'Тема', field: 'head_text', type: 'text', filtering: false},
           {
-            title: 'Отправлено',
+            title: 'Создано',
             field: 'created_at',
             filtering: false,
             type: 'datetime',
             render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
+          },
+          {
+            title: 'Отправитель',
+            field: 'from',
+            filtering: false,
+            type: 'text',
+            render: rowData => `${mapUsers[rowData.user_id].second_name} ${mapUsers[rowData.user_id].first_name} (${mapUsers[rowData.user_id].email})`
+          },
+          {
+            title: 'Роль отправителя',
+            field: 'role',
+            type: 'text',
+            render: rowData => roleName[mapUsers[rowData.user_id].role],
+            lookup: roleName,
+            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(mapUsers[rowData.user_id].role) !== -1
           }
         ]}
         data={store.messages.filter(item => item.kind === 'report')}
@@ -103,7 +101,7 @@ const LettersUserPage = (props) => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                  {rowData.full_text}
+                    {rowData.full_text}
                 </div>
               )
             }
@@ -120,10 +118,9 @@ const LettersUserPage = (props) => {
           onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(resolve).catch(reject))
         }}
       />
-      <ReportDialog handleClose={closeMessageDialog}
-                    open={messageDialogIsOpen}/>
     </div>
   )
+
 }
 
-export default inject('store')(observer(LettersUserPage))
+export default inject('store')(observer(ReportsPage))

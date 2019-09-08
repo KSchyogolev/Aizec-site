@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { OfferEditForm, CourseEditForm } from '../forms'
 import { inject, observer } from 'mobx-react'
 import { TransferListInput } from '../inputs'
-
 import { MultiSearchInput } from '../inputs'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -22,8 +21,10 @@ import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import { tableLocalization } from '../../config/config'
 import DownloadIcon from '@material-ui/icons/CloudDownload'
+import API from '../../api/api'
 
 const moment = require('moment')
+const FileDownload = require('js-file-download')
 
 const visits = [{
   id: 24,
@@ -65,19 +66,31 @@ const useStyles = makeStyles(theme => ({
   },
   lessonsBody: {
     padding: 0
+  },
+  blue: {
+    color: '#507ab4'
   }
 }))
+
+let url = '/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBPUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e38d046cd74291d834457fe2a42a22267877e271/31f70d33-7e12-447f-b86b-8c0274252cbb.jfif'
 
 const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
   const classes = useStyles()
 
   const {store} = props
 
+  const downloadHomework = (visitId) => {
+    store.getHomework(visitId).then(() => {
+      API.main.downloadFile(url).then(res => {
+        FileDownload(res.data, 'homework.jpg')
+      })
+    })
+  }
+
   const usersMap = store.currentGroup.users && store.currentGroup.users.reduce((res, item) => ({
     ...res,
     [item.id]: `${item.first_name} ${item.second_name} (${item.email})`
   }), {})
-  console.log(usersMap)
 
   useEffect(() => {
     store.getLessonVisits(lesson.id)
@@ -127,9 +140,9 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
           ]}
           actions={[
             rowData => ({
-              icon: () => <DownloadIcon/>,
+              icon: () => <DownloadIcon className={rowData.approve_status !== null && classes.blue}/>,
               tooltip: 'Скачать ДЗ',
-              onClick: (e, rowData) => {},
+              onClick: (e, rowData) => downloadHomework(rowData.id),
               disabled: rowData.approve_status === null
             })
           ]}
@@ -139,6 +152,9 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
             pageSizeOptions: [10, 20, 50],
             actionsColumnIndex: -1
             // filtering: true
+          }}
+          editable={{
+            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then(resolve).catch(reject))
           }}
           localization={tableLocalization}
         />

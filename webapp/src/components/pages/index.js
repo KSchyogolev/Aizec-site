@@ -11,6 +11,8 @@ import TablePage, { TabPanel, a11yProps } from './table.page'
 import OffersPage from './offers.page'
 import RemindersPage from './reminders.page'
 import CalendarPage from './calendar.page'
+import ReportsPage from './reports.page'
+
 
 export {
   ProfilePage,
@@ -27,5 +29,6 @@ export {
   RemindersPage,
   TabPanel,
   a11yProps,
-  CalendarPage
+  CalendarPage,
+  ReportsPage
 }

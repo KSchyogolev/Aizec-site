@@ -24,13 +24,14 @@ const useStyles = makeStyles(theme => ({
 const widgetImg = {
   offer: 'offer_card.jpg',
   product: 'product_card.jpg',
-  course: 'course_card.jpg'
+  course: 'course_card.jpg',
+  regular: 'course_card.jpg'
 }
 
-const MessageWidget = ({kind, head_text, full_text}) => {
+const MessageWidget = ({kind, head_text, full_text, index, ...props}) => {
   const classes = useStyles()
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} key={index}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
@@ -39,10 +40,10 @@ const MessageWidget = ({kind, head_text, full_text}) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {head_text}
+            {head_text || props.short_description}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {full_text}
+            {full_text || props.full_description}
           </Typography>
         </CardContent>
       </CardActionArea>
