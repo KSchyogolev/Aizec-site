@@ -21,16 +21,14 @@ class Lesson < ApplicationRecord
 
   private
   def create_visits
-    return nil unless group.present? 
-    return nil unless user.present? 
+    return nil unless group.present?
     group.users.each do |user|
       Visit.create user_id: user.id, lesson_id: id
     end
   end
 
   def destroy_visits
-    return nil unless group.present? 
-    return nil unless user.present? 
+    return nil unless group.present?
     group.users.each do |user|
       user.lessons.delete self
     end
