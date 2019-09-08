@@ -7,6 +7,7 @@ import { MessageDialog } from '../../dialogs/'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
+import Paper from '@material-ui/core/Paper'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,9 +27,23 @@ const useStyles = makeStyles(theme => ({
   description: {
     fontWeight: 600,
     padding: 20,
-/*    '-webkit-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',
-    '-moz-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',*/
+    /*    '-webkit-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',
+        '-moz-box-shadow': 'inset 10px 10px 58px -16px rgba(0,0,0,0.75)',*/
     'box-shadow': 'inset 0px 0px 30px -35px rgba(0,0,0,0.75)'
+  },
+  description: {
+    fontStyle: 'italic',
+    padding: 10,
+    display: 'flex',
+    backgroundColor: 'whitesmoke'
+  },
+  statusIcons: {
+    // color: 'green'
+  },
+  text: {
+    padding: 10,
+    marginLeft: 10,
+    margin: 'auto 20px'
   }
 }))
 
@@ -43,7 +58,7 @@ const CoursesPage = props => {
   return (
     <div className={classes.root}>
       <MaterialTable
-        title="Курсы"
+        title="Доступные курсы"
         icons={tableIcons}
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
@@ -67,7 +82,9 @@ const CoursesPage = props => {
             render: rowData => {
               return (
                 <div className={classes.description}>
+                  <Paper className={classes.text}>
                   {rowData.full_description}
+                  </Paper>
                 </div>
               )
             }

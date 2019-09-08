@@ -180,7 +180,7 @@ import NotificationMessage from '../../notification.component'
   'lesson_type': 'Матиша'
 }]*/
 
-const visits = [{
+/*const visits = [{
   id: 24,
   status: 'done_not_approved',
   homework_comment: 'a',
@@ -220,7 +220,7 @@ const visits = [{
   approve_status: null,
   user_id: 34,
   lesson_id: 7
-}]
+}]*/
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -233,30 +233,21 @@ const useStyles = makeStyles(theme => ({
     display: 'none'
   },
   description: {
-    fontWeight: 600,
+    fontStyle: 'italic',
     padding: 10,
     display: 'flex',
-    // border: '1px solid #b9b9b9'
     backgroundColor: 'whitesmoke'
-  },
-  text: {
-    margin: 'auto 20px'
-  },
-  error: {
-    color: 'red'
-  },
-  success: {
-    color: 'green'
-  },
-  waiting: {
-    color: 'yellow'
   },
   statusIcons: {
     // color: 'green'
   },
   text: {
     padding: 10,
-    marginLeft: 10
+    marginLeft: 10,
+    margin: 'auto 20px'
+  },
+  detailsButton:{
+    margin: 'auto 10px'
   }
 }))
 
@@ -300,7 +291,7 @@ const HomeworkUserPage = (props) => {
   const {store} = props
 
   const openLessons = store.currentLessons.filter(item => item.status === 'open')
-  const mapVisitOnLesson = visits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
+  const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
 
   useEffect(() => {
     store.getUserLessons()
@@ -354,7 +345,7 @@ const HomeworkUserPage = (props) => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                    <div>
+                    <div className={classes.detailsButton}>
                       <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
                              onChange={(file) => onChangeFileHandler(file, rowData.id)}/>
                       <label htmlFor="icon-button-file1">

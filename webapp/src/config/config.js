@@ -71,7 +71,7 @@ export const pages = {
       ]
     },
     {
-      name: 'letters',
+      name: 'reports',
       label: 'Обращения',
       subPages: []
     },
@@ -201,6 +201,10 @@ export const tableLocalization = {
     emptyDataSourceMessage: 'Нет записей',
     filterRow: {
       filterTooltip: 'Филтр'
+    },
+    deleteTooltip: 'Удалить',
+    editRow:{
+      deleteText: 'Вы уверены что хотите удалить запись?'
     }
   },
   toolbar: {

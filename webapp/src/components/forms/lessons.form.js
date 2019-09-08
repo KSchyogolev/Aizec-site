@@ -8,6 +8,7 @@ import { GroupUsersDialog } from '../dialogs'
 import { tableLocalization } from '../../config/config'
 import { LessonsDialog } from '../dialogs'
 import TextField from '@material-ui/core/TextField'
+import Paper from '@material-ui/core/Paper'
 import Input from '@material-ui/core/Input'
 import LessonsIcon from '@material-ui/icons/Filter5'
 import Button from '@material-ui/core/Button'
@@ -20,19 +21,26 @@ const useStyles = makeStyles(theme => ({
     // margin: '15px'
   },
   textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200
   },
   description: {
-        padding: 20,
-        backgroundColor: '#e7f4f9'
+    fontStyle: 'italic',
+    padding: 10,
+    display: 'flex',
+    backgroundColor: 'whitesmoke'
   },
-  tableShortIcons:{
-    '& .MuiIconButton-root' : {
+  tableShortIcons: {
+    '& .MuiIconButton-root': {
       padding: '10px !important'
     }
-  }
+  },
+  text: {
+    padding: 10,
+    marginLeft: 10,
+    margin: 'auto 20px'
+  },
 }))
 
 const label = {
@@ -122,7 +130,9 @@ const LessonsForm = props => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                  {rowData.synopsys}
+                  <Paper className={classes.text}>
+                    {rowData.synopsys}
+                  </Paper>
                 </div>
               )
             }
@@ -134,7 +144,9 @@ const LessonsForm = props => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                  {rowData.homework}
+                  <Paper className={classes.text}>
+                    {rowData.homework}
+                  </Paper>
                 </div>
               )
             }
