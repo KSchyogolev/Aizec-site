@@ -59,6 +59,8 @@ class UsersController < ApplicationController
   end
 
   def received_messages
+    
+  end
 
 
   def approve
