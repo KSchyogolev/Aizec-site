@@ -49,6 +49,10 @@ class User < ApplicationRecord
     msgs
   end
 
+  def sent
+    Message.where(user_id: id)
+  end
+
   private
     def default_values
       self.status ||= "not_activated"

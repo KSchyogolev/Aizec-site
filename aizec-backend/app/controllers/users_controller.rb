@@ -77,6 +77,15 @@ class UsersController < ApplicationController
     render :template => "messages/index", formats: [:json]
   end
 
+  def outbox
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    @messages = user.sent
+    
+    render :template => "messages/index", formats: [:json]
+  end
+
 
   def approve
     @user.status = "active"
