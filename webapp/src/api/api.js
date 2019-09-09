@@ -100,7 +100,7 @@ API.main.getUserVisits = (userId) => get('restapi/users/' + userId + '/visits')
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
-API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/messages')
+API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/inbox')
 API.main.downloadFile = (url) => get(url)
 
 

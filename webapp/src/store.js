@@ -22,6 +22,7 @@ class Store {
   @observable offers = []
   @observable lesson_infos = []
   @observable messages = []
+  @observable visits = []
   @observable lesson_types = []
   @observable currentUser = {}
   @observable currentGroup = {}

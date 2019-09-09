@@ -112,8 +112,7 @@ const LettersUserPage = (props) => {
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
-          actionsColumnIndex: -1,
-          filtering: true
+          actionsColumnIndex: -1
         }}
         localization={tableLocalization}
         editable={{
