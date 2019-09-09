@@ -20,6 +20,13 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
 
     if @message.save
+      if @message.kind == "homework" and @message.to_entity_type == "visit"
+        visit = Visit.find(@message.to_entity_id)
+        if visit.present?
+          visit.approve_status = "done_not_approved"
+          visit.save
+        end
+      end
       UserMailer.with(message: @message).check_message.deliver_later
       render :show, status: :created, location: @message
     else
