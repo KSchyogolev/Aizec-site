@@ -49,11 +49,12 @@ const App = props => {
   }
 
   useEffect(() => {
-/*    if (currentUser.role === 'admin') {
-      store.getUsers().then(() => {
-        setApprovedUsers(getStatusCount(store.users, 'not_approved'))
-      })
-    }*/
+    if (currentUser.role === 'admin') {
+      store.initAdmin()
+    }
+    else if (currentUser.role === 'teacher') {
+      store.initTeacher()
+    }
   }, [])
 
   return (

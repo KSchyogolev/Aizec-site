@@ -70,6 +70,7 @@ class LoginPage extends Component {
           break
         case 'admin' :
           store.router.goTo(routes.profile)
+          store.initAdmin()
           break
         default:
           store.router.goTo(routes.profile)

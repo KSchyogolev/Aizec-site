@@ -16,13 +16,16 @@ class Store {
 
   @observable users = []
   @observable groups = []
+  @observable merches = []
   @observable courses = []
   @observable clubs = []
   @observable lessons = []
   @observable offers = []
+  @observable outbox = []
   @observable lesson_infos = []
   @observable messages = []
   @observable visits = []
+  @observable payments = []
   @observable lesson_types = []
   @observable currentUser = {}
   @observable currentGroup = {}
@@ -30,12 +33,17 @@ class Store {
   @observable currentLessons = []
   @observable currentOffers = []
   @observable currentCourses = []
+  @observable currentMessages = []
   @observable currentVisits = []
   @observable lessonVisits = []
   @observable loading = {
     currentOffers: false
   }
-
+  @observable tips = {
+    users: 0,
+    reminders: 0,
+    homeworkTeacher: 0
+  }
 
   @observable notification = {
     show: false,
@@ -104,6 +112,12 @@ class Store {
   }
 
   @action
+  setTip (field, filterFunc) {
+    const countTips = this[field].filter(filterFunc).length
+    this.setStore('tips', {...this.tips, [field]: countTips})
+  }
+
+  @action
   getAllMessages () {
     return new Promise((resolve, reject) => {
       API.main.getAllMessages().then(res => {
@@ -162,6 +176,7 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.approveUser(userId).then(res => {
         this.updateInStore('users', userId, res.data)
+        this.setTip('users', (user) => user.status === 'not_approved')
         resolve()
       }).catch(reject)
     })
@@ -182,7 +197,7 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.addMessage({message: {...data, status: 'active', user_id: this.currentUser.id}}).then(res => {
         this.addInStore('messages', res.data)
-        resolve()
+        resolve(res.data)
       }).catch(reject)
     })
   }
@@ -298,10 +313,13 @@ class Store {
   }
 
   @action
-  getAll (field) {
+  getAll (field, tipsCountFunction) {
     return new Promise((resolve, reject) => {
       API.main.getAllObjects(field).then(res => {
         this.setStore(field, res.data)
+        if (tipsCountFunction) {
+          this.setTip(field, tipsCountFunction)
+        }
         resolve()
       }).catch(reject)
     })
@@ -379,7 +397,7 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.getUserLessons(userId).then(res => {
         this.setStore('currentLessons', res.data)
-        resolve()
+        resolve(res)
       }).catch(reject)
     })
   }
@@ -395,6 +413,26 @@ class Store {
   }
 
   @action
+  getUserMessages (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserMessages(userId).then(res => {
+        this.setStore('currentMessages', res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getUserObjects (field, userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserObjects(field, userId).then(res => {
+        this.setStore(field, res.data)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
   getUserVisits (userId = this.currentUser.id) {
     return new Promise((resolve, reject) => {
       API.main.getUserVisits(userId).then(res => {
@@ -404,13 +442,12 @@ class Store {
     })
   }
 
-
   @action
   getLessonVisits (lessonId) {
     return new Promise((resolve, reject) => {
       API.main.getLessonVisits(lessonId).then(res => {
         this.setStore('lessonVisits', res.data)
-        resolve()
+        resolve(res)
       }).catch(reject)
     })
   }
@@ -423,7 +460,7 @@ class Store {
         this.setStore('currentOffers', res.data)
         this.setLoading('currentOffers', false)
         resolve()
-      }).catch((err) =>{
+      }).catch((err) => {
         this.setLoading('currentOffers', false)
         reject(err)
       })
@@ -446,7 +483,11 @@ class Store {
       for (let i = 0; i < files.length; i++)
         formData.append('message[photos][]', files[i])
 
-      API.main.uploadHomework(formData).then(() => {
+      API.main.uploadHomework(formData).then((res) => {
+        const currentVisit = this.currentVisits.find(item => item.id === visitId)
+        if (currentVisit.approve_status === 'null') {
+          this.updateInStore('currentVisits', visitId, {...currentVisit, approve_status: 'done_not_approved'})
+        }
         resolve()
       }).catch(reject)
     })
@@ -462,7 +503,6 @@ class Store {
     return this.setStore('notification', {...this.notification, show: false})
   }
 
-
   @action
   getHomework = (visitId) => {
     return new Promise((resolve, reject) => {
@@ -475,6 +515,25 @@ class Store {
   @action
   setLoading = (filed, val) => {
     this.loading[filed] = val
+  }
+
+  @action
+  initAdmin = () => {
+    this.getAll('users', (user) => user.status === 'not_approved')
+    this.getAll('payments', (payment) => payment.status === 'ready')
+  }
+
+  @action
+  initTeacher = () => {
+    let notApprovedHomework = 0
+    this.getUserLessons().then(res => {
+      res.data.forEach(lesson => {
+        this.getLessonVisits(lesson.id).then(res => {
+          notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
+          this.setStore('tips', {...this.tips, homeworkTeacher: notApprovedHomework})
+        })
+      })
+    })
   }
 
 }

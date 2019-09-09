@@ -63,8 +63,7 @@ const ReportsTeacherPage = (props) => {
   }
 
   useEffect(() => {
-    //TODO get request for personal messages
-    store.getAllMessages()
+    store.getUserObjects('outbox')
   }, [])
 
   const openMessageDialog = (message) => {
@@ -95,7 +94,7 @@ const ReportsTeacherPage = (props) => {
             render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
           }
         ]}
-        data={store.messages.filter(item => item.kind === 'report')}
+        data={store.outbox.filter(item => item.kind === 'report')}
         onRowClick={(event, rowData, togglePanel) => togglePanel()}
         detailPanel={[
           {
@@ -116,7 +115,10 @@ const ReportsTeacherPage = (props) => {
         }}
         localization={tableLocalization}
         editable={{
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(resolve).catch(reject))
+          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(res => {
+            store.removeInStore('outbox', oldData.id)
+            resolve()
+          }).catch(reject))
         }}
       />
       <ReportDialog handleClose={closeMessageDialog}

@@ -72,8 +72,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-let url = '/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBPUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e38d046cd74291d834457fe2a42a22267877e271/31f70d33-7e12-447f-b86b-8c0274252cbb.jfif'
-
 const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
   const classes = useStyles()
 
@@ -83,8 +81,15 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
     store.getHomework(visitId).then(res => {
       res.forEach(item => {
         item.photos.forEach(photo => {
+          const ext = photo.url.split('.').pop()
           API.main.downloadFile(photo.url).then(res => {
-            FileDownload(res.data, 'homework.jpg')
+            const url = window.URL.createObjectURL(new Blob([res.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'file.' + ext)
+            document.body.appendChild(link)
+            link.click()
+            // FileDownload(res.data, 'homework.' + ext )
           })
         })
       })
@@ -97,7 +102,7 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
       [item.id]: `${item.first_name} ${item.second_name} (${item.email})`
     } : {...res}
   }, {})
-  console.log(usersMap)
+
   useEffect(() => {
     store.getLessonVisits(lesson.id)
     store.getGroup(lesson.group_id)
@@ -162,6 +167,10 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
           editable={{
             onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then((res) => {
               store.updateInStore('lessonVisits', oldData.id, newData)
+/*              if (oldData.approve_status === 'done_not_approved' && newData.approve_status !== 'done_not_approved')
+                this.setStore('tips', {...this.tips, homeworkTeacher: 0})
+              else if (oldData.approve_status !== 'done_not_approved' && newData.approve_status === 'done_not_approved')
+                this.setStore('tips', {...this.tips, homeworkTeacher: 100})*/
               resolve()
             }).catch(reject))
           }}

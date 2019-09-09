@@ -17,7 +17,7 @@ import ListItem from '@material-ui/core/ListItem'
 import Collapse from '@material-ui/core/Collapse'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-
+import Badge from '@material-ui/core/Badge'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import MailIcon from '@material-ui/icons/Mail'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
@@ -224,7 +224,6 @@ const getIcon = (page) => {
 const LeftMenu = props => {
   const classes = useStyles()
   const theme = useTheme()
-  const {tips} = props
   const {currentUser} = store
   const {currentView} = store.router
 
@@ -251,11 +250,19 @@ const LeftMenu = props => {
                                         key={index}
                                         className={currentView && currentView.path === '/' + name ? classes.selected : ''}
                                         onClick={() => store.router.goTo(routes[name])}>
-      <ListItemIcon>{getIcon(name)}</ListItemIcon>
+
+      <ListItemIcon>
+        <Badge color="primary" badgeContent={store.tips[name]} invisible={!store.tips[name]}
+               anchorOrigin={{'horizontal': 'left'}}>
+          {getIcon(name)}
+        </Badge>
+      </ListItemIcon>
+
       <ListItemText primary={label}/>
-      <Typography component='div'
+      {/*      <Typography component='div'
                   title={'Требуют подтвержения'}
-                  className={classes.tip}>{tips[name] ? tips[name] : ''}</Typography>
+                  className={classes.tip}>{store.tips[name] ? store.tips[name] : ''}</Typography>*/}
+
     </ListItem> : <>
     <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)} key={index}>
       <ListItemIcon>

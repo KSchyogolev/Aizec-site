@@ -97,12 +97,23 @@ API.main.removeUserFromGroup = (groupId, userId) => get('restapi/groups/' + grou
 API.main.getCurrentOffers = (userId) => get('restapi/users/' + userId + '/offers')
 API.main.getUserLessons = (userId) => get('restapi/lessons/by_user_id/' + userId)
 API.main.getUserVisits = (userId) => get('restapi/users/' + userId + '/visits')
+API.main.getUserMessages = (userId) => get('restapi/users/' + userId + '/messages')
+
+API.main.getUserObjects = (field, userId) => get('restapi/users/' + userId + '/' + field)
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
 API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/inbox')
-API.main.downloadFile = (url) => get(url)
-
+API.main.downloadFile = (url, type = 'application/json') => {
+  return new Promise((resolve, reject) =>
+    axios({
+      url: url,
+      method: 'GET',
+      responseType: 'blob'
+    }).then(response => resolve(response))
+      .catch(error => reject(error.response))
+  )
+}
 
 // API.main.uploadHomework = (data) => put('restapi/messages.json', data, 'multipart/form-data')
 

@@ -117,3 +117,8 @@ body {
 .MuiIconButton-root {
     padding: 9px !important;
 }
+
+.MuiBadge-colorPrimary{
+    background-color: #5f89d6 !important;
+    /*color: black !important;*/
+}

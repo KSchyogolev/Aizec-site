@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     padding: '15px'
-  },
+  }
 }))
 
 const ReportDialog = ({handleClose, open, ...props}) => {
@@ -35,17 +35,24 @@ const ReportDialog = ({handleClose, open, ...props}) => {
   }
 
   const handleSave = () => {
-    store.addMessage({...message, kind: 'report', to_entity_type: 'admin'}).then(() => {
+    store.addMessage({...message, kind: 'report', to_entity_type: 'admin'}).then((res) => {
+      store.addInStore('outbox', res)
       store.showNotification('success', 'Обращение отправлено успешно')
-      handleClose()
+      onClose()
     }).catch(err => {
       store.showNotification('error', 'Ошибка при отправке обращения')
       console.log(err)
     })
   }
 
+  const onClose = () => {
+    setMessage({})
+    handleClose()
+  }
+
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'} className={classes.root}>
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}
+            className={classes.root}>
       <DialogTitle id="form-dialog-title">
         Сообщение администратору
       </DialogTitle>
@@ -81,7 +88,7 @@ const ReportDialog = ({handleClose, open, ...props}) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={onClose} color="primary">
           Отмена
         </Button>
         <Button onClick={handleSave} color="primary">

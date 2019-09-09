@@ -7,6 +7,7 @@ import GroupsForm  from './groups.form'
 import CoursesForm from './courses.form'
 import LessonsForm from './lessons.form'
 import LessonsTypesForm from './lessonsTypes.form'
+import PaymentsForm from './payments.form'
 
 export {
   ChildInfoForm,
@@ -17,5 +18,6 @@ export {
   GroupsForm,
   CoursesForm,
   LessonsForm,
-  LessonsTypesForm
+  LessonsTypesForm,
+  PaymentsForm,
 }
