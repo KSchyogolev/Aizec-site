@@ -43,6 +43,12 @@ class User < ApplicationRecord
     Club.joins(groups: [{user_groups: :user}]).where(:users => {:id => id}).uniq
   end
 
+  def received_messages
+    msgs = super.or(Message.where(to_entity_type: "all"))
+    msgs = msgs.or(Message.where(to_entity_type: "admin")) if admin?
+    msgs
+  end
+
   private
     def default_values
       self.status ||= "not_activated"
