@@ -8,8 +8,8 @@ Rails.application.routes.draw do
 
   def receivable(*args)
     args.each do |resource|
-      get "#{resource}/:id/messages", to: "#{resource}#messages"
-      get "#{resource}/:id/messages/:message_kind", to: "#{resource}#messages"
+      get "#{resource}/:id/inbox", to: "#{resource}#inbox"
+      get "#{resource}/:id/inbox/:message_kind", to: "#{resource}#inbox"
     end
   end
 
@@ -33,6 +33,8 @@ Rails.application.routes.draw do
   archivable_routes :lesson_infos, :payments, :messages, :user_groups, :groups, :clubs, :lessons, :courses, :users
 
   receivable :clubs, :courses, :groups, :users, :visits
+  get "users/:id/inbox_all", to: "users#inbox_all"
+  get "users/:id/inbox_all/:message_kind", to: "users#inbox_all"
 
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
     :message_options, :photos, :messages, :user_groups, :groups, :clubs, 
