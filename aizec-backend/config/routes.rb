@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   receivable :clubs, :courses, :groups, :users, :visits
   get "users/:id/inbox_all", to: "users#inbox_all"
   get "users/:id/inbox_all/:message_kind", to: "users#inbox_all"
+  get "users/:id/relevant_courses", to: "users#relevant_courses"
 
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
     :message_options, :photos, :messages, :user_groups, :groups, :clubs, 

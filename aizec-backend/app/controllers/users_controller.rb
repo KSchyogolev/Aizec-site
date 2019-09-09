@@ -103,6 +103,15 @@ class UsersController < ApplicationController
     @render_entities = (messages.flatten + relevant_course).sort_by(&:created_at)
   end
 
+  def relevant_courses
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    relevant_course = Course.get_relevant_to_user(user)
+    @courses = relevant_course.sort_by(&:created_at)
+    render :template => "courses/index", formats: [:json]
+  end
+
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
