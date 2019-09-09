@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   include ArchivableController
   include ReceivableController
-  
 
   before_action :set_user, only: [:show, :update, :destroy, :approve]
   before_action only: [:update] do
@@ -61,6 +60,33 @@ class UsersController < ApplicationController
   end
 
 
+  def inbox_all
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    @messages = [
+        user.groups, 
+        user.clubs,
+        user.courses
+      ].flatten.map{ |receivable| receivable.received_messages } + Message.where(to_entity_type: 'all')
+
+    if params[:message_kind].present?
+      @messages = @messages.map{ |receivable| receivable.where(kind: params[:message_kind]) }  
+    end
+    @messages = @messages.flatten
+    render :template => "messages/index", formats: [:json]
+  end
+
+  def outbox
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    @messages = user.sent
+    
+    render :template => "messages/index", formats: [:json]
+  end
+
+
   def approve
     @user.status = "active"
 
@@ -84,6 +110,15 @@ class UsersController < ApplicationController
       ].flatten.map{ |receivable| receivable.received_messages.where(kind: 'offer') } + 
       Message.where(to_entity_type: 'all', kind: 'offer')
     @render_entities = (messages.flatten + relevant_course).sort_by(&:created_at)
+  end
+
+  def relevant_courses
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    relevant_course = Course.get_relevant_to_user(user)
+    @courses = relevant_course.sort_by(&:created_at)
+    render :template => "courses/index", formats: [:json]
   end
 
   # PATCH/PUT /users/1

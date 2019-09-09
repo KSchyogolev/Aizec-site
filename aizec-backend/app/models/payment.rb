@@ -4,7 +4,7 @@ class Payment < ApplicationRecord
   belongs_to :merch
   validates :cost, :numericality => { greater_than_or_equal_to: 0, only_integer: true }
   validates :bonuses, :numericality => { greater_than_or_equal_to: 0, only_integer: true }
-  has_status %w[archived active]
+  has_status %w[archived ready done]
   
   include Archivable
 

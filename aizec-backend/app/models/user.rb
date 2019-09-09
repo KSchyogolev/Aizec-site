@@ -46,6 +46,11 @@ class User < ApplicationRecord
   def received_messages
     msgs = super.or(Message.where(to_entity_type: "all"))
     msgs = msgs.or(Message.where(to_entity_type: "admin")) if admin?
+    msgs
+  end
+
+  def sent
+    Message.where(user_id: id)
   end
 
   private

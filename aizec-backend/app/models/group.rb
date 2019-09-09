@@ -11,16 +11,16 @@ class Group < ApplicationRecord
 
   private
   def create_visits(user)
-    return nil unless lessons.present? 
-    return nil unless user.present? 
+    # return nil unless lessons.present? 
+    # return nil unless user.present? 
     lessons.each do |lesson|
-      Visit.create user_id: user.id, lesson_id: lesson.id
+      Visit.create! user_id: user.id, lesson_id: lesson.id, status: 'null', approve_status: 'null'
     end
   end
 
   def destroy_visits(user)
-    return nil unless lessons.present? 
-    return nil unless user.present? 
+    # return nil unless lessons.present? 
+    # return nil unless user.present? 
     user.lessons.delete lessons
   end
 end
