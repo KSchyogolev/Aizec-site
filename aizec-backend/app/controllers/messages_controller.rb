@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
       if @message.kind == "homework" and @message.to_entity_type == "visit"
         visit = Visit.find(@message.to_entity_id)
         if visit.present?
-          visit.approve_status = "done_not_approved"
+          visit.approve_status ||= "done_not_approved"
           visit.save
         end
       end
