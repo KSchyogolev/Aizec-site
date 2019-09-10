@@ -24,31 +24,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const payments = [{
-  bonuses: 200,
-  cost: 2000,
-  status: 'done',
-  user_id: 34,
-  course_id: 8
-}, {
-  bonuses: 0,
-  cost: 2000,
-  status: 'ready',
-  user_id: 34,
-  course_id: 18
-}, {
-  bonuses: 0,
-  cost: 2000,
-  status: 'ready',
-  user_id: 34,
-  message_id: 64
-}, {
-  bonuses: 0,
-  cost: 2000,
-  status: 'ready',
-  user_id: 34,
-  message_id: 69
-}]
 
 const PaymentsForm = props => {
   const classes = useStyles()
@@ -68,7 +43,8 @@ const PaymentsForm = props => {
   const merchesMap = store.merches.reduce((res, item) => ({...res, [item.id]: item}), {})
 
   const coursesMap = store.courses.reduce((res, item) => ({...res, [item.id]: item}), {})
-  console.log(coursesMap)
+
+
   const getDealObject = (payment) => {
     try {
       if (payment.merch_id) return {
@@ -83,6 +59,10 @@ const PaymentsForm = props => {
         id: 'message_id',
         description: messagesMap[payment.message_id] && messagesMap[payment.message_id].head_text
       }
+      return {
+        id: 'null_id',
+        description: 'Товар не найден'
+      }
     } catch (err) {
       console.log(err)
     }
@@ -91,7 +71,8 @@ const PaymentsForm = props => {
   const translate = {
     message_id: 'Предложение',
     course_id: 'Курс',
-    merch_id: 'Мерч'
+    merch_id: 'Мерч',
+    null_id : 'Тип не указан'
   }
 
   useEffect(() => {
@@ -135,7 +116,7 @@ const PaymentsForm = props => {
             lookup: {'ready': 'Ожидает оплаты', 'done': 'Оплачено'}
           }
         ]}
-        data={payments}
+        data={store.payments}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],

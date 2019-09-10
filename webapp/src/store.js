@@ -112,9 +112,9 @@ class Store {
   }
 
   @action
-  setTip (field, filterFunc) {
+  setTip (field, filterFunc, page) {
     const countTips = this[field].filter(filterFunc).length
-    this.setStore('tips', {...this.tips, [field]: countTips})
+    this.setStore('tips', {...this.tips, [page || field]: countTips})
   }
 
   @action
@@ -313,12 +313,12 @@ class Store {
   }
 
   @action
-  getAll (field, tipsCountFunction) {
+  getAll (field, tipsCountFunction, page) {
     return new Promise((resolve, reject) => {
       API.main.getAllObjects(field).then(res => {
         this.setStore(field, res.data)
         if (tipsCountFunction) {
-          this.setTip(field, tipsCountFunction)
+          this.setTip(field, tipsCountFunction, page)
         }
         resolve()
       }).catch(reject)
@@ -519,8 +519,8 @@ class Store {
 
   @action
   initAdmin = () => {
-    this.getAll('users', (user) => user.status === 'not_approved')
-    this.getAll('payments', (payment) => payment.status === 'ready')
+    this.getAll('users', (user) => user.status === 'not_approved', 'users')
+    this.getAll('payments', (payment) => payment.status === 'ready', 'reminders')
   }
 
   @action
