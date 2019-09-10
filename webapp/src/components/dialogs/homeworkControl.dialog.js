@@ -72,25 +72,36 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-let url = '/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBPUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e38d046cd74291d834457fe2a42a22267877e271/31f70d33-7e12-447f-b86b-8c0274252cbb.jfif'
-
 const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
   const classes = useStyles()
 
   const {store} = props
 
   const downloadHomework = (visitId) => {
-    store.getHomework(visitId).then(() => {
-      API.main.downloadFile(url).then(res => {
-        FileDownload(res.data, 'homework.jpg')
+    store.getHomework(visitId).then(res => {
+      res.forEach(item => {
+        item.photos.forEach(photo => {
+          const ext = photo.url.split('.').pop()
+          API.main.downloadFile(photo.url).then(res => {
+            const url = window.URL.createObjectURL(new Blob([res.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'file.' + ext)
+            document.body.appendChild(link)
+            link.click()
+            // FileDownload(res.data, 'homework.' + ext )
+          })
+        })
       })
     })
   }
 
-  const usersMap = store.currentGroup.users && store.currentGroup.users.reduce((res, item) => ({
-    ...res,
-    [item.id]: `${item.first_name} ${item.second_name} (${item.email})`
-  }), {})
+  const usersMap = store.currentGroup.users && store.currentGroup.users.reduce((res, item) => {
+    return item.role === 'user' ? {
+      ...res,
+      [item.id]: `${item.first_name} ${item.second_name} (${item.email})`
+    } : {...res}
+  }, {})
 
   useEffect(() => {
     store.getLessonVisits(lesson.id)
@@ -140,13 +151,13 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
           ]}
           actions={[
             rowData => ({
-              icon: () => <DownloadIcon className={rowData.approve_status !== null && classes.blue}/>,
+              icon: () => <DownloadIcon className={rowData.approve_status !== 'null' && classes.blue}/>,
               tooltip: 'Скачать ДЗ',
               onClick: (e, rowData) => downloadHomework(rowData.id),
-              disabled: rowData.approve_status === null
+              disabled: rowData.approve_status === 'null'
             })
           ]}
-          data={visits /*store.lessonVisits*/}
+          data={store.lessonVisits.filter(item => usersMap && usersMap.hasOwnProperty(item.user_id))}
           options={{
             pageSize: 10,
             pageSizeOptions: [10, 20, 50],
@@ -154,7 +165,14 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
             // filtering: true
           }}
           editable={{
-            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then(resolve).catch(reject))
+            onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then((res) => {
+              store.updateInStore('lessonVisits', oldData.id, newData)
+/*              if (oldData.approve_status === 'done_not_approved' && newData.approve_status !== 'done_not_approved')
+                this.setStore('tips', {...this.tips, homeworkTeacher: 0})
+              else if (oldData.approve_status !== 'done_not_approved' && newData.approve_status === 'done_not_approved')
+                this.setStore('tips', {...this.tips, homeworkTeacher: 100})*/
+              resolve()
+            }).catch(reject))
           }}
           localization={tableLocalization}
         />

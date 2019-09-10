@@ -19,48 +19,6 @@ import NotificationMessage from '../../notification.component'
 import { HomeworkControlDialog } from '../../dialogs'
 const moment = require('moment')
 
-const visits = [{
-  id: 24,
-  status: 'done_not_approved',
-  homework_comment: 'a',
-  teacher_comment: 'a',
-  approve_status: null,
-  user_id: 34,
-  lesson_id: 3
-}, {
-  id: 2,
-  status: 'done_approved',
-  homework_comment: 'b',
-  teacher_comment: 'b',
-  approve_status: null,
-  user_id: 34,
-  lesson_id: 12
-}, {
-  id: 4,
-  status: 'need_fix',
-  homework_comment: 'c',
-  teacher_comment: 'c',
-  approve_status: null,
-  user_id: 34,
-  lesson_id: 10
-}, {
-  id: 3,
-  status: null,
-  homework_comment: 'd',
-  teacher_comment: 'd',
-  approve_status: null,
-  user_id: 34,
-  lesson_id: 5
-}, {
-  id: 6,
-  status: 'done_approved',
-  homework_comment: 'e',
-  teacher_comment: 'e',
-  approve_status: null,
-  user_id: 34,
-  lesson_id: 7
-}]
-
 const useStyles = makeStyles(theme => ({
   root: {
     margin: '15px'
@@ -142,11 +100,6 @@ const HomeworkTeacherPage = (props) => {
   const {store} = props
   const [showControlDialog, setVisibleControlDialog] = useState(false)
   const [lesson, setLesson] = useState({})
-  // const [visits, setVisists] = useState([])
-
-
-  // const openLessons = store.currentLessons.filter(item => item.status === 'open')
-  const mapVisitOnLesson = visits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
 
   const showDialog = (lesson) => {
     setLesson(lesson)
@@ -159,18 +112,8 @@ const HomeworkTeacherPage = (props) => {
 
   useEffect(() => {
     store.getUserLessons()
-    store.getUserVisits()
   }, [store.currentVisits.length, store.currentLessons.length])
 
-  const onChangeFileHandler = (e, lessonId) => {
-    const files = e.target.files
-
-    store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
-      store.showNotification('success', 'Домашняя работа успешно загружена')
-    }).catch(e => {
-      store.showNotification('error', 'Произошла ошибка при загрузке домашней работы')
-    })
-  }
 
   return (
     <div className={classes.root}>

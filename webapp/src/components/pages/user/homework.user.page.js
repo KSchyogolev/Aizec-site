@@ -246,7 +246,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
     margin: 'auto 20px'
   },
-  detailsButton:{
+  detailsButton: {
     margin: 'auto 10px'
   }
 }))
@@ -300,12 +300,13 @@ const HomeworkUserPage = (props) => {
 
   const onChangeFileHandler = (e, lessonId) => {
     const files = e.target.files
-
-    store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
-      store.showNotification('success', 'Домашняя работа успешно загружена')
-    }).catch(e => {
-      store.showNotification('error', 'Произошла ошибка при загрузке домашней работы')
-    })
+    if (files.length > 0) {
+      store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
+        store.showNotification('success', 'Домашняя работа успешно загружена')
+      }).catch(e => {
+        store.showNotification('error', 'Произошла ошибка при загрузке домашней работы')
+      })
+    }
   }
 
   return (
@@ -345,19 +346,19 @@ const HomeworkUserPage = (props) => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                    <div className={classes.detailsButton}>
-                      <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
-                             onChange={(file) => onChangeFileHandler(file, rowData.id)}/>
-                      <label htmlFor="icon-button-file1">
-                        <Tooltip title="Отправить на проверку" aria-label="add">
-                          <Fab size="small" color="primary" className={classes.margin}
-                               component={'span'}>
-                            <CloudUploadIcon/>
-                          </Fab>
-                        </Tooltip>
-                      </label>
-                    </div>
-                    <Paper className={classes.text}>{rowData.homework}</Paper>
+                  <div className={classes.detailsButton}>
+                    <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
+                           onChange={(file) => onChangeFileHandler(file, rowData.id)}/>
+                    <label htmlFor="icon-button-file1">
+                      <Tooltip title="Отправить на проверку" aria-label="add">
+                        <Fab size="small" color="primary" className={classes.margin}
+                             component={'span'}>
+                          <CloudUploadIcon/>
+                        </Fab>
+                      </Tooltip>
+                    </label>
+                  </div>
+                  <Paper className={classes.text}>{rowData.homework}</Paper>
                 </div>
               )
             }
