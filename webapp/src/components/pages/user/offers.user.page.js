@@ -41,23 +41,26 @@ const OffersUserPage = (props) => {
     store.getCurrentOffers()
   }, [store.currentOffers.length])
 
+  const getCurrentOffers = (currentOffers = []) => currentOffers.map((message, index) => <Grid item xs={12} sm={6}
+                                                                                               md={6} lg={4}
+                                                                                               key={index}>
+    <MessageWidget {...message}
+                   head_text={message.head_text || message.short_description}
+                   full_text={message.head_text || message.full_description}
+                   key={index}
+                   message_id={message.kind === 'offer' ? message.id : null}
+                   merch_id={message.kind === 'merch' ? message.id : null}
+                   course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
+                   img={widgetImg[message.kind]}/>
+  </Grid>)
+
   return (
     <div>
       <video className={classes.fullVideo} muted loop autoplay="autoplay">
-        <source src={require('../../../static/videos/background_3.mov')} type="video/mp4"/>
+        <source src={require('../../../static/videos/background_2.mov')} type="video/mp4"/>
       </video>
       <Grid container spacing={3}>
-        {!store.loading.currentOffers ? store.currentOffers.map((message, index) => <Grid item xs={12} sm={6} md={6} lg={4}
-                                                                                          key={index}>
-          <MessageWidget {...message}
-                         head_text={message.head_text || message.short_description}
-                         full_text={message.head_text || message.full_description}
-                         key={index}
-                         message_id={message.kind === 'offer' ? message.id : null}
-                         merch_id={message.kind === 'merch' ? message.id : null}
-                         course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
-                         img={widgetImg[message.kind]}/>
-        </Grid>) : <CircularProgress className={classes.fullLoader}/>}
+        {getCurrentOffers(store.currentOffers)}
       </Grid>
     </div>
   )

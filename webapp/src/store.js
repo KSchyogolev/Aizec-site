@@ -521,6 +521,7 @@ class Store {
   initAdmin = () => {
     this.getAll('users', (user) => user.status === 'not_approved', 'users')
     this.getAll('payments', (payment) => payment.status === 'ready', 'reminders')
+    this.getAll('messages', message => message.kind === 'report', 'reports')
   }
 
   @action
