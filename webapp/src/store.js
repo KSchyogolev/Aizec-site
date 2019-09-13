@@ -42,8 +42,8 @@ class Store {
   @observable tips = {
     users: 0,
     reminders: 0,
-    homeworkTeacher: 0,
-    homeworkUser: 0
+    homeworkUser: 0,
+    currentVisits: 0
   }
 
   @observable notification = {
@@ -529,7 +529,7 @@ class Store {
 
   @action
   initUser = () => {
-    this.getUserVisits(this.currentUser.id, (visit) => visit.approve_status === "null")
+    // this.getUserVisits(this.currentUser.id, (visit) => visit.approve_status === "null", 'homeworkUser')
   }
 
   @action
@@ -539,7 +539,7 @@ class Store {
       res.data.forEach(lesson => {
         this.getLessonVisits(lesson.id).then(res => {
           notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
-          this.setStore('tips', {...this.tips, homeworkTeacher: notApprovedHomework})
+          this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
         })
       })
     })

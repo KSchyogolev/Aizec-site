@@ -303,7 +303,7 @@ const HomeworkUserPage = (props) => {
     if (files.length > 0) {
       store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
         store.showNotification('success', 'Домашняя работа успешно загружена')
-        this.setTip('currentVisits', (visit) => visit.approve_status === "null", 'homeworkUser')
+        // this.setTip('currentVisits', (visit) => visit.approve_status === "null", 'homeworkUser')
       }).catch(e => {
         store.showNotification('error', 'Произошла ошибка при загрузке домашней работы')
       })
