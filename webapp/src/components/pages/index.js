@@ -12,6 +12,8 @@ import OffersPage from './offers.page'
 import RemindersPage from './reminders.page'
 import CalendarPage from './calendar.page'
 import ReportsPage from './reports.page'
+import BonusesPage from './bonuses.page'
+import StatisticPage from './statistic.page'
 
 
 export {
@@ -30,5 +32,7 @@ export {
   TabPanel,
   a11yProps,
   CalendarPage,
-  ReportsPage
+  ReportsPage,
+  BonusesPage,
+  StatisticPage,
 }
