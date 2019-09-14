@@ -19,7 +19,9 @@ import {
   CoursesPage,
   RemindersPage,
   CalendarPage,
-  ReportsPage
+  ReportsPage,
+  BonusesPage,
+  StatisticPage,
 } from '../components/pages'
 
 import {
@@ -96,6 +98,16 @@ const routes = {
   reports: new Route({
     path: '/reports',
     component: <ReportsPage/>,
+    beforeEnter: () => userIsLoggedIn('admin')
+  }),
+  bonuses: new Route({
+    path: '/bonuses',
+    component: <BonusesPage/>,
+    beforeEnter: () => userIsLoggedIn('admin')
+  }),
+  statistics: new Route({
+    path: '/statistics',
+    component: <StatisticPage/>,
     beforeEnter: () => userIsLoggedIn('admin')
   }),
   reminders: new Route({

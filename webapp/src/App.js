@@ -54,6 +54,8 @@ const App = props => {
     }
     else if (currentUser.role === 'teacher') {
       store.initTeacher()
+    } else if (currentUser.role === 'user') {
+      store.initUser()
     }
   }, [])
 
@@ -68,7 +70,8 @@ const App = props => {
         <div className={classes.toolbar}/>
         <MobxRouter/>
       </div>
-      <NotificationMessage isOpen={store.notification.show} handleClose={store.closeNotification} variant={store.notification.variant}
+      <NotificationMessage isOpen={store.notification.show} handleClose={store.closeNotification}
+                           variant={store.notification.variant}
                            message={store.notification.message}/>
     </div>
   )

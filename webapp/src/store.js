@@ -42,7 +42,8 @@ class Store {
   @observable tips = {
     users: 0,
     reminders: 0,
-    homeworkTeacher: 0
+    homeworkUser: 0,
+    currentVisits: 0
   }
 
   @observable notification = {
@@ -433,10 +434,12 @@ class Store {
   }
 
   @action
-  getUserVisits (userId = this.currentUser.id) {
+  getUserVisits (userId = this.currentUser.id, filterFunc) {
     return new Promise((resolve, reject) => {
       API.main.getUserVisits(userId).then(res => {
         this.setStore('currentVisits', res.data)
+        if (filterFunc)
+          this.setTip('currentVisits', filterFunc, 'homeworkUser')
         resolve()
       }).catch(reject)
     })
@@ -521,6 +524,12 @@ class Store {
   initAdmin = () => {
     this.getAll('users', (user) => user.status === 'not_approved', 'users')
     this.getAll('payments', (payment) => payment.status === 'ready', 'reminders')
+    this.getAll('messages', message => message.kind === 'report', 'reports')
+  }
+
+  @action
+  initUser = () => {
+    // this.getUserVisits(this.currentUser.id, (visit) => visit.approve_status === "null", 'homeworkUser')
   }
 
   @action
@@ -530,7 +539,7 @@ class Store {
       res.data.forEach(lesson => {
         this.getLessonVisits(lesson.id).then(res => {
           notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
-          this.setStore('tips', {...this.tips, homeworkTeacher: notApprovedHomework})
+          this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
         })
       })
     })

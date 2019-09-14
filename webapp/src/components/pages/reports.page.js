@@ -55,9 +55,8 @@ const ReportsPage = props => {
   const mapUsers = store.users.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
   const mapGroups = store.groups.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
-  console.log(mapUsers, mapGroups)
   useEffect(() => {
-    store.getAllMessages()
+    store.getAll('messages', message => message.kind === 'report', 'reports')
     store.getAll('groups')
     store.getAll('users')
   }, [])
@@ -101,7 +100,7 @@ const ReportsPage = props => {
             render: rowData => {
               return (
                 <div className={classes.description}>
-                    {rowData.full_text}
+                  {rowData.full_text}
                 </div>
               )
             }
@@ -115,7 +114,11 @@ const ReportsPage = props => {
         }}
         localization={tableLocalization}
         editable={{
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(resolve).catch(reject))
+          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(() => {
+              store.setStore('tips', {...store.tips, reports: store.tips.reports - 1})
+              resolve()
+            }
+          ).catch(reject))
         }}
       />
     </div>
