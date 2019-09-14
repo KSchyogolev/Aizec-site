@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 const translate = {
   regular: 'Регулярный курс',
-  offer: 'Регулярный курс',
+  offer: 'Предложение',
   intensive: 'Интенсивный курс',
   merch: 'Мерчендайз',
 }

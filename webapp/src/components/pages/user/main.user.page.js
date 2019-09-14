@@ -5,13 +5,8 @@ import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
-import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import Table from '@material-ui/core/Table'
-import TableCell from '@material-ui/core/TableCell'
-import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -114,6 +109,10 @@ const MainUserPage = (props) => {
             <div className={classes.infoRow}>
               <div>Дата рождения</div>
               <div>{user.birthday}</div>
+            </div>
+            <div className={classes.infoRow}>
+              <div>Бонусы</div>
+              <div>{user.bonus_count || 0}</div>
             </div>
           </Typography>
           {user.parents ? <Typography className={classes.parentsForm}>
