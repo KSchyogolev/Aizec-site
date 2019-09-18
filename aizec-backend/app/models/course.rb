@@ -5,7 +5,7 @@ class Course < ApplicationRecord
   has_many :payments
   has_ancestry
 
-  validates :kind, inclusion: { in: %w[intensive regular], message: "%{value} is not valid kind." }
+  validates :kind, inclusion: { in: %w[intensive regular individual], message: "%{value} is not valid kind." }
   has_status %w[archived active]
   
   include Archivable

@@ -121,6 +121,14 @@ class UsersController < ApplicationController
     render :template => "courses/index", formats: [:json]
   end
 
+  def clubs
+    id = params[:id] || current_user.id
+    return false unless id.present?
+    user = User.unscoped.find(id)
+    @clubs = user.clubs
+    render :template => "clubs/index", formats: [:json]
+  end
+
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
