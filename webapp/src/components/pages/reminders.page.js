@@ -34,24 +34,24 @@ const RemindersPage = (props) => {
   }
 
   useEffect(() => {
-    store.getAll('payments')
+    // store.getAll('payments')
 /*    store.getAll('lesson_infos')
     store.getAll('lesson_types')*/
   }, [])
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.defaultBar}>
+{/*      <AppBar position="static" className={classes.defaultBar}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Покупки" {...a11yProps(0)} />
-{/*          <Tab label="Занятия" {...a11yProps(1)} />
-          <Tab label="Предметы" {...a11yProps(2)} />*/}
+          <Tab label="Занятия" {...a11yProps(1)} />
+          <Tab label="Предметы" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         <PaymentsForm/>
       </TabPanel>
-{/*      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1}>
         <LessonsForm/>
       </TabPanel>
       <TabPanel value={value} index={2}>

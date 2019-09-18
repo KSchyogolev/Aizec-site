@@ -20,7 +20,7 @@ export const pages = {
   admin: [
     {
       name: 'profile',
-      label: 'Профиль',
+      label: 'Главная',
       subPages: []
     },
     {
@@ -46,7 +46,7 @@ export const pages = {
     },
     {
       name: 'main',
-      label: 'Главная',
+      label: 'Обучение',
       subPages: [
         {
           name: 'offers',
@@ -210,5 +210,9 @@ export const tableLocalization = {
   toolbar: {
     searchTooltip: 'Поиск',
     searchPlaceholder: 'Поиск'
+  },
+  grouping:{
+    placeholder: 'Перетащите заголовки столбцов',
+    groupedBy: 'Сгруппировано по'
   }
 }

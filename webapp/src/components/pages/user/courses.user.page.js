@@ -63,7 +63,7 @@ const CoursesPage = props => {
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Стоимость', field: 'cost', filtering: false, type: 'numeric'},
-          {title: 'Стоимость в месяц', field: 'cost_month', filtering: false, type: 'numeric'},
+          // {title: 'Стоимость в месяц', field: 'cost_month', filtering: false, type: 'numeric'},
           {
             title: 'Тип',
             field: 'kind',

@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import { MessageWidget } from '../../widgets'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import { TabPanel, a11yProps } from '../index'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,6 +27,26 @@ const useStyles = makeStyles(theme => ({
     minWidth: '100%',
     minHeight: '100%',
     zIndex: -1
+  },
+  offersBar: {
+    background: 'none',
+    boxShadow: 'none',
+    '& .MuiTabs-indicator': {
+      background: 'none'
+    },
+    '& .MuiTab-root': {
+      borderRadius: 5,
+      backgroundColor: '#757575',
+      margin: 10
+    },
+    '& .Mui-selected': {
+      backgroundColor: '#FF5722',
+      opacity: 0.8
+    }
+
+  },
+  offersHeader: {
+    // display: 'flex'
   }
 }))
 const widgetImg = {
@@ -36,6 +60,12 @@ const widgetImg = {
 const OffersUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
+
+  const [value, setValue] = React.useState(0)
+
+  function handleChange (event, newValue) {
+    setValue(newValue)
+  }
 
   useEffect(() => {
     store.getCurrentOffers()
@@ -59,9 +89,24 @@ const OffersUserPage = (props) => {
       <video className={classes.fullVideo} muted loop autoplay="autoplay">
         <source src={require('../../../static/videos/background_2.mov')} type="video/mp4"/>
       </video>
-      <Grid container spacing={3}>
-        {getCurrentOffers(store.currentOffers)}
-      </Grid>
+      <div className={classes.offersHeader}>
+        <AppBar position="static" className={classes.offersBar}>
+          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            <Tab label="Лента" {...a11yProps(0)} />
+            <Tab label="Магазин" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+          <Grid container spacing={3}>
+            {getCurrentOffers(store.currentOffers.filter(item => item.kind !== 'offer'))}
+          </Grid>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Grid container spacing={3}>
+            {getCurrentOffers(store.currentOffers.filter(item => item.kind === 'offer'))}
+          </Grid>
+        </TabPanel>
+      </div>
     </div>
   )
 }

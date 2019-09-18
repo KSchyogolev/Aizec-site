@@ -36,6 +36,8 @@ class Store {
   @observable currentMessages = []
   @observable currentVisits = []
   @observable lessonVisits = []
+  @observable currentGroups = []
+  @observable currentClubs = []
   @observable loading = {
     currentOffers: false
   }
@@ -424,10 +426,10 @@ class Store {
   }
 
   @action
-  getUserObjects (field, userId = this.currentUser.id) {
+  getUserObjects (field, userId = this.currentUser.id, storeField) {
     return new Promise((resolve, reject) => {
       API.main.getUserObjects(field, userId).then(res => {
-        this.setStore(field, res.data)
+        this.setStore(storeField || field, res.data)
         resolve()
       }).catch(reject)
     })
@@ -523,7 +525,7 @@ class Store {
   @action
   initAdmin = () => {
     this.getAll('users', (user) => user.status === 'not_approved', 'users')
-    this.getAll('payments', (payment) => payment.status === 'ready', 'reminders')
+    // this.getAll('payments', (payment) => payment.status === 'ready', 'reminders')
     this.getAll('messages', message => message.kind === 'report', 'reports')
   }
 

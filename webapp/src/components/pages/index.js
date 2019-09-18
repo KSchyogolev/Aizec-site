@@ -6,7 +6,6 @@ import CoursesPage from './courses.page'
 import FeedPage from './feed.page'
 import HomeworkPage from './homework.page'
 import JournalPage from './journal.page'
-import ReportPage from './report.page'
 import TablePage, { TabPanel, a11yProps } from './table.page'
 import OffersPage from './offers.page'
 import RemindersPage from './reminders.page'
@@ -25,7 +24,6 @@ export {
   FeedPage,
   HomeworkPage,
   JournalPage,
-  ReportPage,
   TablePage,
   OffersPage,
   RemindersPage,

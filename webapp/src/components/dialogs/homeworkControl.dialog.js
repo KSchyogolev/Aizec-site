@@ -130,24 +130,23 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
               }
             },
             {
-              title: 'Домашняя работа',
+              title: 'Статус домашней работы',
               field: 'approve_status',
               lookup: {
-                'done_not_approved': 'На проверке',
                 'done_approved': 'Зачтена',
-                'need_fix': 'Не зачтена'
+                'need_fix': 'Не зачтена',
               }
             },
-            {
+/*            {
               title: 'Посещение',
               field: 'status',
               lookup: {
                 'ok': 'Был на занятии',
-                'skip_without_reason ': 'Пропуск без ув.причины',
+                'skip_without_reason': 'Пропуск без ув.причины',
                 'skip_not_approved': 'Прислал справку',
                 'skip_approved': 'Пропуск с ув.причиной'
               }
-            }
+            }*/
           ]}
           actions={[
             rowData => ({

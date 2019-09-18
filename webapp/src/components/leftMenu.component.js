@@ -144,7 +144,7 @@ const translate = (str) => {
     case 'calendar' :
       return 'Календарь'
     case 'profile' :
-      return 'Профиль'
+      return 'Главная'
     case 'users' :
       return 'Пользователи'
     case 'teacher' :
