@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 
-import { ClubsForm, GroupsForm } from '../forms'
+import { ClubsForm, GroupsForm, UsersForm } from '../forms'
 
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -52,6 +52,7 @@ const TablePage = props => {
     store.getAll('clubs')
     store.getAll('groups')
     store.getAll('courses')
+    store.getAll('users')
   }, [])
 
   return (
@@ -60,6 +61,7 @@ const TablePage = props => {
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Клубы" {...a11yProps(0)} />
           <Tab label="Группы" {...a11yProps(1)} />
+          <Tab label="Ученики" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -67,6 +69,9 @@ const TablePage = props => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <GroupsForm/>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <UsersForm/>
       </TabPanel>
     </div>
   )

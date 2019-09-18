@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 const ClubsForm = props => {
   const classes = useStyles()
   const {store} = props
+  const isAdmin = store.currentUser.role === 'admin'
   return (
     <div className={classes.root}>
       <MaterialTable
@@ -23,7 +24,7 @@ const ClubsForm = props => {
           {title: 'Название', field: 'name'},
           {title: 'Адрес', field: 'address'}
         ]}
-        data={store.clubs}
+        data={store.clubs || store.currentClubs}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],

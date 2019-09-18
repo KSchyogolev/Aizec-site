@@ -122,7 +122,7 @@ const HomeworkTeacherPage = (props) => {
         icons={tableIcons}
         columns={[
           {
-            title: 'Дата и время',
+            title: 'Дата урока',
             field: 'start_time',
             type: 'datetime',
             render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
-import { tableIcons } from '../../../config/config'
+import { tableIcons, tableLocalization } from '../../../config/config'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
@@ -93,10 +93,18 @@ const HomeworkUserPage = (props) => {
 
   const openLessons = store.currentLessons.filter(item => item.status === 'open')
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
+  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+
+  const mutableData = openLessons.map(item => {
+    const lesson = item
+    lesson.course_name = mapCourses[item.course_id].short_description
+    return lesson
+  })
 
   useEffect(() => {
     store.getUserLessons()
     store.getUserVisits()
+    store.getCurrentCourses()
   }, [store.currentVisits.length, store.currentLessons.length])
 
   const onChangeFileHandler = (e, lessonId) => {
@@ -114,16 +122,23 @@ const HomeworkUserPage = (props) => {
   return (
     <div className={classes.root}>
       <MaterialTable
-        title="Доступные уроки"
+        title="Занятия"
         icons={tableIcons}
         columns={[
           {
+            title: 'Курс',
+            field: 'course_name',
+            filtering: false,
+            defaultGroupOrder: 0,
+            // render: rowData => mapCourses[rowData.course_id] && mapCourses[rowData.course_id].short_description
+          },
+          {
             title: 'Предмет', field: 'lesson_type', filtering: true
           },
-          {title: 'Название', field: 'short_description', filtering: false},
-          {title: 'Полное описание', field: 'full_description', filtering: false},
+          {title: 'Название', field: 'short_description', filtering: false, grouping: false},
+          {title: 'Полное описание', field: 'full_description', filtering: false, grouping: false},
           {
-            title: 'Дата урока', field: 'full_description', filtering: false,
+            title: 'Дата урока', field: 'full_description', filtering: false, grouping: false,
             type: 'datetime',
             render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
           },
@@ -177,31 +192,19 @@ const HomeworkUserPage = (props) => {
             }
           }
         ]}
-        data={openLessons}
+        data={mutableData}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
-          filtering: true
+          filtering: true,
+          grouping: true,
+        /*  rowStyle: rowData => rowData.status !=='open' && ({
+            background: '#f5f2f9',
+            // cursorEvents: 'none'
+          })*/
         }}
-        localization={{
-          pagination: {
-            labelDisplayedRows: '{from}-{to} из {count}',
-            labelRowsSelect: 'строк'
-          },
-          header: {
-            actions: ''
-          },
-          body: {
-            emptyDataSourceMessage: 'Нет записей',
-            filterRow: {
-              filterTooltip: 'Филтр'
-            }
-          },
-          toolbar: {
-            searchTooltip: 'Поиск',
-            searchPlaceholder: 'Поиск'
-          }
-        }}
+
+        localization={tableLocalization}
       />
     </div>
   )

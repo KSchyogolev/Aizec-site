@@ -4,6 +4,7 @@ import LessonsDialog  from './lessons.dialog'
 import HomeworkControlDialog  from './homeworkControl.dialog'
 import ReportDialog  from './report.dialog'
 import BuyDialog from './buy.dialog'
+import UserInfoDialog from './userInfo.dialog'
 
 export {
   MessageDialog,
@@ -11,5 +12,6 @@ export {
   LessonsDialog,
   HomeworkControlDialog,
   ReportDialog,
-  BuyDialog
+  BuyDialog,
+  UserInfoDialog
 }

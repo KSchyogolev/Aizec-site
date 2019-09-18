@@ -69,7 +69,7 @@ const CoursesForm = props => {
           {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Полное описание', field: 'full_description', filtering: false},
           {title: 'Стоимость', field: 'cost', filtering: false},
-          {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},
+          // {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},
           {
             title: 'Тип',
             field: 'kind',
