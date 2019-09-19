@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const RemindersPage = (props) => {
+const ReportsPage = (props) => {
   const classes = useStyles()
   const {store} = props
 
@@ -48,10 +48,10 @@ const RemindersPage = (props) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <ReportsForm/>
+        <PaymentsForm/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <PaymentsForm/>
+        <ReportsForm/>
       </TabPanel>
       {/*    <TabPanel value={value} index={2}>
         <LessonsTypesForm/>
@@ -60,4 +60,4 @@ const RemindersPage = (props) => {
   )
 }
 
-export default inject('store')(observer(RemindersPage))
+export default inject('store')(observer(ReportsPage))

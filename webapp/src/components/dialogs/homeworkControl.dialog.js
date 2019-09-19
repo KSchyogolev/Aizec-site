@@ -36,7 +36,7 @@ const visits = [{
   lesson_id: 3
 }, {
   id: 2,
-  status: 'skip_without_reason ',
+  status: 'skip_without_reason',
   homework_comment: 'b',
   teacher_comment: 'b',
   approve_status: 'done_not_approved',

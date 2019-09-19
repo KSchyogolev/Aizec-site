@@ -1,64 +1,112 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import { TabPanel, a11yProps } from './index'
-import { PaymentsForm } from '../forms/'
-
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
+import { RemindersDialog } from '../dialogs/'
+import MaterialTable from 'material-table'
 import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import { tableIcons, tableLocalization } from '../../config/config'
+import AddIcon from '@material-ui/icons/Add'
+const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    margin: '15px'
+  root: {},
+  addButton: {
+    display: 'flex'
   },
-  defaultBar: {
-    backgroundColor: '#464646',
-    '& .MuiTabs-indicator': {
-      backgroundColor: '#E64A19'
-    }
+  leftIcon: {
+    marginRight: theme.spacing(1)
+  },
+  controlHeader: {
+    marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'row-reverse'
+  },
+  actionCell: {
+    padding: 0,
+    minWidth: 110
   }
 }))
 
-
-const RemindersPage = (props) => {
+const RemindersPage = props => {
+  const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
+  const [currentMessage, setCurrentMessage] = useState({})
   const classes = useStyles()
   const {store} = props
 
-  const [value, setValue] = React.useState(0)
-
-  function handleChange (event, newValue) {
-    setValue(newValue)
+  const messageKinds = {
+    offer: 'Предложение'
   }
 
   useEffect(() => {
-    // store.getAll('payments')
-/*    store.getAll('lesson_infos')
-    store.getAll('lesson_types')*/
+    store.getAllMessages()
+    store.getAll('courses')
+    store.getAll('groups')
+    store.getAll('users')
+    store.getAll('clubs')
   }, [])
+
+  const saveMessage = () => {
+    let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage})
+    savePromise().then(() => {
+      closeMessageDialog()
+    })
+  }
+
+  const handleChange = (name, value) => {
+    setCurrentMessage({...currentMessage, [name]: value})
+  }
+
+  const openMessageDialog = (message) => {
+    setMessageDialogVisible(true)
+    setCurrentMessage(message || {})
+  }
+  const closeMessageDialog = () => setMessageDialogVisible(false)
 
   return (
     <div className={classes.root}>
-{/*      <AppBar position="static" className={classes.defaultBar}>
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Покупки" {...a11yProps(0)} />
-          <Tab label="Занятия" {...a11yProps(1)} />
-          <Tab label="Предметы" {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <PaymentsForm/>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <LessonsForm/>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <LessonsTypesForm/>
-      </TabPanel>*/}
+      <Typography component='div' className={classes.controlHeader}>
+        <Button variant="contained" color="primary" className={classes.addButton} onClick={() => openMessageDialog()}>
+          <AddIcon className={classes.leftIcon}/> Добавить напоминание
+        </Button>
+      </Typography>
+      <MaterialTable
+        title="Напоминания"
+        icons={tableIcons}
+        columns={[
+          {title: 'Приоритет', field: 'head_text', filtering: false},
+          {title: 'Текст', field: 'full_text', filtering: false},
+          {
+            title: 'Дата создания', field: 'created_at', filtering: false, type: 'datetime',
+            render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
+          }
+          // {title: 'Видимость', field: 'entity', filtering: false},
+        ]}
+        data={store.messages.filter(item => item.kind === 'notification')}
+        actions={[
+          {
+            icon: tableIcons.Edit,
+            tooltip: 'Редактировать',
+            onClick: (event, rowData) => openMessageDialog(rowData)
+          }
+        ]}
+        options={{
+          pageSize: 10,
+          pageSizeOptions: [10, 20, 50],
+          actionsColumnIndex: -1
+        }}
+        localization={tableLocalization}
+        editable={{
+          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(resolve).catch(reject))
+        }}
+      />
+      <RemindersDialog handleClose={closeMessageDialog}
+                       handleChange={handleChange}
+                       open={messageDialogIsOpen}
+                       notification={currentMessage}/>
     </div>
   )
+
 }
 
 export default inject('store')(observer(RemindersPage))

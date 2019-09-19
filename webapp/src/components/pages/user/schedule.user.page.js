@@ -14,23 +14,35 @@ const getEndFromDuration = (start, durationMin) => {
   return new Date(new Date(start).getTime() + durationMin * 60 * 1000)
 }
 
-const getEvents = (list = []) => {
-  return list.map(item => {
-    const {start_time, duration, short_description} = item
-    return {
-      startDate: start_time,
-      endDate: getEndFromDuration(start_time, duration || 10),
-      title: short_description || 'Урок'
-    }
-  })
-}
+
+
+
 
 const ScheduleUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
 
+  const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
+  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+
+
+  const getEvents = (list = []) => {
+    return list.map(item => {
+      const {start_time, duration, short_description, course_id, id} = item
+      return {
+        startDate: start_time,
+        endDate: getEndFromDuration(start_time, duration || 10),
+        title: short_description || 'Урок',
+        course: mapCourses[course_id],
+        visit: mapVisitOnLesson[id]
+      }
+    })
+  }
+
   useEffect(() => {
     store.getUserLessons()
+    store.getUserVisits()
+    store.getCurrentCourses()
   }, [store.currentLessons.length])
 
   return (
