@@ -16,10 +16,11 @@ import WorkIcon from '@material-ui/icons/Work'
 import NextWeek from '@material-ui/icons/NextWeek'
 import WorkOff from '@material-ui/icons/WorkOff'
 import WarningIcon from '@material-ui/icons/Warning'
+import LockIcon from '@material-ui/icons/Lock'
 
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
-import ReportIcon from '@material-ui/icons/Report'
+import ReportIcon from '@material-ui/icons/Error'
 
 const currentDate = new Date()
 const locale = 'ru-RUS'
@@ -109,6 +110,7 @@ const getHomeworkInfo = (status) => {
 }
 
 const LessonInfo = ({lesson}) => <div>
+  {lesson.status === 'closed' && <div><b>ДОСТУП К МАТЕРИАЛАМ ЗАКРЫТ</b></div>}
   <div><b>КУРС </b>"{lesson.course.short_description}"</div>
   <div><b>ЗАНЯТИЕ </b>"{lesson.title}"</div>
   <div>{getLessonInfo(lesson.visit.status).title}</div>
@@ -134,6 +136,7 @@ const Appointment = ({children, style, ...restProps}) => {
     >
       <div className={classes.description}>
         <div><b>{moment(lesson.startDate).format('HH:mm')}</b></div>
+        {lesson.status === 'closed' && <LockIcon style={{color: '#757575'}}/>}
         {getLessonInfo(lesson.visit.status).icon}
         {getHomeworkInfo(lesson.visit.approve_status).icon}
       </div>

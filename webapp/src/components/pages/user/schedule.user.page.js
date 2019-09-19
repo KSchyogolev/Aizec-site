@@ -14,10 +14,6 @@ const getEndFromDuration = (start, durationMin) => {
   return new Date(new Date(start).getTime() + durationMin * 60 * 1000)
 }
 
-
-
-
-
 const ScheduleUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
@@ -25,16 +21,16 @@ const ScheduleUserPage = (props) => {
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
   const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
-
   const getEvents = (list = []) => {
     return list.map(item => {
-      const {start_time, duration, short_description, course_id, id} = item
+      const {start_time, duration, short_description, course_id, id, status} = item
       return {
         startDate: start_time,
         endDate: getEndFromDuration(start_time, duration || 10),
         title: short_description || 'Урок',
         course: mapCourses[course_id],
-        visit: mapVisitOnLesson[id]
+        visit: mapVisitOnLesson[id],
+        status: status
       }
     })
   }
