@@ -133,7 +133,7 @@ const Appointment = ({children, style, ...restProps}) => {
       }}
     >
       <div className={classes.description}>
-        <div>{moment(lesson.startDate).format('HH:mm')}</div>
+        <div><b>{moment(lesson.startDate).format('HH:mm')}</b></div>
         {getLessonInfo(lesson.visit.status).icon}
         {getHomeworkInfo(lesson.visit.approve_status).icon}
       </div>
