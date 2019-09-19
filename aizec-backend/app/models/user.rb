@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :payments
   has_many :courses, through: :payments
   has_many :merches, through: :payments
+  has_one_attached :photo
 
   has_status %w[archived active not_activated not_approved]
 
