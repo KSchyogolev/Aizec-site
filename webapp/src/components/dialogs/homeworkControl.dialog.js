@@ -137,6 +137,10 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
                 'need_fix': 'Не зачтена',
               }
             },
+            {
+              title: 'Комментарий к ДЗ',
+              field: 'homework_comment'
+            },
 /*            {
               title: 'Посещение',
               field: 'status',

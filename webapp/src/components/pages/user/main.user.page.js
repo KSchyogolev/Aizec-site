@@ -97,7 +97,7 @@ const MainUserPage = (props) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="h2">
-            {user.second_name} {user.first_name}
+            {user.second_name} {user.first_name} {user.third_name}
           </Typography>
           <Divider/>
           <Grid/>
@@ -109,6 +109,10 @@ const MainUserPage = (props) => {
             <div className={classes.infoRow}>
               <div>Дата рождения</div>
               <div>{user.birthday}</div>
+            </div>
+            <div className={classes.infoRow}>
+              <div>Уровень знаний</div>
+              <div>{user.level || 'Не выбран'}</div>
             </div>
             <div className={classes.infoRow}>
               <div>Бонусы</div>

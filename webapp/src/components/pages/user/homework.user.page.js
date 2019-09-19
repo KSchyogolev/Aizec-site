@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   description: {
     fontStyle: 'italic',
     padding: 10,
-    display: 'flex',
+    // display: 'flex',
     backgroundColor: 'whitesmoke'
   },
   statusIcons: {
@@ -87,6 +87,7 @@ const homeworkMap = {
   'need_fix': 'Не зачтена',
   'null': 'Не отправлена'
 }
+
 const HomeworkUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
@@ -119,6 +120,22 @@ const HomeworkUserPage = (props) => {
     }
   }
 
+  const UploadHomeWorkButton = ({lessonId, disabled}) => {
+    return <div className={classes.detailsButton}>
+      <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
+             onChange={(file) => onChangeFileHandler(file, lessonId)}/>
+      <label htmlFor="icon-button-file1">
+        <Tooltip title="Отправить ДЗ на проверку" aria-label="add">
+          <Fab size="small" color={disabled ? '' : 'primary'} className={classes.margin}
+               disabled={disabled}
+               component={'span'}>
+            <CloudUploadIcon/>
+          </Fab>
+        </Tooltip>
+      </label>
+    </div>
+  }
+
   return (
     <div className={classes.root}>
       <MaterialTable
@@ -126,10 +143,19 @@ const HomeworkUserPage = (props) => {
         icons={tableIcons}
         columns={[
           {
+            title: '',
+            filtering: false,
+            grouping: false,
+            render: rowData => {
+              const visit = mapVisitOnLesson[rowData.id] || {}
+              return <UploadHomeWorkButton lessonId={rowData.id} disabled={visit.approve_status === 'done_approved'}/>
+            }
+          },
+          {
             title: 'Курс',
             field: 'course_name',
             filtering: false,
-            defaultGroupOrder: 0,
+            defaultGroupOrder: 0
             // render: rowData => mapCourses[rowData.course_id] && mapCourses[rowData.course_id].short_description
           },
           {
@@ -156,37 +182,25 @@ const HomeworkUserPage = (props) => {
         ]}
         detailPanel={[
           {
-            tooltip: 'Констпект',
+            tooltip: 'Подробнее',
             render: rowData => {
+              const visit = mapVisitOnLesson[rowData.id] || {}
               return (
                 <div className={classes.description}>
                   <Paper className={classes.text}>
+                    <h3>Домашнее задание:</h3>
+                    {rowData.homework}
+                    {visit.homework_comment && <div>
+                      <h4>Комментарий от учителя:</h4>
+                      {visit.homework_comment}
+                    </div>}
+                    <br/>
+                  </Paper>
+                  <br/>
+                  <Paper className={classes.text}>
+                    <h3>Конспект:</h3>
                     {rowData.synopsys}
                   </Paper>
-                </div>
-              )
-            }
-          },
-          {
-            icon: () => <WorkOutlineIcon/>,
-            openIcon: () => <WorkIcon/>,
-            tooltip: 'Домашняя работа',
-            render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <div className={classes.detailsButton}>
-                    <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
-                           onChange={(file) => onChangeFileHandler(file, rowData.id)}/>
-                    <label htmlFor="icon-button-file1">
-                      <Tooltip title="Отправить на проверку" aria-label="add">
-                        <Fab size="small" color="primary" className={classes.margin}
-                             component={'span'}>
-                          <CloudUploadIcon/>
-                        </Fab>
-                      </Tooltip>
-                    </label>
-                  </div>
-                  <Paper className={classes.text}>{rowData.homework}</Paper>
                 </div>
               )
             }
@@ -197,13 +211,12 @@ const HomeworkUserPage = (props) => {
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
           filtering: true,
-          grouping: true,
-        /*  rowStyle: rowData => rowData.status !=='open' && ({
-            background: '#f5f2f9',
-            // cursorEvents: 'none'
-          })*/
+          grouping: true
+          /*  rowStyle: rowData => rowData.status !=='open' && ({
+              background: '#f5f2f9',
+              // cursorEvents: 'none'
+            })*/
         }}
-
         localization={tableLocalization}
       />
     </div>
