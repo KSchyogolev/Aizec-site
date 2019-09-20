@@ -50,7 +50,7 @@ class UsersController < ApplicationController
 
   def revoke_password
     email = params.require(:user).permit(:email)
-    @user = Users.find_by(email: email)
+    @user = User.find_by(email: email)
     generated_password = Devise.friendly_token.first(10)
     @user.password = generated_password
     
