@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
-import { tableIcons } from '../../config/config'
-import { MessageDialog } from '../dialogs/'
-import { tableLocalization } from '../../config/config'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import AddIcon from '@material-ui/icons/Add'
+import { tableIcons, tableLocalization } from '../../config/config'
+
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -23,7 +19,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   }
 }))
-
 
 const PaymentsForm = props => {
   const classes = useStyles()
@@ -43,7 +38,6 @@ const PaymentsForm = props => {
   const merchesMap = store.merches.reduce((res, item) => ({...res, [item.id]: item}), {})
 
   const coursesMap = store.courses.reduce((res, item) => ({...res, [item.id]: item}), {})
-
 
   const getDealObject = (payment) => {
     try {
@@ -72,7 +66,7 @@ const PaymentsForm = props => {
     message_id: 'Предложение',
     course_id: 'Курс',
     merch_id: 'Мерч',
-    null_id : 'Тип не указан'
+    null_id: 'Тип не указан'
   }
 
   useEffect(() => {

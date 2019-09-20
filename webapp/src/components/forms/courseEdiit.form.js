@@ -48,7 +48,7 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
     value: 'individual'
   }]
 
-  const {name, short_description, full_description, cost_month, kind, cost, ancestry} = course
+  const {name, short_description, full_description, duration, kind, cost, ancestry, lessonsWeek} = course
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -105,22 +105,29 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
             }}
           />
         </Grid>
+        <Grid item xs={12} sm={9}></Grid>
         <Grid item xs={6} sm={3}>
           <TextField
-            label="Стоимость в месяц"
-            value={cost_month}
+            label="Длительность(нед.)"
+            value={duration}
             onChange={handleChange}
             type="number"
-            name={'cost_month'}
+            name={'duration'}
             className={classes.textField}
-            InputLabelProps={{
-              shrink: true
-            }}
             margin="normal"
             variant="outlined"
-            InputProps={{
-              startAdornment: <InputAdornment position="start">₽</InputAdornment>,
-            }}
+          />
+        </Grid>
+        <Grid item xs={6} sm={3}>
+          <TextField
+            label="Занятий в неделю"
+            value={lessonsWeek}
+            onChange={handleChange}
+            type="number"
+            name={'lessonsWeek'}
+            className={classes.textField}
+            margin="normal"
+            variant="outlined"
           />
         </Grid>
         <Grid item xs={12} sm={6}></Grid>

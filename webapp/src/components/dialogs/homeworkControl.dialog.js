@@ -36,7 +36,7 @@ const visits = [{
   lesson_id: 3
 }, {
   id: 2,
-  status: 'skip_without_reason ',
+  status: 'skip_without_reason',
   homework_comment: 'b',
   teacher_comment: 'b',
   approve_status: 'done_not_approved',
@@ -136,6 +136,10 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
                 'done_approved': 'Зачтена',
                 'need_fix': 'Не зачтена',
               }
+            },
+            {
+              title: 'Комментарий к ДЗ',
+              field: 'homework_comment'
             },
 /*            {
               title: 'Посещение',
