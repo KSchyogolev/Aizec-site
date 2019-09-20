@@ -6,6 +6,8 @@ class SessionsController < Devise::SessionsController
 
   def respond_with(resource, _opts = {})
     #render json: resource
+    @user = resource
+    render :template => "users/show", formats: [:json]
   end
 
   def respond_to_on_destroy
