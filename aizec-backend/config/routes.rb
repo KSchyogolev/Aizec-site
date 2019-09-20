@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   get "users/:id/inbox_all/:message_kind", to: "users#inbox_all"
   get "users/:id/relevant_courses", to: "users#relevant_courses"
   get "users/:id/clubs", to: "users#clubs"
-  get "users/:id/revoke_password", to: "users#revoke_password"
+  get "users/:email/revoke_password", to: "users#revoke_password"
 
   resources(:lesson_infos, :lesson_types, :payments, :user_messages, 
     :message_options, :photos, :messages, :user_groups, :groups, :clubs, 

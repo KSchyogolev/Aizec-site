@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   include ArchivableController
   include ReceivableController
 
-  before_action :set_user, only: [:show, :update, :destroy, :approve, :revoke_password]
+  before_action :set_user, only: [:show, :update, :destroy, :approve]
   before_action only: [:update] do
     allow_owner(params[:id])
   end
@@ -49,6 +49,8 @@ class UsersController < ApplicationController
   end
 
   def revoke_password
+    email = params[:email]
+    @user = Users.find_by(email: email)
     generated_password = Devise.friendly_token.first(10)
     @user.password = generated_password
     
