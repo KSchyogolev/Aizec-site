@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   include ArchivableController
   include ReceivableController
 
-  before_action :set_user, only: [:show, :update, :destroy, :approve]
+  before_action :set_user, only: [:show, :update, :destroy, :approve, :revoke_password]
   before_action only: [:update] do
     allow_owner(params[:id])
   end
@@ -42,6 +42,18 @@ class UsersController < ApplicationController
     @user.role = "user"
     if @user.save
       UserMailer.with(user: @user, password: generated_password).activate_email.deliver_later!
+      render :show, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def revoke_password
+    generated_password = Devise.friendly_token.first(10)
+    @user.password = generated_password
+    
+    if @user.save
+      UserMailer.with(user: @user, password: generated_password).revoke_password.deliver_later!
       render :show, status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
