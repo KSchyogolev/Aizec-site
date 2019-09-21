@@ -2,6 +2,16 @@ import { action, observable } from 'mobx'
 import { RouterStore } from 'mobx-router'
 import API from './api/api'
 
+const _ = require('lodash')
+
+const getLessonsVisits = async (lessons) => {
+  const pArray = lessons.map(async lesson => {
+    const res = await API.main.getLessonVisits(lesson.id)
+    return {lesson_id: lesson.id, data: res.data}
+  })
+  return Promise.all(pArray)
+}
+
 class Store {
 
   constructor () {
@@ -34,10 +44,13 @@ class Store {
   @observable currentOffers = []
   @observable currentCourses = []
   @observable currentMessages = []
+  @observable journalLessons = []
   @observable currentVisits = []
   @observable lessonVisits = []
   @observable currentGroups = []
   @observable currentClubs = []
+  @observable currentVisitsMap = {}
+  @observable currentCourseId = {}
   @observable loading = {
     currentOffers: false
   }
@@ -353,7 +366,6 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.updateObject(field, id, data).then(res => {
         this.updateInStore(field, id, res.data)
-        console.log('RESOLVE')
         resolve(res.data)
       }).catch(reject)
     })
@@ -537,14 +549,15 @@ class Store {
   @action
   initTeacher = () => {
     let notApprovedHomework = 0
-    this.getUserLessons().then(res => {
-      res.data.forEach(lesson => {
-        this.getLessonVisits(lesson.id).then(res => {
-          notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
-          this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
-        })
-      })
-    })
+    /*    this.getUserLessons().then(res => {
+          res.data.forEach(lesson => {
+            this.getLessonVisits(lesson.id).then(res => {
+              notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
+              this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
+            })
+          })
+        })*/
+    this.getUserObjects('groups', undefined, 'currentGroups')
   }
 
   @action
@@ -555,6 +568,67 @@ class Store {
       }).catch(reject)
     })
   }
+
+  @action
+  getJournalLessons = (courseId) => {
+    if (!courseId) {
+      this.setStore('journalLessons', [])
+      this.setStore('currentVisitsMap', {})
+      this.setStore('currentCourseId', null)
+      return
+    }
+
+    const lessons = this.lesson_infos.filter(item => item.course_id === courseId).reduce((res, item) => ([...item.lessons, ...res]), [])
+    getLessonsVisits(lessons).then(res => {
+      const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
+      const lessonsWithVisits = lessons.map(item => ({
+        ...item,
+        visits: visitsMap[item.id] || []
+      }))
+      const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+
+      const currentLessons = Object.keys(lessonsGroupByType).map(key => {
+        return {
+          lesson_type: key,
+          lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
+        }
+      })
+      this.setStore('journalLessons', currentLessons)
+      this.setStore('currentVisitsMap', visitsMap)
+      this.setStore('currentCourseId', courseId)
+    })
+  }
+
+  @action
+  updateVisit = (visitId, data) => {
+    return new Promise((resolve, reject) => {
+      API.main.updateObject('visits', visitId, data).then(res => {
+
+        const visitsMap = {...this.currentVisitsMap}
+        const visits = visitsMap[res.data.lesson_id]
+        const index = visits.findIndex(item => item.id === visitId)
+        visits[index] = res.data
+
+        const lessons = this.lesson_infos.filter(item => item.course_id === this.currentCourseId).reduce((res, item) => ([...item.lessons, ...res]), [])
+        const lessonsWithVisits = lessons.map(item => ({
+          ...item,
+          visits: visitsMap[item.id] || []
+        }))
+        const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+        const currentLessons = Object.keys(lessonsGroupByType).map(key => {
+          return {
+            lesson_type: key,
+            lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
+          }
+        })
+
+        this.setStore('journalLessons', currentLessons)
+        this.setStore('currentVisitsMap', visitsMap)
+        resolve()
+      }).catch(reject)
+    })
+  }
+
 }
 
 export default new Store()
