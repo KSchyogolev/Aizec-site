@@ -547,6 +547,14 @@ class Store {
     })
   }
 
+  @action
+  sendNewPassword = (email) => {
+    return new Promise((resolve, reject) => {
+      API.main.sendNewPassword({email}).then(() => {
+        resolve()
+      }).catch(reject)
+    })
+  }
 }
 
 export default new Store()

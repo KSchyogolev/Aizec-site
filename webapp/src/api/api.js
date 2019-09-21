@@ -57,6 +57,8 @@ axios.interceptors.response.use(undefined, err => {
 
 const API = {main: {}}
 
+API.main.sendNewPassword = (data) => post('restapi/users/revoke_password', data)
+
 API.main.getAllObjects = (objects) => get('restapi/' + objects)
 API.main.deleteObject = (objects, id) => del('restapi/' + objects + '/' + id)
 API.main.updateObject = (objects, id, data) => patch('restapi/' + objects + '/' + id, data)

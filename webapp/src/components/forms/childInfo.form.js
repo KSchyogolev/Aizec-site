@@ -111,14 +111,30 @@ const ChildInfoForm = props => {
             value={user.first_name}
             onChange={handleChange}
           />
-        </Grid>
+        </Grid>*/}
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
-            <InputLabel htmlFor="place">Год обучения</InputLabel>
+            <InputLabel htmlFor="place">Уровень знаний</InputLabel>
             <Select
               inputProps={{
-                name: 'Год обучения',
-                id: 'year'
+                name: 'Уровень',
+                id: 'level'
+              }}
+              name='level'
+              value={user.level}
+              onChange={handleChange}
+            >
+              {[1, 2, 3, 4].map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}
+            </Select>
+          </FormControl>
+        </Grid>
+        {/*<Grid item xs={12} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="place">Клуб</InputLabel>
+            <Select
+              inputProps={{
+                name: 'Клуб',
+                id: 'level'
               }}
             >
               {[1, 2, 3, 4].map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}

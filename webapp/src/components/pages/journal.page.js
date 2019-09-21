@@ -17,7 +17,6 @@ const JournalPage = props => {
 
     </div>
   )
-
 }
 
 export default inject('store')(observer(JournalPage))

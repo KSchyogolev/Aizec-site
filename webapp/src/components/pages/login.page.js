@@ -3,7 +3,7 @@ import { withStyles, withTheme } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import routes from '../../config/routes'
 import store from '../../store'
-import API from '../../api/api'
+import { ForgetPasswordDialog } from '../dialogs'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -45,6 +45,11 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: '#E64A19'
     }
+  },
+  linkButton: {
+    '& input': {
+      display: 'none'
+    }
   }
 })
 
@@ -54,7 +59,8 @@ class LoginPage extends Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    forgetDialogIsOpen: false
   }
 
   signIn = (e) => {
@@ -82,6 +88,8 @@ class LoginPage extends Component {
     const {target: {name, value}} = e
     this.setState(currentState => ({...currentState, [name]: value}))
   }
+
+  toggleForgetDialog = (visible) => this.setState({forgetDialogIsOpen: visible})
 
   render () {
     const {classes, store} = this.props
@@ -129,8 +137,19 @@ class LoginPage extends Component {
             >
               Вход
             </Button>
+            <Button
+
+              color="link"
+              // href="#text-buttons"
+              className={classes.linkButton}
+              onClick={() => this.toggleForgetDialog(true)}
+            >
+              Забыли пароль?
+            </Button>
           </form>
         </div>
+        <ForgetPasswordDialog handleClose={() => this.toggleForgetDialog(false)}
+                              open={this.state.forgetDialogIsOpen}/>
       </Container>
     )
   }
