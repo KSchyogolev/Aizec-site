@@ -70,9 +70,11 @@ class LoginPage extends Component {
       switch (res.role) {
         case 'user' :
           store.router.goTo(routes.offersUser)
+          store.initUser()
           break
         case 'teacher' :
           store.router.goTo(routes.journalTeacher)
+          store.initTeacher()
           break
         case 'admin' :
           store.router.goTo(routes.profile)
