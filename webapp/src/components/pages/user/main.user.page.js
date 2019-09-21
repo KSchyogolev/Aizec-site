@@ -120,9 +120,8 @@ const MainUserPage = (props) => {
             </div>
           </Typography>
           {user.parents ? <Typography className={classes.parentsForm}>
-            {/*<Typography variant="h5" component="h2">Представители</Typography>*/}
             <Grid container spacing={3}>
-              {JSON.parse(user.parents).map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
+              {user.parents.map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
                 <ParentCard parent={item}/>
               </Grid>)}
             </Grid>
