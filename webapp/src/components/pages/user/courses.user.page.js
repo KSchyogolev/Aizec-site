@@ -6,8 +6,11 @@ import { tableIcons } from '../../../config/config'
 import { MessageDialog } from '../../dialogs/'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
 import AddIcon from '@material-ui/icons/Add'
 import Paper from '@material-ui/core/Paper'
+
+import {getCurrentOffers} from './offers.user.page'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,12 +55,17 @@ const CoursesPage = props => {
   const {store} = props
 
   useEffect(() => {
-    store.getCurrentCourses()
+    store.getCurrentOffers()
+
   }, [store.currentCourses.length])
 
   return (
     <div className={classes.root}>
-      <MaterialTable
+      <Grid container spacing={3}>
+        {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'regular' || item.kind === 'intensive') && item.status === 'done'), 4)}
+      </Grid>
+
+      {/*<MaterialTable
         title="Доступные курсы"
         icons={tableIcons}
         columns={[
@@ -110,7 +118,7 @@ const CoursesPage = props => {
             searchPlaceholder: 'Поиск'
           }
         }}
-      />
+      />*/}
     </div>
   )
 

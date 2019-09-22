@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Input from '@material-ui/core/Input'
 import Paper from '@material-ui/core/Paper'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import SearchIcon from '@material-ui/icons/Search'
 import SwapIcon from '@material-ui/icons/SwapHoriz'
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   searchInput: {
     marginBottom: 15
   },
-  rowIcon:{
+  rowIcon: {
     color: '#757575',
     display: 'flex'
   }
@@ -40,6 +41,12 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
 
   const [left, setLeft] = useState(leftList)
   const [right, setRight] = useState(rightList)
+  console.log(right)
+  const [showNewOnly, setShowing] = useState(false)
+
+  const handleCheckNewUsers = () => {
+    setShowing(prev => !prev)
+  }
 
   const handleClickItem = (item, isLeft) => {
     return isLeft ? handleRemove(item.id).then(() => {
@@ -66,10 +73,10 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
     setRight(rightList.filter(item => item.label.includes(e.target.value)))
   }
 
-  const customList = (items, isLeft) => (
+  const customList = (items, isLeft, onlyNew) => (
     <Paper className={classes.paper}>
       <List dense component="div" role="list">
-        {items.map((item, index) => {
+        {items.filter(item => onlyNew ? item.isNew : true).map((item, index) => {
           const labelId = `transfer-list-item-${index}-label`
           return (
             <ListItem key={index} role="listitem" button onClick={() => handleClickItem(item, isLeft)}>
@@ -85,8 +92,11 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
 
   return (
     <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+
       <Grid item xs={5} md={5}>
         <h3>Группа</h3>
+        <br/>
+        <br/>
         <FormControl className={classes.searchInput} fullWidth>
           <Input
             placeholder='Поиск'
@@ -103,6 +113,17 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
       </Grid>
       <Grid item xs={5} md={5}>
         <h3>Все пользователи</h3>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showNewOnly}
+              onChange={handleCheckNewUsers}
+              value="checkRules"
+              color="primary"
+            />
+          }
+          label="Только новые"
+        />
         <FormControl className={classes.searchInput} fullWidth>
           <Input
             placeholder='Поиск'
@@ -110,8 +131,9 @@ export default function TransferListInput ({leftList = [], rightList = [], handl
             endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>}
           />
         </FormControl>
-        {customList(right)}
+        {customList(right, false, showNewOnly)}
       </Grid>
+
     </Grid>
   )
 }

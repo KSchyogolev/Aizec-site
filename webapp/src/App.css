@@ -126,3 +126,7 @@ body {
     background-color: #5f89d6 !important;
     /*color: black !important;*/
 }
+
+.MuiPaper-elevetion {
+    z-index: 100000 !important
+}

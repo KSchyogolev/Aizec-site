@@ -7,6 +7,8 @@ import BuyDialog from './buy.dialog'
 import UserInfoDialog from './userInfo.dialog'
 import RemindersDialog from './reminders.dialog'
 import ForgetPasswordDialog from './forgetPassword.dialog'
+import OfferInfoDialog from './offerInfo.dialog'
+import GroupUsersTeacherDialog from './groupUsersTeacher.dialog'
 
 export {
   MessageDialog,
@@ -17,5 +19,7 @@ export {
   BuyDialog,
   UserInfoDialog,
   RemindersDialog,
-  ForgetPasswordDialog
+  ForgetPasswordDialog,
+  OfferInfoDialog,
+  GroupUsersTeacherDialog
 }

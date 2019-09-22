@@ -180,9 +180,8 @@ const JournalPage = props => {
 
   useEffect(() => {
     store.getAll('courses')
-    store.getAll('lesson_infos')
+    store.getLessonsInfos()
     store.getAll('lesson_types')
-    store.getAll('groups')
   }, [])
 
   return (

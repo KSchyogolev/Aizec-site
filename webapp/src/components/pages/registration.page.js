@@ -77,7 +77,7 @@ const UserRulesDialog = ({open, handleClose}) => <Dialog open={open} onClose={ha
   <DialogTitle id="form-dialog-title">Пользоветельское соглашение</DialogTitle>
   <DialogContent>
     <DialogContentText>
-      ntrc
+
     </DialogContentText>
   </DialogContent>
 </Dialog>

@@ -57,6 +57,24 @@ const widgetImg = {
   regular: require('../../../static/images/regular_card.jpg')
 }
 
+export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers.map((message, index) => <Grid item
+                                                                                                               xs={12}
+                                                                                                               sm={12 / count}
+                                                                                                               md={12 / count}
+                                                                                                               lg={12 / (count + 1)}
+                                                                                                               key={index}>
+  <MessageWidget {...message}
+                 head_text={message.head_text || message.short_description}
+                 full_text={message.head_text || message.full_description}
+                 isNew={message.isNew}
+                 status={message.status}
+                 key={index}
+                 message_id={message.kind === 'offer' ? message.id : null}
+                 merch_id={message.kind === 'merch' ? message.id : null}
+                 course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
+                 img={widgetImg[message.kind]}/>
+</Grid>)
+
 const OffersUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
@@ -71,19 +89,6 @@ const OffersUserPage = (props) => {
     store.getCurrentOffers()
   }, [store.currentOffers.length])
 
-  const getCurrentOffers = (currentOffers = []) => currentOffers.map((message, index) => <Grid item xs={12} sm={6}
-                                                                                               md={6} lg={4}
-                                                                                               key={index}>
-    <MessageWidget {...message}
-                   head_text={message.head_text || message.short_description}
-                   full_text={message.head_text || message.full_description}
-                   key={index}
-                   message_id={message.kind === 'offer' ? message.id : null}
-                   merch_id={message.kind === 'merch' ? message.id : null}
-                   course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
-                   img={widgetImg[message.kind]}/>
-  </Grid>)
-
   return (
     <div>
       <video className={classes.fullVideo} muted loop autoplay="autoplay">
@@ -92,18 +97,19 @@ const OffersUserPage = (props) => {
       <div className={classes.offersHeader}>
         <AppBar position="static" className={classes.offersBar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-            <Tab label="Лента" {...a11yProps(0)} />
-            <Tab label="Магазин" {...a11yProps(1)} />
+            {/*<Tab label="Лента" {...a11yProps(0)} />*/}
+            <Tab label="Магазин" {...a11yProps(0)} />
+            <Tab label="Мои покупки" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
           <Grid container spacing={3}>
-            {getCurrentOffers(store.currentOffers.filter(item => item.kind !== 'offer'))}
+            {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'offer' || item.kind === 'merch') && item.status !== 'done'))}
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Grid container spacing={3}>
-            {getCurrentOffers(store.currentOffers.filter(item => item.kind === 'offer'))}
+            {getCurrentOffers(store.currentOffers.filter(item => item.status === 'done'))}
           </Grid>
         </TabPanel>
       </div>

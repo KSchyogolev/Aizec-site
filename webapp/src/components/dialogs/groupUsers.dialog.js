@@ -41,7 +41,8 @@ const GroupUsersDialog = ({handleClose, open, group, store}) => {
   const getUsersList = (items = []) => items.map(item => ({
     id: item.id,
     label: item.first_name + ' ' + item.second_name + '(' + item.email + ')',
-    icon: item.role === 'teacher' ? <TeacherIcon/> : null
+    icon: item.role === 'teacher' ? <TeacherIcon/> : null,
+    isNew: item.isNew
   }))
 
   const filterIncluded = (allItems, items) => allItems.filter(item => items.findIndex(grpItem => item.id === grpItem.id) === -1)

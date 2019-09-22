@@ -81,6 +81,7 @@ const getIconByStatus = (status) => {
     {component}
   </Tooltip>
 }
+
 const homeworkMap = {
   'done_not_approved': 'На проверке',
   'done_approved': 'Зачтена',
@@ -88,14 +89,18 @@ const homeworkMap = {
   'null': 'Не отправлена'
 }
 
+
 const HomeworkUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
 
   const openLessons = store.currentLessons.filter(item => item.status === 'open')
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
-  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
+  console.log(mapVisitOnLesson)
+
+  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+  console.log(mapVisitOnLesson)
   const mutableData = openLessons.map(item => {
     const lesson = item
     lesson.course_name = mapCourses[item.course_id].short_description
@@ -108,10 +113,10 @@ const HomeworkUserPage = (props) => {
     store.getCurrentCourses()
   }, [store.currentVisits.length, store.currentLessons.length])
 
-  const onChangeFileHandler = (e, lessonId) => {
+  const onChangeFileHandler = visitId => e => {
     const files = e.target.files
     if (files.length > 0) {
-      store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
+      store.uploadHomework(files, visitId).then(res => {
         store.showNotification('success', 'Домашняя работа успешно загружена')
         // this.setTip('currentVisits', (visit) => visit.approve_status === "null", 'homeworkUser')
       }).catch(e => {
@@ -120,10 +125,12 @@ const HomeworkUserPage = (props) => {
     }
   }
 
-  const UploadHomeWorkButton = ({lessonId, disabled}) => {
+  const UploadHomeWorkButton = ({uploadFile, disabled}) => {
+    const classes = useStyles()
+    console.log(uploadFile)
     return <div className={classes.detailsButton}>
       <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
-             onChange={(file) => onChangeFileHandler(file, lessonId)}/>
+             onChange={file => uploadFile(file)}/>
       <label htmlFor="icon-button-file1">
         <Tooltip title="Отправить ДЗ на проверку" aria-label="add">
           <Fab size="small" color={disabled ? '' : 'primary'} className={classes.margin}
@@ -135,6 +142,7 @@ const HomeworkUserPage = (props) => {
       </label>
     </div>
   }
+
 
   return (
     <div className={classes.root}>
@@ -148,7 +156,7 @@ const HomeworkUserPage = (props) => {
             grouping: false,
             render: rowData => {
               const visit = mapVisitOnLesson[rowData.id] || {}
-              return <UploadHomeWorkButton lessonId={rowData.id} disabled={visit.approve_status === 'done_approved'}/>
+              return <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} uploadFile={onChangeFileHandler(visit.id)}/>
             }
           },
           {

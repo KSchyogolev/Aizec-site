@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import { MultiSearchInput } from '../inputs'
-import { GroupUsersDialog } from '../dialogs'
+import { GroupUsersTeacherDialog } from '../dialogs'
 import { tableLocalization } from '../../config/config'
 
 import GroupIcon from '@material-ui/icons/Group'
@@ -38,22 +38,13 @@ const weekDays = {
   7: 'Вс'
 }
 
-const LessonsForm = props => {
+const GroupsTeacherForm = props => {
 
   const classes = useStyles()
   const {store} = props
   const [usersDialogIsOpen, setUsersDialogVisible] = useState(false)
   const [currentGroup, setCurrentGroup] = useState({})
   const [selectedTeacher, setSelectedTeacher] = useState({})
-
-  const teachersItems = store.users.filter(item => item.role === 'teacher').map(item => ({
-    label: item.second_name + ' ' + item.first_name,
-    value: item.id
-  }))
-  console.log(teachersItems.push({
-    label: '-= Не выбран =-',
-    value: null
-  }))
 
   const openUsersDialog = (group) => {
     setCurrentGroup(group)
@@ -62,7 +53,8 @@ const LessonsForm = props => {
   const closeUsersDialog = () => setUsersDialogVisible(false)
 
   useEffect(() => {
-    store.getLessonsInfos()
+    // store.getLessonsInfos()
+
   }, [])
 
   const handleSelectTeacher = (value) => {
@@ -77,26 +69,21 @@ const LessonsForm = props => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.teacherSelect}>
-        <MultiSearchInput multi={false} handleChange={handleSelectTeacher}
-                          values={selectedTeacher} label={'Выберите преподавателя'}
-                          items={teachersItems}/>
-      </div>
       <MaterialTable
-        title="Группы"
+        title="Мои группы"
         icons={tableIcons}
         columns={[
           {title: 'Название', field: 'name', type: 'text'},
           {
             title: 'Дни недели',
             field: 'daysWeek',
-            render: rowData => rowData && rowData.daysWeek && rowData.daysWeek.map(item => <span>{weekDays[item]} </span>),
+            render: rowData => rowData.daysWeek && rowData.daysWeek.map(item => <span>{weekDays[item]} </span>),
             lookup: weekDays,
             editable: false
           },
           {
             title: 'Время', field: 'times',
-            render: rowData => rowData && rowData.times && rowData.times.map(item => <span>{item} </span>),
+            render: rowData => rowData.times && rowData.times.map(item => <span>{item} </span>),
             editable: false
           },
           {
@@ -122,18 +109,9 @@ const LessonsForm = props => {
             },
             lookup: coursesMap,
             customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(rowData.course_id.toString()) !== -1
-          },
-          {
-            title: 'Преподаватель',
-            field: 'teacher',
-            render: rowData => rowData.users.filter(user => user.role === 'teacher').map(item =>
-              <div>{item.second_name + ' ' + item.first_name}</div>)
-            ,
-            filtering: false,
-            editable: false
           }
         ]}
-        data={store.groups.filter(group => selectedTeacher.value ? group.users.findIndex(user => user.id === selectedTeacher.value) !== -1 : true)}
+        data={store.groups.filter(item => item.users.findIndex(user=> user.id === store.currentUser.id) !== -1)}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
@@ -148,15 +126,12 @@ const LessonsForm = props => {
             onClick: (e, rowData) => openUsersDialog(rowData)
           }
         ]}
-        editable={{
-          onRowAdd: newData => new Promise((resolve, reject) => store.addTo('groups', 'group', {...newData}).then(resolve).catch(reject)),
-          onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('groups', oldData.id, newData).then(resolve).catch(reject)),
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('groups', oldData.id).then(resolve).catch(reject))
-        }}
+        editable={false}
       />
-      <GroupUsersDialog handleClose={closeUsersDialog} open={usersDialogIsOpen} group={currentGroup}/>
+      <GroupUsersTeacherDialog handleClose={closeUsersDialog} open={usersDialogIsOpen} users={currentGroup.users}
+                               title={currentGroup.name}/>
     </div>
   )
 }
 
-export default inject('store')(observer(LessonsForm))
+export default inject('store')(observer(GroupsTeacherForm))

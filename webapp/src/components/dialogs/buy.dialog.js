@@ -27,6 +27,10 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
       status: 'ready',
       user_id: store.currentUser.id
     }).then(() => {
+      const offerId = merch_id || course_id || message_id
+      const offer = {...store.currentOffers.find(item => item.id === offerId)}
+      offer.status = 'ready'
+      store.updateInStore('currentOffers', offerId, offer)
       store.showNotification('success', 'Заявка на покупку отправлена')
       handleClose()
     }).catch(err => {

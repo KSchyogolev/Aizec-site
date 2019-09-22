@@ -59,7 +59,10 @@ const API = {main: {}}
 
 API.main.sendNewPassword = (data) => post('restapi/users/revoke_password', data)
 
-API.main.getAllObjects = (objects) => get('restapi/' + objects)
+API.main.getAllObjects = (objects) => get('restapi/' + objects )
+
+API.main.getAllArchived = (objects) => get('restapi/' + objects + '/archivated')
+
 API.main.deleteObject = (objects, id) => del('restapi/' + objects + '/' + id)
 API.main.updateObject = (objects, id, data) => patch('restapi/' + objects + '/' + id, data)
 API.main.addObject = (objects, data) => post('restapi/' + objects, data)

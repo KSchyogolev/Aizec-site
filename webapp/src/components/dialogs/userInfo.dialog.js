@@ -18,6 +18,7 @@ import Select from '@material-ui/core/Select'
 import TeacherIcon from '@material-ui/icons/School'
 import { tableIcons } from '../../config/config'
 import MaterialTable from 'material-table'
+
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
@@ -42,9 +43,9 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
   const classes = useStyles()
 
   useEffect(() => {
-    store.getUserObjects('groups', user.id, 'currentGroups')
-    store.getUserObjects('courses', user.id, 'currentCourses')
-    store.getUserObjects('clubs', user.id, 'currentClubs')
+    store.getUserObjects('groups', 'currentGroups', user.id)
+    store.getUserObjects('courses', 'currentCourses', user.id)
+    store.getUserObjects('clubs', 'currentClubs', user.id)
   }, [user.id])
 
   return (
@@ -58,7 +59,12 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
           icons={tableIcons}
           columns={[
             {title: 'Название', field: 'name', filtering: false},
-            {title: 'Дата создания', field: 'first_name', filtering: false, render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>},
+            {
+              title: 'Дата создания',
+              field: 'first_name',
+              filtering: false,
+              render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
+            }
           ]}
           data={store.currentGroups}
           options={{
@@ -79,7 +85,12 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
               field: 'kind',
               lookup: {'intensive': 'Интенсивный', 'regular': 'Регулярный', 'individual': 'Индивидуальный'}
             },
-            {title: 'Дата создания', field: 'first_name', filtering: false, render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>},
+            {
+              title: 'Дата создания',
+              field: 'first_name',
+              filtering: false,
+              render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+            }
           ]}
           data={store.currentCourses}
           options={{
@@ -96,7 +107,12 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
           columns={[
             {title: 'Название', field: 'name', filtering: false},
             {title: 'Адрес', field: 'address', filtering: false},
-            {title: 'Дата создания', field: 'first_name', filtering: false, render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>},
+            {
+              title: 'Дата создания',
+              field: 'first_name',
+              filtering: false,
+              render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+            }
           ]}
           data={store.currentClubs}
           options={{

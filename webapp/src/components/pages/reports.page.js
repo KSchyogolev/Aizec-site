@@ -42,8 +42,8 @@ const ReportsPage = (props) => {
     <div className={classes.root}>
       <AppBar position="static" className={classes.defaultBar}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Обращения" {...a11yProps(0)} />
-          <Tab label="Покупки" {...a11yProps(1)} />
+          <Tab label="Покупки" {...a11yProps(0)} />
+          <Tab label="Обращения" {...a11yProps(1)} />
           {/*  <Tab label="Предметы" {...a11yProps(2)} />*/}
         </Tabs>
       </AppBar>
