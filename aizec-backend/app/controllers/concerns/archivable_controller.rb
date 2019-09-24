@@ -9,7 +9,7 @@ module ArchivableController extend ActiveSupport::Concern
     resource_model = controller_name.classify.constantize
     plural_var = controller_name
     instance_variable_set("@#{plural_var}", resource_model.unscoped.where(status: "archived"))
-    render :index
+    render :template => "@#{plural_var}/index", formats: [:json]
   end
 
   def with_archivated_index
@@ -17,7 +17,7 @@ module ArchivableController extend ActiveSupport::Concern
     resource_model = controller_name.classify.constantize
     plural_var = controller_name
     instance_variable_set("@#{plural_var}", resource_model.unscoped.all)
-    render :index
+    render :template => "@#{plural_var}/index", formats: [:json]
   end
 
   def archivated_show
@@ -25,6 +25,6 @@ module ArchivableController extend ActiveSupport::Concern
     resource_model = controller_name.classify.constantize
     singular_var = controller_name.singularize
     instance_variable_set("@#{singular_var}", resource_model.unscoped.find(params[:id]))
-    render :show
+    render :template => "@#{plural_var}/show", formats: [:json]
   end
 end

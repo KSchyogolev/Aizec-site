@@ -18,4 +18,11 @@ class UserMailer < ApplicationMailer
       mail(to: User.where(role: "admin").map(&:email).join(","), subject: 'Сообщение администратору')
     end
   end
+
+  def revoke_password
+    @user = params[:user]
+    @password = params[:password]
+    @url  = 'http://innovate-school.com/login'
+    mail(to: @user.email, subject: 'Ваш пароль обновлен')
+  end
 end

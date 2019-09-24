@@ -48,6 +48,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def revoke_password
+    @user = User.find_by(params.require(:user).permit(:email))
+    generated_password = Devise.friendly_token.first(10)
+    @user.password = generated_password
+    
+    if @user.save
+      UserMailer.with(user: @user, password: generated_password).revoke_password.deliver_later!
+      render :show, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
   def activate
     @user = current_user
     changed_status = user_params
