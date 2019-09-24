@@ -89,7 +89,6 @@ const homeworkMap = {
   'null': 'Не отправлена'
 }
 
-
 const HomeworkUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
@@ -113,7 +112,7 @@ const HomeworkUserPage = (props) => {
     store.getCurrentCourses()
   }, [store.currentVisits.length, store.currentLessons.length])
 
-  const onChangeFileHandler = visitId => e => {
+  const onChangeFileHandler = (e, visitId) => {
     const files = e.target.files
     if (files.length > 0) {
       store.uploadHomework(files, visitId).then(res => {
@@ -125,13 +124,13 @@ const HomeworkUserPage = (props) => {
     }
   }
 
-  const UploadHomeWorkButton = ({uploadFile, disabled}) => {
+  const UploadHomeWorkButton = ({visitId, disabled}) => {
     const classes = useStyles()
-    console.log(uploadFile)
+    const id = `icon-button-file-${visitId}`
     return <div className={classes.detailsButton}>
-      <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
-             onChange={file => uploadFile(file)}/>
-      <label htmlFor="icon-button-file1">
+      <input accept="image/*" className={classes.input} id={id} type="file"
+             onChange={file => onChangeFileHandler(file, visitId)}/>
+      <label htmlFor={id}>
         <Tooltip title="Отправить ДЗ на проверку" aria-label="add">
           <Fab size="small" color={disabled ? '' : 'primary'} className={classes.margin}
                disabled={disabled}
@@ -142,7 +141,6 @@ const HomeworkUserPage = (props) => {
       </label>
     </div>
   }
-
 
   return (
     <div className={classes.root}>
@@ -156,7 +154,7 @@ const HomeworkUserPage = (props) => {
             grouping: false,
             render: rowData => {
               const visit = mapVisitOnLesson[rowData.id] || {}
-              return <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} uploadFile={onChangeFileHandler(visit.id)}/>
+              return <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} visitId={visit.id}/>
             }
           },
           {
@@ -196,19 +194,19 @@ const HomeworkUserPage = (props) => {
               return (
                 <div className={classes.description}>
                   <Paper className={classes.text}>
-                    <h3>Домашнее задание:</h3>
-                    {rowData.homework}
-                    {visit.homework_comment && <div>
-                      <h4>Комментарий от учителя:</h4>
-                      {visit.homework_comment}
-                    </div>}
-                    <br/>
-                  </Paper>
-                  <br/>
-                  <Paper className={classes.text}>
                     <h3>Конспект:</h3>
                     {rowData.synopsys}
                   </Paper>
+                  <br/>
+                  <Paper className={classes.text}>
+                    <h3>Домашнее задание:</h3>
+                    {rowData.homework}
+                  </Paper>
+                  <br/>
+                  {visit.homework_comment && <Paper className={classes.text}>
+                    <h3>Комментарий от учителя:</h3>
+                    {visit.homework_comment}
+                  </Paper>}
                 </div>
               )
             }
