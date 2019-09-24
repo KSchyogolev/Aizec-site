@@ -54,7 +54,21 @@ const translate = {
   merch: 'Мерчендайз'
 }
 
-const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, message_id, img, cost, isNew, status, ...props}) => {
+const widgetImg = {
+  offer: require('../../static/images/offer_card.jpg'),
+  product: require('../../static/images/intensive_card.jpg'),
+  intensive: require('../../static/images/intensive_card.jpg'),
+  course: require('../../static/images/regular_card.jpg'),
+  regular: require('../../static/images/regular_card.jpg')
+}
+
+/*const images = [
+  {url: 'https://picsum.photos/id/1018/1000/600/'},
+  {url: 'https://picsum.photos/id/1015/1000/600/'},
+  {url: 'https://picsum.photos/id/1019/1000/600/'}
+]*/
+
+const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, message_id, images, cost, isNew, status, ...props}) => {
   const classes = useStyles()
   const [openBuy, setBuyDialogOpen] = useState(false)
   const [openInfo, setInfoDialogOpen] = useState(false)
@@ -75,12 +89,12 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
     switch (status) {
       case 'ready':
         return <Tooltip title="Заявка на покупку в обработке" aria-label="add">
-          <DoneIcon style={{color: '#668bc5', margin:9}}/>
+          <DoneIcon style={{color: '#668bc5', margin: 9}}/>
         </Tooltip>
       case 'done' :
         return <Tooltip title="Товар приобретен" aria-label="add">
-        <DoneAllIcon style={{color: '#73c56e', margin:9}}/>
-      </Tooltip>
+          <DoneAllIcon style={{color: '#73c56e', margin: 9}}/>
+        </Tooltip>
       default:
         return <IconButton onClick={handleOpenBuy}>
           <AddShoppingCartIcon/>
@@ -89,11 +103,11 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
   }
 
   return (
-    <Card className={clsx(classes.card, isNew && classes.newOffer)} key={index} >
+    <Card className={clsx(classes.card, isNew && classes.newOffer)} key={index}>
       <CardActionArea onClick={handleOpenInfo}>
         <CardMedia
           className={classes.media}
-          image={img}
+          image={images.length ? images[0].url : widgetImg[kind]}
           title="Contemplative Reptile"
         />
         <CardContent>
@@ -129,7 +143,8 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
       <BuyDialog handleClose={handleCloseBuy} open={openBuy} name={head_text} merch_id={merch_id} course_id={course_id}
                  cost={cost}
                  message_id={message_id}/>
-      <OfferInfoDialog handleClose={handleCloseInfo} open={openInfo} title={head_text} text={full_text}/>
+      <OfferInfoDialog handleClose={handleCloseInfo} open={openInfo} title={head_text} text={full_text}
+                       images={images}/>
     </Card>
   )
 

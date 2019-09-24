@@ -49,13 +49,8 @@ const useStyles = makeStyles(theme => ({
     // display: 'flex'
   }
 }))
-const widgetImg = {
-  offer: require('../../../static/images/offer_card.jpg'),
-  product: require('../../../static/images/intensive_card.jpg'),
-  intensive: require('../../../static/images/intensive_card.jpg'),
-  course: require('../../../static/images/regular_card.jpg'),
-  regular: require('../../../static/images/regular_card.jpg')
-}
+
+
 
 export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers.map((message, index) => <Grid item
                                                                                                                xs={12}
@@ -72,7 +67,7 @@ export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers
                  message_id={message.kind === 'offer' ? message.id : null}
                  merch_id={message.kind === 'merch' ? message.id : null}
                  course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
-                 img={widgetImg[message.kind]}/>
+                 images={message.photos}/>
 </Grid>)
 
 const OffersUserPage = (props) => {

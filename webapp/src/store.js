@@ -553,6 +553,21 @@ class Store {
   }
 
   @action
+  uploadImages (files, messageId) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData()
+
+      for (let i = 0; i < files.length; i++)
+        formData.append('message[photos][]', files[i])
+
+      API.main.uploadFile(formData, messageId).then(res => {
+        this.updateInStore('outbox', messageId, res.data)
+        resolve()
+      })
+    })
+  }
+
+  @action
   showNotification (variant, message) {
     this.setStore('notification', {variant, message, show: true})
   }

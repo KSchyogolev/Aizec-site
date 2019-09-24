@@ -5,36 +5,42 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import { FileUploadInput } from '../inputs'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { inject, observer } from 'mobx-react'
-import ImageGallery from 'react-image-gallery'
-import 'react-image-gallery/styles/css/image-gallery.css'
 
-const OfferInfoDialog = ({open, handleClose, text, title, images, ...props}) => {
+const FileUploadDialog = ({handleClose, open, message, ...props}) => {
+
+  const [photos, setPhotos] = useState([])
+
+  const handleDrop = (img) => {
+    setPhotos(img)
+  }
+
+  const handleSave = () => {
+    store.uploadImages(photos, message.id).then(res => {
+      handleClose()
+    })
+  }
 
   const {store} = props
 
-  const getImgResources = (photos) => photos.map(item => ({
-    original: item.url,
-    thumbnail: item.url
-  }))
-
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'}>
-      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="form-dialog-title">Загрузка файлов к {message.head_text}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          {text}
-        </DialogContentText>
-        {images.length ? <ImageGallery showPlayButton={false} items={getImgResources(images)}/> : null}
+        <FileUploadInput pictures={photos} onDrop={handleDrop}/>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Закрыть
+          Отмена
+        </Button>
+        <Button onClick={handleSave} color="primary">
+          Сохранить
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default inject('store')(observer(OfferInfoDialog))
+export default inject('store')(observer(FileUploadDialog))

@@ -9,6 +9,7 @@ import RemindersDialog from './reminders.dialog'
 import ForgetPasswordDialog from './forgetPassword.dialog'
 import OfferInfoDialog from './offerInfo.dialog'
 import GroupUsersTeacherDialog from './groupUsersTeacher.dialog'
+import FileUploadDialog from './fileUpload.dialog'
 
 export {
   MessageDialog,
@@ -21,5 +22,6 @@ export {
   RemindersDialog,
   ForgetPasswordDialog,
   OfferInfoDialog,
-  GroupUsersTeacherDialog
+  GroupUsersTeacherDialog,
+  FileUploadDialog,
 }
