@@ -3,6 +3,8 @@ class MessagesController < ApplicationController
 
   before_action :set_message, only: [:show, :update, :destroy]
 
+  has_many_methods_for Message
+  
   # GET /messages
   # GET /messages.json
   def index
