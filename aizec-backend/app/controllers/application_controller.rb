@@ -56,7 +56,11 @@ class ApplicationController < ActionController::API
         end
 
         define_method("remove_#{assoc.plural_name.singularize}") do 
-          model.find(params[:id]).send(assoc.plural_name).delete(params["#{assoc.plural_name.singularize}_id"])
+          if assoc.plural_name.end_with? "attachments"
+            model.find(params[:id]).send(assoc.plural_name)[params["#{assoc.plural_name.singularize}_id"]].purge
+          else 
+            model.find(params[:id]).send(assoc.plural_name).delete(params["#{assoc.plural_name.singularize}_id"])
+          end
         end
 
         define_method(assoc.plural_name) do
