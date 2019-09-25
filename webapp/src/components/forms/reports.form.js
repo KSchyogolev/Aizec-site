@@ -5,7 +5,8 @@ import MaterialTable from 'material-table'
 import Paper from '@material-ui/core/Paper'
 import { tableIcons } from '../../config/config'
 import { tableLocalization } from '../../config/config'
-
+import ImageGallery from 'react-image-gallery'
+import 'react-image-gallery/styles/css/image-gallery.css'
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
@@ -26,17 +27,28 @@ const useStyles = makeStyles(theme => ({
     minWidth: 110
   },
   description: {
-    // fontStyle: 'italic',
+    fontStyle: 'italic',
     padding: 10,
     display: 'flex',
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'whitesmoke',
+    flexDirection: 'column'
   },
   text: {
     padding: 10,
     marginLeft: 10,
     margin: 'auto 20px'
+  },
+  imgContainer: {
+    display: 'flex',
+    margin: '30px auto'
   }
 }))
+
+const getImgResources = (photos) => photos.map(item => ({
+  original: item.url,
+  thumbnail: item.url
+}))
+
 
 const roleName = {
   admin: 'Администратор',
@@ -98,9 +110,13 @@ const ReportsPage = props => {
           {
             tooltip: 'Сообщение',
             render: rowData => {
+              const images = getImgResources(rowData.photos)
               return (
                 <div className={classes.description}>
                   {rowData.full_text}
+                  {images.length ? <div className={classes.imgContainer}>
+                    <ImageGallery showPlayButton={false} items={images}/>
+                  </div> : null}
                 </div>
               )
             }

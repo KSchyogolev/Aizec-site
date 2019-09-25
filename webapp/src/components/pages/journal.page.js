@@ -10,13 +10,11 @@ import Typography from '@material-ui/core/Typography'
 import { Paper } from '@material-ui/core/'
 import { MultiSearchInput } from '../inputs'
 import moment from 'moment'
-import API from '../../api/api'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
-import LockIcon from '@material-ui/icons/Lock'
 
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
@@ -121,6 +119,7 @@ const JournalPage = props => {
   }), {})
 
   const handleSelectCourse = (course) => {
+    console.log(course)
     setSelectedCourse(course)
     setLessonsByCourseId(course.value)
   }
@@ -180,8 +179,9 @@ const JournalPage = props => {
 
   useEffect(() => {
     store.getAll('courses')
-    store.getLessonsInfos()
     store.getAll('lesson_types')
+    store.getAll('lesson_infos')
+    store.getLessonsInfos()
   }, [])
 
   return (

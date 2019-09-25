@@ -23,22 +23,23 @@ import MailIcon from '@material-ui/icons/Mail'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
 import UserIcon from '@material-ui/icons/People'
 import FolderIcon from '@material-ui/icons/Folder'
-import FaceIcon from '@material-ui/icons/Face'
-import CalendarIcon from '@material-ui/icons/Event'
-import HomeWorkIcon from '@material-ui/icons/FileCopy'
+import FaceIcon from '@material-ui/icons/AccountBox'
+import CalendarIcon from '@material-ui/icons/DateRange'
+import HomeWorkIcon from '@material-ui/icons/Work'
 import SummaryIcon from '@material-ui/icons/FileCopy'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
+import AddShoppingCartIcon from '@material-ui/icons/LocalGroceryStore'
 import NotificationIcon from '@material-ui/icons/NotificationImportant'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import AnnouncementIcon from '@material-ui/icons/Announcement'
-import LoyalotyIcon from '@material-ui/icons/Loyalty'
+import LoyalotyIcon from '@material-ui/icons/Stars'
 import JournalIcon from '@material-ui/icons/ChromeReaderMode'
-import MainIcon from '@material-ui/icons/RecentActors'
-import LettersIcon from '@material-ui/icons/Textsms'
-import ScheduleIcon from '@material-ui/icons/Web'
+import MainIcon from '@material-ui/icons/OfflineBolt'
+import LettersIcon from '@material-ui/icons/Email'
 import CoursesIcon from '@material-ui/icons/School'
+import AchievementsIcon from '@material-ui/icons/ThumbUp'
+import ProgressIcon from '@material-ui/icons/TrendingUp'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -144,6 +145,8 @@ const translate = (str) => {
     case 'calendar' :
       return 'Календарь'
     case 'profile' :
+      return 'Профиль'
+    case 'main' :
       return 'Главная'
     case 'users' :
       return 'Пользователи'
@@ -156,7 +159,7 @@ const translate = (str) => {
     case 'summary':
       return 'Прогресс'
     case 'offers':
-      return 'Предложения'
+      return 'Магазин'
     case 'reminders':
       return 'Напоминания'
     case 'courses':
@@ -176,10 +179,14 @@ const getIcon = (page) => {
       return <UserIcon/>
     case 'profile':
       return <FaceIcon/>
+    case 'profileUser':
+      return <FaceIcon/>
     case 'calendar':
       return <CalendarIcon/>
     case 'homework':
       return <HomeWorkIcon/>
+    case 'progressUser':
+      return <ProgressIcon/>
     case 'homeworkTeacher':
       return <HomeWorkIcon/>
     case 'offers':
@@ -211,11 +218,11 @@ const getIcon = (page) => {
     case 'reportsTeacher':
       return <LettersIcon/>
     case 'scheduleUser':
-      return <ScheduleIcon/>
+      return <CalendarIcon/>
     case 'coursesUser':
       return <CoursesIcon/>
     case 'achievementsUser':
-      return <AddShoppingCartIcon/>
+      return <AchievementsIcon/>
     default:
       return <FolderIcon/>
   }
@@ -266,7 +273,7 @@ const LeftMenu = props => {
     </ListItem> : <>
     <ListItem button onClick={() => !isOpen ? handleOpen(name) : handleClose(name)} key={index}>
       <ListItemIcon>
-        <DnsIcon/>
+        {getIcon(name)}
       </ListItemIcon>
       <ListItemText primary={label}/>
       {isOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}

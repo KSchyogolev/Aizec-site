@@ -31,7 +31,8 @@ import {
   ScheduleUserPage,
   MainUserPage,
   OffersUserPage,
-  LettersUserPage
+  LettersUserPage,
+  ProfileUserPage
 } from '../components/pages/user'
 
 const userIsRegistered = (user) => {
@@ -64,6 +65,11 @@ const routes = {
   login: new Route({
     path: '/login',
     component: <LoginPage/>
+  }),
+  profileUser: new Route({
+    path: '/profileUser',
+    component: <ProfileUserPage/>,
+    beforeEnter: () => userIsLoggedIn('user')
   }),
   offersUser: new Route({
     path: '/offersUser',

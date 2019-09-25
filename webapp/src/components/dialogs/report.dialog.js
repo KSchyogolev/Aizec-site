@@ -16,6 +16,7 @@ import Select from '@material-ui/core/Select'
 import Grid from '@material-ui/core/Grid'
 import { FileUploadInput } from '../inputs'
 
+
 const useStyles = makeStyles(theme => ({
   root: {
     // padding: '15px'
@@ -25,11 +26,31 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ReportDialog = ({handleClose, open, ...props}) => {
+const userThemes = {
+  1: 'Пропуск по болезни',
+  2: 'Курсы и занятия',
+  3: 'Расписание',
+  4: 'Пожелание',
+  5: 'Жалоба',
+  6: 'Оплата',
+  7: 'Другое'
+}
+
+const teacherThemes = {
+  1: 'Необходима замена на занятие',
+  2: 'Потребность в комплектующих',
+  3: 'Неисправность',
+  4: 'Нарушение ',
+  5: 'Другое'
+}
+
+const ReportDialog = ({handleClose, open, isUser, ...props}) => {
   const classes = useStyles()
   const {store} = props
   const [message, setMessage] = useState({})
   const [photos, setPhotos] = useState([])
+
+  const themes = isUser ? userThemes : teacherThemes
 
   const handleDrop = (img) => {
     setPhotos(img)
@@ -58,6 +79,7 @@ const ReportDialog = ({handleClose, open, ...props}) => {
     })
   }
 
+
   const onClose = () => {
     setMessage({})
     handleClose()
@@ -72,21 +94,24 @@ const ReportDialog = ({handleClose, open, ...props}) => {
       <DialogContent dividers className={classes.content}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Тема"
-              className={classes.textField}
-              value={message.head_text}
-              name={'head_text'}
-              onChange={handleChange}
-              margin="normal"
-              variant="outlined"
-              fullWidth
-            />
+            <FormControl fullWidth>
+              <InputLabel htmlFor="parent_relationship">Тема</InputLabel>
+              <Select
+                inputProps={{
+                  name: 'head_text',
+                  id: 'head_text',
+                  value: message.head_text,
+                  onChange: handleChange
+                }}
+              >
+                {Object.keys(themes).map((key,index) => <MenuItem key={index} value={themes[key]}>{themes[key]}</MenuItem>)}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={12} md={12}>
             <TextField
-              multilinew
+              multiline
               label="Сообщение"
               className={classes.textField}
               value={message.full_text}

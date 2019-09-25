@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { tableIcons, tableLocalization } from '../../../config/config'
 import AddIcon from '@material-ui/icons/Email'
-import { FileUploadInput } from '../../inputs'
 import ImageGallery from 'react-image-gallery'
 import 'react-image-gallery/styles/css/image-gallery.css'
 
@@ -146,6 +145,7 @@ const LettersUserPage = (props) => {
         }}
       />
       <ReportDialog handleClose={closeMessageDialog}
+                    isUser={true}
                     open={messageDialogIsOpen}/>
     </div>
   )

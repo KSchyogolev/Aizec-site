@@ -95,14 +95,10 @@ const HomeworkUserPage = (props) => {
 
   const openLessons = store.currentLessons.filter(item => item.status === 'open')
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
-
-  console.log(mapVisitOnLesson)
-
   const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
-  console.log(mapVisitOnLesson)
   const mutableData = openLessons.map(item => {
     const lesson = item
-    lesson.course_name = mapCourses[item.course_id].short_description
+    lesson.course_name = mapCourses[item.course_id] ? mapCourses[item.course_id].short_description : ''
     return lesson
   })
 

@@ -10,6 +10,9 @@ import ForgetPasswordDialog from './forgetPassword.dialog'
 import OfferInfoDialog from './offerInfo.dialog'
 import GroupUsersTeacherDialog from './groupUsersTeacher.dialog'
 import FileUploadDialog from './fileUpload.dialog'
+import GenerateLessonsDialog from './generateLessons.dialog'
+import DeleteDialog from './delete.dialog'
+
 
 export {
   MessageDialog,
@@ -24,4 +27,6 @@ export {
   OfferInfoDialog,
   GroupUsersTeacherDialog,
   FileUploadDialog,
+  GenerateLessonsDialog,
+  DeleteDialog,
 }

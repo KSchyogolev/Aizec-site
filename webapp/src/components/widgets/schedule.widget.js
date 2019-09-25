@@ -50,27 +50,30 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const lessonType = {
-  intensive: '#fffec5',
-  regular: '#edf5fa',
-  individual: '#faa8ff'
+  ok: '#dcffdd',
+  skip_without_reason: '#ffdfd3',
+  skip_approved: '#fae5ab',
+  skip_not_approved: ''
 }
+
+
 
 const getLessonInfo = (status) => {
   switch (status) {
     case 'ok':
       return {
         title: 'Был на занятии',
-        icon: <CheckIcon style={{color: '#73c56e'}}/>
+        // icon: <CheckIcon style={{color: '#73c56e'}}/>
       }
     case 'skip_without_reason':
       return {
         title: 'Пропуск без ув. причины',
-        icon: <ReportIcon style={{color: '#c54436'}}/>
+        // icon: <ReportIcon style={{color: '#c54436'}}/>
       }
     case 'skip_approved':
       return {
         title: 'Пропуск по ув. причине',
-        icon: <ReportIcon style={{color: '#faaa0c'}}/>
+        // icon: <ReportIcon style={{color: '#faaa0c'}}/>
       }
     case 'skip_not_approved':
       return {
@@ -105,7 +108,7 @@ const getHomeworkInfo = (status) => {
     default:
       return {
         title: 'Домашняя работа не отправлена',
-        icon: ''/*<WarningIcon style={{color: '#757575'}}/>*/
+        icon: <WarningIcon style={{color: '#757575'}}/>
       }
   }
 }
@@ -121,13 +124,12 @@ const LessonInfo = ({lesson}) => <div>
 const Appointment = ({children, style, ...restProps}) => {
   const classes = useStyles()
   const lesson = children[1].props.data
-  console.log(lesson)
   return <Tooltip title={<LessonInfo lesson={lesson}/>} placement={'top'} aria-label="add">
     <Paper
       style={{
         ...style,
         // border: '1px solid',
-        background: lessonType[lesson.course.kind],
+        background: lesson.status === 'closed' ? '#e7e7e7' : lessonType[lesson.visit.status],
         // borderColor: lessonType[lesson.course.kind],
         // borderRadius: '8px',
         margin: '5px',
@@ -137,9 +139,9 @@ const Appointment = ({children, style, ...restProps}) => {
     >
       <div className={classes.description}>
         <div><b>{moment(lesson.startDate).format('HH:mm')}</b></div>
-        {lesson.status === 'closed' && <LockIcon style={{color: '#757575'}}/>}
-        {getLessonInfo(lesson.visit.status).icon}
-        {getHomeworkInfo(lesson.visit.approve_status).icon}
+        {/*{lesson.status === 'closed' && <LockIcon style={{color: '#757575'}}/>}*/}
+        {lesson.status !== 'closed' && getLessonInfo(lesson.visit.status).icon}
+        {lesson.status !== 'closed' && getHomeworkInfo(lesson.visit.approve_status).icon}
       </div>
     </Paper>
   </Tooltip>

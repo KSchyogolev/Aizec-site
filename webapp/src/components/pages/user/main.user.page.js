@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   },
   notificationBox: {
     margin: '20px 0',
-    textAlign: 'left',
+    textAlign: 'left'
     // backgroundColor: '#ff57221c'
   },
   notification: {
@@ -75,44 +75,15 @@ const parentTypes = {
   rustee: 'Опекун'
 }
 
-const ParentCard = ({parent, ...props}) => {
-  const classes = useStyles()
-  return <Typography component='div'>
-    <Card>
-      <CardMedia
-        className={classes.parentMedia}
-        image={require('../../../static/images/' + (parent.gender ? 'man_card.jpg' : 'woman_card.jpg'))}
-        title="Contemplative Reptile"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="h6">
-          {parent.second_name} {parent.first_name} {parent.third_name}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {parentTypes[parent.relationship]}
-        </Typography>
-        <Typography component={'div'} className={classes.info}>
-          <div className={classes.infoRow}>
-            <div>Телефон</div>
-            <div>{parent.phone}</div>
-          </div>
-          <div className={classes.infoRow}>
-            <div>Почта</div>
-            <div>{parent.email}</div>
-          </div>
-          <div className={classes.infoRow}>
-            <div>Дата рождения</div>
-            <div>{parent.birthday}</div>
-          </div>
-        </Typography>
-      </CardContent>
-    </Card>
-  </Typography>
-}
-
 const NotificationRow = ({text, priority}) => {
   const classes = useStyles()
-  return <div className={classes.notification}><NotifIcon style={{color: '#FF5722'}}/>{text}</div>
+  const priorityColor = {
+    1: '#FF5722',
+    2: '#faaa0c',
+    3: '#757575'
+  }
+
+  return <div className={classes.notification}><NotifIcon style={{color: priorityColor[priority]}}/>{text}</div>
 }
 
 const MainUserPage = (props) => {
@@ -127,61 +98,14 @@ const MainUserPage = (props) => {
 
   return (
     <div className={classes.root}>
-      <Card className={classes.card}>
-        <CardMedia
-          className={classes.media} s
-          image={require('../../../static/images/profile_background_2.jpg')}
-          title="Contemplative Reptile"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h4" component="h2">
-            {user.second_name} {user.first_name} {user.third_name}
-          </Typography>
-          <Divider/>
-          <Grid/>
-          <Typography component={'div'} className={classes.info}>
-            <div className={classes.infoRow}>
-              <div>Почта</div>
-              <div>{user.email}</div>
-            </div>
-            <div className={classes.infoRow}>
-              <div>Дата рождения</div>
-              <div>{user.birthday}</div>
-            </div>
-            <div className={classes.infoRow}>
-              <div>Уровень знаний</div>
-              <div>{user.level || 'Не выбран'}</div>
-            </div>
-            <div className={classes.infoRow}>
-              <div>Бонусы</div>
-              <div>{user.bonus_count || 0}</div>
-            </div>
-          </Typography>
-          {user.parents ? <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon/>}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Родители</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.parentsExpand}>
-              <Grid container spacing={3}>
-                {user.parents.map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
-                  <ParentCard parent={item}/>
-                </Grid>)}
-              </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel> : null}
-        </CardContent>
-      </Card>
-      <br/>
       <Grid container spacing={3}>
-        {getCurrentOffers(store.currentOffers.filter(item => item.kind !== 'offer' && item.status !== 'done'), 4)}
+        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && item.isNew), 4)}
+        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && !item.isNew), 4)}
       </Grid>
       <Paper className={classes.notificationBox}>
-        {store.inbox.filter(item => item.kind === 'notification').sort((a, b) => parseInt(a.head_text) - parseInt(b.head_text)).map(item => <NotificationRow
-          text={item.full_text}/>)}
+        {[...store.inbox.filter(item => item.kind === 'notification'), ...store.autoNotifications].sort((a, b) => parseInt(a.head_text) - parseInt(b.head_text)).map(item =>
+          <NotificationRow
+            text={item.full_text} priority={item.head_text}/>)}
       </Paper>
     </div>
   )

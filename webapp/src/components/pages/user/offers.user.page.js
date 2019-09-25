@@ -93,7 +93,7 @@ const OffersUserPage = (props) => {
         <AppBar position="static" className={classes.offersBar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
             {/*<Tab label="Лента" {...a11yProps(0)} />*/}
-            <Tab label="Магазин" {...a11yProps(0)} />
+            <Tab label="Товары" {...a11yProps(0)} />
             <Tab label="Мои покупки" {...a11yProps(1)} />
           </Tabs>
         </AppBar>

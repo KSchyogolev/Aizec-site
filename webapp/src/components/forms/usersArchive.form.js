@@ -55,6 +55,7 @@ const UsersArchiveForm = props => {
           {title: 'Имя', field: 'first_name', filtering: false},
           {title: 'Фамилия', field: 'second_name', filtering: false},
           {title: 'Отчество', field: 'third_name', filtering: false},
+          {title: 'Причина удаления', field: 'bio', filtering: false},
           {title: 'Почта', field: 'email', filtering: false},
           {
             title: 'Роль',

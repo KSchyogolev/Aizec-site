@@ -110,13 +110,13 @@ export const pages = {
   ],
   user: [
     {
-      name: 'offersUser',
-      label: 'Предложения',
+      name: 'mainUser',
+      label: 'Главная',
       subPages: []
     },
     {
-      name: 'mainUser',
-      label: 'Главная',
+      name: 'offersUser',
+      label: 'Магазин',
       subPages: []
     },
     {
@@ -164,6 +164,11 @@ export const pages = {
     {
       name: 'lettersUser',
       label: 'Обращения',
+      subPages: []
+    },
+    {
+      name: 'profileUser',
+      label: 'Профиль',
       subPages: []
     }
   ]

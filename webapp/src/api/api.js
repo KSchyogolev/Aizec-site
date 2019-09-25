@@ -69,7 +69,7 @@ API.main.addObject = (objects, data) => post('restapi/' + objects, data)
 
 API.main.getAllUsers = () => get('restapi/users')
 API.main.getUser = (userId) => get('restapi/users/' + userId)
-API.main.deleteUser = (userId) => del('restapi/users/' + userId)
+API.main.deleteUser = (userId, data) => del('restapi/users/' + userId, data)
 API.main.createByEmail = (data) => post('restapi/users/create_by_email', data)
 API.main.approveUser = (userId) => get('restapi/users/' + userId + '/approve')
 
@@ -80,6 +80,8 @@ API.main.updateMessage = (messageId, data) => patch('restapi/messages/' + messag
 
 API.main.addCourse = (data) => post('restapi/courses', data)
 API.main.getAllCourses = () => get('restapi/courses')
+API.main.getCourseGroups = (id) => get('restapi/courses/' + id + '/groups')
+API.main.getCourseLessons = (id) => get('restapi/courses/' + id + '/lesson_infos')
 API.main.deleteCourse = (id) => del('restapi/courses/' + id)
 API.main.updateCourse = (id, data) => patch('restapi/courses/' + id, data)
 API.main.getCurrentCourses = (userId) => get('restapi/courses/by_user_id/' + userId)
@@ -108,7 +110,7 @@ API.main.getUserObjects = (field, userId) => get('restapi/users/' + userId + '/'
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
-API.main.uploadFile = (data, messageId) => patch('restapi/messages/' + messageId + '.json', data, 'multipart/form-data')
+API.main.uploadFile = (data, id, field = 'messages') => patch('restapi/' + field + '/' + id + '.json', data, 'multipart/form-data')
 API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/inbox')
 API.main.downloadFile = (url, type = 'application/json') => {
   return new Promise((resolve, reject) =>
@@ -133,12 +135,25 @@ function get (url, type = 'application/json') {
   )
 }
 
-function del (url, data = '', type = 'application/json') {
+/*function del (url, data = '', type = 'application/json') {
   return new Promise((resolve, reject) =>
     axios.delete(url, {data, headers: {'Content-Type': type, 'Accept': type}})
       .then(response => resolve(response))
       .catch(error => reject(error.response))
   )
+}*/
+
+function del (url, data = {}, type = 'application/json') {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'patch',
+      url,
+      headers: {'Content-Type': type, 'Accept': type},
+      data: {...data, status: 'archived'}
+    })
+      .then(response => resolve(response))
+      .catch(error => reject(error.response))
+  })
 }
 
 function post (url, data = '', type = 'application/json') {

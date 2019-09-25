@@ -6,7 +6,7 @@ import { tableIcons } from '../../config/config'
 import { MultiSearchInput } from '../inputs'
 import { GroupUsersDialog } from '../dialogs'
 import { tableLocalization } from '../../config/config'
-import { LessonsDialog } from '../dialogs'
+import { LessonsDialog, GenerateLessonsDialog } from '../dialogs'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import Input from '@material-ui/core/Input'
@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button'
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import WorkIcon from '@material-ui/icons/Work'
 import MoreIcon from '@material-ui/icons/MoreHoriz'
+import Typography from '@material-ui/core/Typography'
+import AddIcon from '@material-ui/icons/MoveToInbox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,6 +43,17 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
     margin: 'auto 20px'
   },
+  controlHeader: {
+    marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'row-reverse'
+  },
+  addButton: {
+    display: 'flex'
+  },
+  leftIcon: {
+    marginRight: theme.spacing(1)
+  }
 }))
 
 const label = {
@@ -52,6 +65,7 @@ const LessonsForm = props => {
   const classes = useStyles()
   const {store} = props
   const [lessonsDialogIsOpen, setLessonsDialogVisible] = useState(false)
+  const [generateDialogIsOpen, setGenerateDialogVisible] = useState(false)
   const [currentLessonInfo, setCurrentLessonInfo] = useState({})
 
   const openLessonsDialog = (data) => {
@@ -59,6 +73,9 @@ const LessonsForm = props => {
     setLessonsDialogVisible(true)
   }
   const closeLessonsDialog = () => setLessonsDialogVisible(false)
+
+  const closeGenerateDialog = () => setGenerateDialogVisible(false)
+  const openGenerateDialog = () => setGenerateDialogVisible(true)
 
   const lessonTypeItems = store.lesson_types.map(item => ({label: item.name, value: item.id}))
   const coursesItems = store.courses.map(item => ({label: item.short_description, value: item.id}))
@@ -68,6 +85,11 @@ const LessonsForm = props => {
 
   return (
     <div className={classes.root}>
+      <Typography component='div' className={classes.controlHeader}>
+        <Button variant="contained" color="primary" className={classes.addButton} onClick={() => openGenerateDialog()}>
+          <AddIcon className={classes.leftIcon}/> Сгенерировать уроки для группы
+        </Button>
+      </Typography>
       <MaterialTable
         className={classes.tableShortIcons}
         title="Занятия"
@@ -173,6 +195,7 @@ const LessonsForm = props => {
         }}
       />
       <LessonsDialog handleClose={closeLessonsDialog} open={lessonsDialogIsOpen} lesson={currentLessonInfo}/>
+      <GenerateLessonsDialog handleClose={closeGenerateDialog} open={generateDialogIsOpen}/>
     </div>
   )
 }

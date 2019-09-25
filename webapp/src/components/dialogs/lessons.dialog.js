@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 const LessonsDialog = ({handleClose, open, lesson, store}) => {
   const classes = useStyles()
   let lesson_info = store.lesson_infos.find(item => item.id === lesson.id)
+
   const groupsItems = lesson_info && lesson_info.groups ? lesson_info.groups.map(item => ({
     label: item.name,
     value: item.id

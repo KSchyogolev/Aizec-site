@@ -5,42 +5,48 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
-import { FileUploadInput } from '../inputs'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { inject, observer } from 'mobx-react'
 
-const FileUploadDialog = ({handleClose, open, message, field, requestField, ...props}) => {
+const DeleteDialog = ({open, handleClose, handleDelete, ...props}) => {
 
-  const [photos, setPhotos] = useState([])
-
-  const handleDrop = (img) => {
-    setPhotos(img)
-  }
-
-  const handleSave = () => {
-    store.uploadImages(photos, message.id, field, requestField).then(res => {
-      handleClose()
-    })
-  }
+  const [comment, setComment] = useState('')
 
   const {store} = props
 
+  const handleChangeBonuses = (e) => {
+    setComment(e.target.value)
+  }
+
+  const onDelete = () => {
+    handleDelete(comment)
+    handleClose()
+  }
+
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'}>
-      <DialogTitle id="form-dialog-title">Загрузка файлов к {message.head_text || message.short_description}</DialogTitle>
+      <DialogTitle id="form-dialog-title">Удаление пользователя</DialogTitle>
       <DialogContent>
-        <FileUploadInput pictures={photos} onDrop={handleDrop}/>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="comment"
+          label="Комментарий"
+          fullWidth
+          style={{width: '400px'}}
+          onChange={handleChangeBonuses}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Отмена
         </Button>
-        <Button onClick={handleSave} color="primary">
-          Сохранить
+        <Button onClick={onDelete} color="primary">
+          Удалить
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default inject('store')(observer(FileUploadDialog))
+export default inject('store')(observer(DeleteDialog))

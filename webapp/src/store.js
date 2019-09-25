@@ -13,6 +13,21 @@ const getLessonsVisits = async (lessons) => {
   return Promise.all(pArray)
 }
 
+const findClosestItem = (items, dateField, today = moment()) => {
+  const nextDays = items.filter(item => moment(item[dateField]).diff(today) > 0)
+  let resItem = nextDays[0] || null
+  nextDays.forEach(item => {
+    const currentDate = moment(item[dateField])
+    const resultDate = moment(resItem[dateField])
+    if (currentDate.diff(resultDate) <= 0) {
+      resItem = item
+    }
+  })
+  return resItem
+}
+
+const getNotification = (priority, text) => ({full_text: text, head_text: priority})
+
 class Store {
 
   constructor () {
@@ -54,6 +69,7 @@ class Store {
   @observable currentVisitsMap = {}
   @observable currentPayments = []
   @observable currentCourseId = {}
+  @observable autoNotifications = []
 
   @observable archivedUsers = []
 
@@ -184,9 +200,9 @@ class Store {
   }
 
   @action
-  deleteUser (userId) {
+  deleteUser (userId, data) {
     return new Promise((resolve, reject) => {
-      API.main.deleteUser(userId).then(() => {
+      API.main.deleteUser(userId, data).then(() => {
         this.removeInStore('users', userId)
         resolve()
       }).catch(reject)
@@ -479,7 +495,7 @@ class Store {
         this.setStore('currentVisits', res.data)
         if (filterFunc)
           this.setTip('currentVisits', filterFunc, 'homeworkUser')
-        resolve()
+        resolve(res)
       }).catch(reject)
     })
   }
@@ -553,15 +569,15 @@ class Store {
   }
 
   @action
-  uploadImages (files, messageId) {
+  uploadImages (files, messageId, field = 'message', requestField = 'messages') {
     return new Promise((resolve, reject) => {
       const formData = new FormData()
 
       for (let i = 0; i < files.length; i++)
-        formData.append('message[photos][]', files[i])
+        formData.append(field + '[photos][]', files[i])
 
-      API.main.uploadFile(formData, messageId).then(res => {
-        this.updateInStore('outbox', messageId, res.data)
+      API.main.uploadFile(formData, messageId, requestField).then(res => {
+        if (field === 'message') this.updateInStore('outbox', messageId, res.data)
         resolve()
       })
     })
@@ -587,6 +603,24 @@ class Store {
   }
 
   @action
+  getCourseGroups = (courseId) => {
+    return new Promise((resolve, reject) => {
+      API.main.getCourseGroups(courseId).then(res => {
+        resolve(res)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getCourseLessons = (courseId) => {
+    return new Promise((resolve, reject) => {
+      API.main.getCourseLessons(courseId).then(res => {
+        resolve(res)
+      }).catch(reject)
+    })
+  }
+
+  @action
   setLoading = (filed, val) => {
     this.loading[filed] = val
   }
@@ -600,7 +634,43 @@ class Store {
 
   @action
   initUser = () => {
-    // this.getUserVisits(this.currentUser.id, (visit) => visit.approve_status === "null", 'homeworkUser')
+    let notifications = []
+
+    Promise.all([this.getUserVisits(), this.getUserLessons()]).then(res => {
+      const visits = res[0].data,
+        lessons = res[1].data
+
+      const mapLessons = lessons.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+
+      const mapVisitOnLesson = visits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
+
+      const homeworkNotSend = visits.filter(item => item.status !== 'null' && item.approve_status === 'null').map(item => mapLessons[item.lesson_id].short_description)
+
+      const closestLesson = findClosestItem(lessons, 'start_time')
+
+      let hasTwoMiss = false
+      const beforeVisit = {}
+      visits.forEach(visit => {
+        if (visit.status === 'skip_without_reason') {
+          const nextLesson = findClosestItem(lessons, 'start_time', moment(mapLessons[visit.lesson_id].start_time))
+          if (nextLesson) {
+            hasTwoMiss = mapVisitOnLesson[nextLesson.id].status === 'skip_without_reason'
+          }
+        }
+      })
+
+      if (homeworkNotSend.length > 0) {
+        notifications.push(getNotification(2, 'Не отправлена домашня работа по урокам: ' + homeworkNotSend.join(', ')))
+      }
+      if (closestLesson) {
+        notifications.push(getNotification(3, 'Ближайшее занятие - ' + closestLesson.short_description + ' (' + moment(closestLesson.start_time).format('DD.MM.YYYY HH:mm') + ')'))
+      }
+      if (hasTwoMiss) {
+        notifications.push(getNotification(1, 'Внимание! У вас пропущено 2 или более занятий подряд, рекомендуем записаться на индивидуальное занятие!'))
+      }
+
+      this.setStore('autoNotifications', notifications)
+    })
   }
 
   @action
@@ -657,8 +727,6 @@ class Store {
               teachers: grp.users.filtr
             }
           })
-          // this.setStore('groups', newGroups)
-          console.log(newGroups)
           this.setStore('groups', newGroups)
         }).catch(reject)
       })

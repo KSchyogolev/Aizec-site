@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { makeStyles } from '@material-ui/core/styles'
 import MaterialTable from 'material-table'
@@ -6,6 +6,7 @@ import { tableIcons } from '../../config/config'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NewIcon from '@material-ui/icons/FiberNew'
+import { DeleteDialog } from '../dialogs'
 
 import ApproveUserIcon from '@material-ui/icons/HowToReg'
 
@@ -41,6 +42,18 @@ const getIconByStatus = (status) => {
 const UsersMainForm = props => {
   const {store} = props
   const classes = useStyles()
+
+  const [deleteDialogIsOpen, setDeleteDialogVisible] = useState(false)
+  const [deleteFunc, setDeleteFunc] = useState(() => {})
+
+  const openDeleteDialog = (rowData) => {
+    setDeleteDialogVisible(true)
+    setDeleteFunc(() => deleteClosureFunc(rowData.id, 'bio'))
+  }
+
+  const closeDeleteDialog = () => setDeleteDialogVisible(false)
+
+  const deleteClosureFunc = (id, key) => (value) => store.deleteUser(id, {[key]: value})
 
   useEffect(() => {
     store.getUsers()
@@ -102,10 +115,18 @@ const UsersMainForm = props => {
             }
             store.addUser(newData).then(resolve).catch(reject)
           }),
-          onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateUser(oldData.id, newData).then(resolve).catch(reject)),
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteUser(oldData.id).then(resolve).catch(reject))
+          onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateUser(oldData.id, newData).then(resolve).catch(reject))
+          // onRowDelete: oldData => new Promise((resolve, reject) => store.deleteUser(oldData.id).then(resolve).catch(reject))
         }}
+        actions={[
+          {
+            icon: tableIcons.Delete,
+            tooltip: 'Удалить',
+            onClick: (event, rowData) => openDeleteDialog(rowData)
+          }
+        ]}
       />
+      <DeleteDialog handleClose={closeDeleteDialog} open={deleteDialogIsOpen} handleDelete={deleteFunc}/>
     </div>
   )
 }

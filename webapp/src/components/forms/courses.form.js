@@ -3,15 +3,15 @@ import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
-import { MessageDialog } from '../dialogs/'
+import { MessageDialog, FileUploadDialog } from '../dialogs/'
 import { tableLocalization } from '../../config/config'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
+import CollectionsIcon from '@material-ui/icons/Collections'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-  },
+  root: {},
   controlHeader: {
     marginBottom: 15,
     display: 'flex',
@@ -30,6 +30,13 @@ const CoursesForm = props => {
   const {store} = props
   const [currentCourse, setCurrentCourse] = useState({})
   const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
+  const [uploadDialogIsOpen, setUploadDialogVisible] = useState(false)
+
+  const openUploadDialog = (message) => {
+    setUploadDialogVisible(true)
+    setCurrentCourse(message || {})
+  }
+  const closeUploadDialog = () => setUploadDialogVisible(false)
 
   const openMessageDialog = (message) => {
     setMessageDialogVisible(true)
@@ -68,8 +75,8 @@ const CoursesForm = props => {
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Полное описание', field: 'full_description', filtering: false},
-          {title: 'Длительность (нед.)', field: 'duration', filtering: false, type:'numeric'},
-          {title: 'Занятий в неделю', field: 'lessonsWeek', filtering: false, type:'numeric'},
+          {title: 'Длительность (нед.)', field: 'duration', filtering: false, type: 'numeric'},
+          {title: 'Занятий в неделю', field: 'lessonsWeek', filtering: false, type: 'numeric'},
           {title: 'Стоимость', field: 'cost', filtering: false},
           {
             title: 'Тип',
@@ -79,6 +86,11 @@ const CoursesForm = props => {
         ]}
         data={store.courses}
         actions={[
+          {
+            icon: () => <CollectionsIcon/>,
+            tooltip: 'Изображения',
+            onClick: (event, rowData) => openUploadDialog(rowData)
+          },
           {
             icon: tableIcons.Edit,
             tooltip: 'Редактировать',
@@ -100,6 +112,10 @@ const CoursesForm = props => {
                      handleChange={handleChange}
                      open={messageDialogIsOpen}
                      types={['course']}/>
+      <FileUploadDialog handleClose={closeUploadDialog} message={currentCourse}
+                        field={'course'}
+                        requestField={'courses'}
+                        open={uploadDialogIsOpen}/>
     </div>
   )
 

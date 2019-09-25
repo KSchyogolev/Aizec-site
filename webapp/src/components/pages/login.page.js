@@ -69,7 +69,7 @@ class LoginPage extends Component {
     store.signIn({user: {email, password}}).then(res => {
       switch (res.role) {
         case 'user' :
-          store.router.goTo(routes.offersUser)
+          store.router.goTo(routes.mainUser)
           store.initUser()
           break
         case 'teacher' :
