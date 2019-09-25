@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { tableIcons, tableLocalization } from '../../../config/config'
 import AddIcon from '@material-ui/icons/Email'
+import { FileUploadInput } from '../../inputs'
+import ImageGallery from 'react-image-gallery'
+import 'react-image-gallery/styles/css/image-gallery.css'
 
 const moment = require('moment')
 
@@ -34,23 +37,40 @@ const useStyles = makeStyles(theme => ({
     fontStyle: 'italic',
     padding: 10,
     display: 'flex',
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'whitesmoke',
+    flexDirection: 'column'
   },
   text: {
-    /*    padding: 10,
-        marginLeft: 10,
-        margin: 'auto 20px',
-        '&:before': {
-          content: '""',
-          position: 'absolute',
-          bottom: -7,
-          left: 10,
-          borderLeft: '15px solid #F5F6F7',
-          borderBottom: '8px solid transparent'
-        }*/
+    padding: 10,
+    marginLeft: 10,
+    margin: 'auto 20px'
+  },
+  imgContainer: {
+    display: 'flex',
+    margin: '30px auto'
   }
 
 }))
+
+const getImgResources = (photos) => photos.map(item => ({
+  original: item.url,
+  thumbnail: item.url
+}))
+
+/*const images = [
+  {
+    original: 'https://picsum.photos/id/1018/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1018/1000/600/'
+  },
+  {
+    original: 'https://picsum.photos/id/1015/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1015/1000/600/'
+  },
+  {
+    original: 'https://picsum.photos/id/1019/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1019/1000/600/'
+  }
+]*/
 
 const LettersUserPage = (props) => {
   const classes = useStyles()
@@ -100,9 +120,13 @@ const LettersUserPage = (props) => {
           {
             tooltip: 'Сообщение',
             render: rowData => {
+              const images = getImgResources(rowData.photos)
               return (
                 <div className={classes.description}>
-                  {rowData.full_text}
+                  <Paper className={classes.text}>{rowData.full_text}</Paper>
+                  {rowData.photos.length ? <div className={classes.imgContainer}>
+                    <ImageGallery showPlayButton={false} items={images}/>
+                  </div> : null}
                 </div>
               )
             }

@@ -10,6 +10,11 @@ import LessonsTypesForm from './lessonsTypes.form'
 import PaymentsForm from './payments.form'
 import UsersForm from './users.form'
 import ReportsForm from './reports.form'
+import GroupsTeacherForm from './groupsTeacher.form'
+import UsersMainForm from './users.main.form'
+import UsersArchiveForm from './usersArchive.form'
+
+
 
 export {
   ChildInfoForm,
@@ -24,4 +29,7 @@ export {
   PaymentsForm,
   UsersForm,
   ReportsForm,
+  GroupsTeacherForm,
+  UsersArchiveForm,
+  UsersMainForm
 }

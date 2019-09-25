@@ -43,7 +43,8 @@ const RemindersDialog = ({handleClose, open, notification, ...props}) => {
   }
 
   const handleSave = () => {
-    store.addMessage({...message, kind: 'notification'}).then((res) => {
+    let savePromise = message.id ? () => store.updateMessage(message.id, message) : () => store.addMessage({...message, kind: 'notification'})
+    savePromise().then((res) => {
       // store.addInStore('outbox', res)
       // store.showNotification('success', 'Обращение отправлено успешно')
       onClose()
@@ -109,7 +110,7 @@ const RemindersDialog = ({handleClose, open, notification, ...props}) => {
           Отмена
         </Button>
         <Button onClick={handleSave} color="primary">
-          Отправить
+          Сохранить
         </Button>
       </DialogActions>
     </Dialog>

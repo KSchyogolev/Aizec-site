@@ -1,6 +1,17 @@
 import { action, observable } from 'mobx'
 import { RouterStore } from 'mobx-router'
 import API from './api/api'
+import moment from 'moment'
+
+const _ = require('lodash')
+
+const getLessonsVisits = async (lessons) => {
+  const pArray = lessons.map(async lesson => {
+    const res = await API.main.getLessonVisits(lesson.id)
+    return {lesson_id: lesson.id, data: res.data}
+  })
+  return Promise.all(pArray)
+}
 
 class Store {
 
@@ -25,6 +36,7 @@ class Store {
   @observable lesson_infos = []
   @observable messages = []
   @observable visits = []
+  @observable inbox = []
   @observable payments = []
   @observable lesson_types = []
   @observable currentUser = {}
@@ -34,10 +46,17 @@ class Store {
   @observable currentOffers = []
   @observable currentCourses = []
   @observable currentMessages = []
+  @observable journalLessons = []
   @observable currentVisits = []
   @observable lessonVisits = []
   @observable currentGroups = []
   @observable currentClubs = []
+  @observable currentVisitsMap = {}
+  @observable currentPayments = []
+  @observable currentCourseId = {}
+
+  @observable archivedUsers = []
+
   @observable loading = {
     currentOffers: false
   }
@@ -107,10 +126,19 @@ class Store {
   @action
   getUsers () {
     return new Promise((resolve, reject) => {
-      API.main.getAllUsers().then(res => {
-        this.setStore('users', res.data)
-        resolve()
-      }).catch(reject)
+      this.getAll('groups').then(resG => {
+        const groups = resG.data
+        API.main.getAllUsers().then(res => {
+          const users = res.data.map(user => {
+            return {
+              ...user,
+              isNew: !groups.some(grp => grp.users.some(item => item.id === user.id))
+            }
+          })
+          this.setStore('users', users)
+          resolve()
+        }).catch(reject)
+      })
     })
   }
 
@@ -323,7 +351,17 @@ class Store {
         if (tipsCountFunction) {
           this.setTip(field, tipsCountFunction, page)
         }
-        resolve()
+        resolve(res)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getArchived (field, storeField) {
+    return new Promise((resolve, reject) => {
+      API.main.getAllArchived(field).then(res => {
+        this.setStore(storeField, res.data)
+        resolve(res)
       }).catch(reject)
     })
   }
@@ -353,7 +391,6 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.updateObject(field, id, data).then(res => {
         this.updateInStore(field, id, res.data)
-        console.log('RESOLVE')
         resolve(res.data)
       }).catch(reject)
     })
@@ -426,11 +463,11 @@ class Store {
   }
 
   @action
-  getUserObjects (field, userId = this.currentUser.id, storeField) {
+  getUserObjects (field, storeField, userId = this.currentUser.id) {
     return new Promise((resolve, reject) => {
       API.main.getUserObjects(field, userId).then(res => {
         this.setStore(storeField || field, res.data)
-        resolve()
+        resolve(res)
       }).catch(reject)
     })
   }
@@ -461,13 +498,30 @@ class Store {
   getCurrentOffers () {
     this.setLoading('currentOffers', true)
     return new Promise((resolve, reject) => {
-      API.main.getCurrentOffers(this.currentUser.id).then(res => {
-        this.setStore('currentOffers', res.data)
-        this.setLoading('currentOffers', false)
-        resolve()
-      }).catch((err) => {
-        this.setLoading('currentOffers', false)
-        reject(err)
+      this.getUserObjects('payments', 'currentPayments').then(resP => {
+        const payments = resP.data
+        this.setStore('currentPayments', payments)
+        API.main.getCurrentOffers(this.currentUser.id).then(res => {
+          const offers = res.data.map(offer => {
+            const a = moment()
+            const b = moment(offer.created_at)
+
+            let payIndex = payments.findIndex(payment => payment.merch_id === offer.id || payment.message_id === offer.id || payment.course_id === offer.id)
+
+            return {
+              ...offer,
+              isNew: a.diff(b, 'days') < 7,
+              status: payIndex === -1 ? 'null' : payments[payIndex].status
+            }
+          })
+          console.log(offers)
+          this.setStore('currentOffers', offers)
+          this.setLoading('currentOffers', false)
+          resolve()
+        }).catch((err) => {
+          this.setLoading('currentOffers', false)
+          reject(err)
+        })
       })
     })
   }
@@ -495,6 +549,21 @@ class Store {
         }
         resolve()
       }).catch(reject)
+    })
+  }
+
+  @action
+  uploadImages (files, messageId) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData()
+
+      for (let i = 0; i < files.length; i++)
+        formData.append('message[photos][]', files[i])
+
+      API.main.uploadFile(formData, messageId).then(res => {
+        this.updateInStore('outbox', messageId, res.data)
+        resolve()
+      })
     })
   }
 
@@ -537,13 +606,122 @@ class Store {
   @action
   initTeacher = () => {
     let notApprovedHomework = 0
-    this.getUserLessons().then(res => {
-      res.data.forEach(lesson => {
-        this.getLessonVisits(lesson.id).then(res => {
-          notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
-          this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
-        })
+    /*    this.getUserLessons().then(res => {
+          res.data.forEach(lesson => {
+            this.getLessonVisits(lesson.id).then(res => {
+              notApprovedHomework += res.data.filter(item => item.approve_status === 'done_not_approved').length
+              this.setStore('tips', {...this.tips, currentVisits: notApprovedHomework})
+            })
+          })
+        })*/
+    this.getUserObjects('groups', 'currentGroups')
+  }
+
+  @action
+  sendNewPassword = (email) => {
+    return new Promise((resolve, reject) => {
+      API.main.sendNewPassword({email}).then(() => {
+        resolve()
+      }).catch(reject)
+    })
+  }
+
+  @action
+  getLessonsInfos = () => {
+    return new Promise((resolve, reject) => {
+      this.getAll('groups').then(res => {
+        const groups = res.data
+        this.getAll('lessons').then(res => {
+          const lessons = res.data
+          const groupLessons = _.groupBy(lessons, 'group_id')
+          const newGroups = groups.map(item => {
+            let grp = {...item},
+              daysWeek = [],
+              times = []
+            if (groupLessons[item.id]) {
+              groupLessons[item.id].forEach(lesson => {
+                const day = moment(lesson.start_time).isoWeekday()
+                const time = moment(lesson.start_time).format('hh:mm')
+                if (daysWeek.indexOf(day) === -1) {
+                  daysWeek.push(day)
+                }
+                if (times.indexOf(time) === -1) {
+                  times.push(time)
+                }
+              })
+            }
+            return {
+              ...grp,
+              daysWeek: daysWeek,
+              times: times,
+              teachers: grp.users.filtr
+            }
+          })
+          // this.setStore('groups', newGroups)
+          console.log(newGroups)
+          this.setStore('groups', newGroups)
+        }).catch(reject)
       })
+    })
+  }
+
+  @action
+  getJournalLessons = (courseId) => {
+    if (!courseId) {
+      this.setStore('journalLessons', [])
+      this.setStore('currentVisitsMap', {})
+      this.setStore('currentCourseId', null)
+      return
+    }
+
+    const lessons = this.lesson_infos.filter(item => item.course_id === courseId).reduce((res, item) => ([...item.lessons, ...res]), [])
+    getLessonsVisits(lessons).then(res => {
+      const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
+      const lessonsWithVisits = lessons.map(item => ({
+        ...item,
+        visits: visitsMap[item.id] || []
+      }))
+      const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+
+      const currentLessons = Object.keys(lessonsGroupByType).map(key => {
+        return {
+          lesson_type: key,
+          lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
+        }
+      })
+      this.setStore('journalLessons', currentLessons)
+      this.setStore('currentVisitsMap', visitsMap)
+      this.setStore('currentCourseId', courseId)
+    })
+  }
+
+  @action
+  updateVisit = (visitId, data) => {
+    return new Promise((resolve, reject) => {
+      API.main.updateObject('visits', visitId, data).then(res => {
+
+        const visitsMap = {...this.currentVisitsMap}
+        const visits = visitsMap[res.data.lesson_id]
+        const index = visits.findIndex(item => item.id === visitId)
+        visits[index] = res.data
+
+        const lessons = this.lesson_infos.filter(item => item.course_id === this.currentCourseId).reduce((res, item) => ([...item.lessons, ...res]), [])
+        const lessonsWithVisits = lessons.map(item => ({
+          ...item,
+          visits: visitsMap[item.id] || []
+        }))
+        const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+        const currentLessons = Object.keys(lessonsGroupByType).map(key => {
+          return {
+            lesson_type: key,
+            lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
+          }
+        })
+
+        this.setStore('journalLessons', currentLessons)
+        this.setStore('currentVisitsMap', visitsMap)
+        resolve()
+      }).catch(reject)
     })
   }
 

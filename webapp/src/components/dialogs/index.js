@@ -6,6 +6,10 @@ import ReportDialog  from './report.dialog'
 import BuyDialog from './buy.dialog'
 import UserInfoDialog from './userInfo.dialog'
 import RemindersDialog from './reminders.dialog'
+import ForgetPasswordDialog from './forgetPassword.dialog'
+import OfferInfoDialog from './offerInfo.dialog'
+import GroupUsersTeacherDialog from './groupUsersTeacher.dialog'
+import FileUploadDialog from './fileUpload.dialog'
 
 export {
   MessageDialog,
@@ -15,5 +19,9 @@ export {
   ReportDialog,
   BuyDialog,
   UserInfoDialog,
-  RemindersDialog
+  RemindersDialog,
+  ForgetPasswordDialog,
+  OfferInfoDialog,
+  GroupUsersTeacherDialog,
+  FileUploadDialog,
 }

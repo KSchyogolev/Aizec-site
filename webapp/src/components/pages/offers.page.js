@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import { MessageDialog } from '../dialogs/'
+import { MessageDialog, FileUploadDialog } from '../dialogs/'
 import MaterialTable from 'material-table'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import CollectionsIcon from '@material-ui/icons/Collections'
 
 import AddIcon from '@material-ui/icons/Add'
 
@@ -32,12 +33,13 @@ const useStyles = makeStyles(theme => ({
   },
   actionCell: {
     padding: 0,
-    minWidth: 110
+    minWidth: 140
   }
 }))
 
 const OffersPage = props => {
   const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
+  const [uploadDialogIsOpen, setUploadDialogVisible] = useState(false)
   const [currentMessage, setCurrentMessage] = useState({})
   const classes = useStyles()
   const {store} = props
@@ -71,6 +73,12 @@ const OffersPage = props => {
   }
   const closeMessageDialog = () => setMessageDialogVisible(false)
 
+  const openUploadDialog = (message) => {
+    setUploadDialogVisible(true)
+    setCurrentMessage(message || {})
+  }
+  const closeUploadDialog = () => setUploadDialogVisible(false)
+
   return (
     <div className={classes.root}>
       <Typography component='div' className={classes.controlHeader}>
@@ -95,6 +103,9 @@ const OffersPage = props => {
                 <TableCell align="left">{row.head_text}</TableCell>
                 <TableCell align="left">{row.full_text}</TableCell>
                 <TableCell align="right" className={classes.actionCell}>
+                  <IconButton aria-label="edit" className={classes.margin} onClick={() => openUploadDialog(row)}>
+                    <CollectionsIcon fontSize="small"/>
+                  </IconButton>
                   <IconButton aria-label="edit" className={classes.margin} onClick={() => openMessageDialog(row)}>
                     <EditIcon fontSize="small"/>
                   </IconButton>
@@ -112,6 +123,9 @@ const OffersPage = props => {
                      handleChange={handleChange}
                      open={messageDialogIsOpen}
                      types={['offer', 'product', 'course']}/>
+
+      <FileUploadDialog handleClose={closeUploadDialog} message={currentMessage}
+                        open={uploadDialogIsOpen}/>
     </div>
   )
 

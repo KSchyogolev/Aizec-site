@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 
-import { ClubsForm, GroupsForm, UsersForm } from '../../forms'
+import { ClubsForm, GroupsForm, UsersForm, GroupsTeacherForm } from '../../forms'
 
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -49,29 +49,27 @@ const ListTeacherPage = props => {
   }
 
   useEffect(() => {
-    store.getUserObjects('groups', null, 'currentGroups')
-    store.getUserObjects('courses', null, 'currentCourses')
-    store.getUserObjects('clubs', null, 'currentClubs')
+    store.getUserObjects('groups', 'currentGroups')
+    store.getAll('clubs')
+    store.getAll('courses')
+    store.getUsers()
+    store.getLessonsInfos()
   }, [])
 
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.defaultBar}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Клубы" {...a11yProps(0)} />
-          <Tab label="Группы" {...a11yProps(1)} />
-          <Tab label="Ученики" {...a11yProps(2)} />
+          <Tab label="Группы" {...a11yProps(0)} />
+          {/*<Tab label="Ученики" {...a11yProps(1)} />*/}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <ClubsForm/>
+        <GroupsTeacherForm/>
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <GroupsForm/>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
+      {/*      <TabPanel value={value} index={1}>
         <UsersForm/>
-      </TabPanel>
+      </TabPanel>*/}
     </div>
   )
 

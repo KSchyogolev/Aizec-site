@@ -18,7 +18,6 @@ const HomeworkPage = props => {
       HOMEWORK
     </div>
   )
-
 }
 
 export default inject('store')(observer(HomeworkPage))

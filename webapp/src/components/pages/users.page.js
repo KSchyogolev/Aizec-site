@@ -1,11 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import { makeStyles } from '@material-ui/core/styles'
 import MaterialTable from 'material-table'
 import { tableIcons } from '../../config/config'
 import IconButton from '@material-ui/core/IconButton'
-
+import Tooltip from '@material-ui/core/Tooltip'
+import NewIcon from '@material-ui/icons/FiberNew'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import ApproveUserIcon from '@material-ui/icons/HowToReg'
+import { TabPanel, a11yProps } from './index'
+import { UsersMainForm, UsersArchiveForm } from '../forms/'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,68 +20,61 @@ const useStyles = makeStyles(theme => ({
   },
   actionButton: {
     padding: '0!important'
+  },
+  defaultBar: {
+    backgroundColor: '#464646',
+    '& .MuiTabs-indicator': {
+      backgroundColor: '#E64A19'
+    }
   }
 }))
+
+const getIconByStatus = (status) => {
+
+  let component = <NewIcon/>,
+    title = ''
+
+  switch (status) {
+    case 'new':
+      component = <NewIcon style={{color: '#668bc5'}}/>
+      title = 'Пользователь не состоит ни в одной группе'
+      break
+    default :
+      return null
+  }
+
+  return <Tooltip title={title} aria-label="icon">
+    {component}
+  </Tooltip>
+}
 
 const UsersPage = props => {
   const {store} = props
   const classes = useStyles()
 
-  useEffect(() => {
-    store.getUsers()
-  }, [])
+  const [value, setValue] = useState(0)
+
+  function handleChange (event, newValue) {
+    setValue(newValue)
+  }
 
 
   return (
     <div className={classes.root}>
-      <MaterialTable
-        title="Пользователи"
-        icons={tableIcons}
-        columns={[
-          {
-            title: '',
-            field: 'approve',
-            filtering: false,
-            cellStyle: {
-              width: 40
-            },
-            render: rowData => rowData.status === 'not_approved' ?
-              <IconButton className={classes.actionButton} onClick={() => store.approveUser(rowData.id)}
-                          title={'Подтвердить пользователя'}>
-                <ApproveUserIcon/>
-              </IconButton> : '',
-            editComponent: () => null
-          },
-          {title: 'Имя', field: 'first_name', filtering: false},
-          {title: 'Фамилия', field: 'second_name', filtering: false},
-          {title: 'Отчество', field: 'third_name', filtering: false},
-          {title: 'Пароль', field: 'password', filtering: false},
-          {title: 'Почта', field: 'email', filtering: false},
-          {
-            title: 'Роль',
-            field: 'role',
-            lookup: {'admin': 'Администратор', 'teacher': 'Учитель', 'user': 'Ученик'}
-          }
-        ]}
-        data={store.users}
-        options={{
-          pageSize: 10,
-          actionsColumnIndex: -1,
-          pageSizeOptions: [10, 20, 50],
-          filtering: true
-        }}
-        editable={{
-          onRowAdd: newData => new Promise((resolve, reject) => {
-            if (newData.role === 'user') {
-              store.createByEmail(newData).then(resolve).catch(reject)
-              return
-            }
-            store.addUser(newData).then(resolve).catch(reject)
-          }),
-          onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateUser(oldData.id, newData).then(resolve).catch(reject)),
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteUser(oldData.id).then(resolve).catch(reject))
-        }}
-      />
+      <div className={classes.root}>
+        <AppBar position="static" className={classes.defaultBar}>
+          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            <Tab label="Активные" {...a11yProps(0)} />
+            <Tab label="Архив" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+          <UsersMainForm/>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <UsersArchiveForm/>
+        </TabPanel>
+      </div>
     </div>
   )
 }

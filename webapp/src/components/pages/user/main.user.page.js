@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
+import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
+import { getCurrentOffers } from './offers.user.page'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import NotifIcon from '@material-ui/icons/PriorityHigh'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,6 +50,22 @@ const useStyles = makeStyles(theme => ({
   },
   parentsForm: {
     // marginTop: 100
+  },
+  parentsExpand: {
+    width: '100%'
+  },
+  notificationBox: {
+    margin: '20px 0',
+    textAlign: 'left',
+    // backgroundColor: '#ff57221c'
+  },
+  notification: {
+    display: 'flex',
+    padding: 15,
+    fontWeight: 600,
+    '& svg': {
+      marginRight: 10
+    }
   }
 }))
 
@@ -58,7 +81,7 @@ const ParentCard = ({parent, ...props}) => {
     <Card>
       <CardMedia
         className={classes.parentMedia}
-        image={require('../../../static/images/' + (parent.gender ? 'man_card.jpg' : 'woman_card.jpg') )}
+        image={require('../../../static/images/' + (parent.gender ? 'man_card.jpg' : 'woman_card.jpg'))}
         title="Contemplative Reptile"
       />
       <CardContent>
@@ -74,6 +97,10 @@ const ParentCard = ({parent, ...props}) => {
             <div>{parent.phone}</div>
           </div>
           <div className={classes.infoRow}>
+            <div>Почта</div>
+            <div>{parent.email}</div>
+          </div>
+          <div className={classes.infoRow}>
             <div>Дата рождения</div>
             <div>{parent.birthday}</div>
           </div>
@@ -83,10 +110,21 @@ const ParentCard = ({parent, ...props}) => {
   </Typography>
 }
 
+const NotificationRow = ({text, priority}) => {
+  const classes = useStyles()
+  return <div className={classes.notification}><NotifIcon style={{color: '#FF5722'}}/>{text}</div>
+}
+
 const MainUserPage = (props) => {
   const classes = useStyles()
   const {store} = props
   const {currentUser: user} = store
+
+  useEffect(() => {
+    store.getCurrentOffers()
+    store.getUserObjects('inbox')
+  }, [store.currentOffers.length])
+
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
@@ -119,16 +157,32 @@ const MainUserPage = (props) => {
               <div>{user.bonus_count || 0}</div>
             </div>
           </Typography>
-          {user.parents ? <Typography className={classes.parentsForm}>
-            {/*<Typography variant="h5" component="h2">Представители</Typography>*/}
-            <Grid container spacing={3}>
-              {JSON.parse(user.parents).map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
-                <ParentCard parent={item}/>
-              </Grid>)}
-            </Grid>
-          </Typography> : null}
+          {user.parents ? <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon/>}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>Родители</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails className={classes.parentsExpand}>
+              <Grid container spacing={3}>
+                {user.parents.map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
+                  <ParentCard parent={item}/>
+                </Grid>)}
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel> : null}
         </CardContent>
       </Card>
+      <br/>
+      <Grid container spacing={3}>
+        {getCurrentOffers(store.currentOffers.filter(item => item.kind !== 'offer' && item.status !== 'done'), 4)}
+      </Grid>
+      <Paper className={classes.notificationBox}>
+        {store.inbox.filter(item => item.kind === 'notification').sort((a, b) => parseInt(a.head_text) - parseInt(b.head_text)).map(item => <NotificationRow
+          text={item.full_text}/>)}
+      </Paper>
     </div>
   )
 }

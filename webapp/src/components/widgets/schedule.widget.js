@@ -54,6 +54,7 @@ const lessonType = {
   regular: '#edf5fa',
   individual: '#faa8ff'
 }
+
 const getLessonInfo = (status) => {
   switch (status) {
     case 'ok':

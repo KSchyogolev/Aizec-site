@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Grid from '@material-ui/core/Grid'
+import { FileUploadInput } from '../inputs'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,6 +29,11 @@ const ReportDialog = ({handleClose, open, ...props}) => {
   const classes = useStyles()
   const {store} = props
   const [message, setMessage] = useState({})
+  const [photos, setPhotos] = useState([])
+
+  const handleDrop = (img) => {
+    setPhotos(img)
+  }
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -37,8 +43,15 @@ const ReportDialog = ({handleClose, open, ...props}) => {
   const handleSave = () => {
     store.addMessage({...message, kind: 'report', to_entity_type: 'admin'}).then((res) => {
       store.addInStore('outbox', res)
-      store.showNotification('success', 'Обращение отправлено успешно')
-      onClose()
+      if (!photos.length) {
+        store.showNotification('success', 'Обращение отправлено успешно')
+        onClose()
+        return
+      }
+      store.uploadImages(photos, res.id).then(res => {
+        store.showNotification('success', 'Обращение отправлено успешно')
+        onClose()
+      })
     }).catch(err => {
       store.showNotification('error', 'Ошибка при отправке обращения')
       console.log(err)
@@ -73,7 +86,7 @@ const ReportDialog = ({handleClose, open, ...props}) => {
           <Grid item xs={12} sm={6}></Grid>
           <Grid item xs={12} sm={12} md={12}>
             <TextField
-              multiline
+              multilinew
               label="Сообщение"
               className={classes.textField}
               value={message.full_text}
@@ -84,6 +97,9 @@ const ReportDialog = ({handleClose, open, ...props}) => {
               fullWidth
               rows={10}
             />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <FileUploadInput pictures={photos} onDrop={handleDrop}/>
           </Grid>
         </Grid>
       </DialogContent>

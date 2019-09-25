@@ -52,7 +52,7 @@ const TablePage = props => {
     store.getAll('clubs')
     store.getAll('groups')
     store.getAll('courses')
-    store.getAll('users')
+    store.getUsers()
   }, [])
 
   return (

@@ -81,6 +81,7 @@ const getIconByStatus = (status) => {
     {component}
   </Tooltip>
 }
+
 const homeworkMap = {
   'done_not_approved': 'На проверке',
   'done_approved': 'Зачтена',
@@ -94,8 +95,11 @@ const HomeworkUserPage = (props) => {
 
   const openLessons = store.currentLessons.filter(item => item.status === 'open')
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
-  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
+  console.log(mapVisitOnLesson)
+
+  const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+  console.log(mapVisitOnLesson)
   const mutableData = openLessons.map(item => {
     const lesson = item
     lesson.course_name = mapCourses[item.course_id].short_description
@@ -108,10 +112,10 @@ const HomeworkUserPage = (props) => {
     store.getCurrentCourses()
   }, [store.currentVisits.length, store.currentLessons.length])
 
-  const onChangeFileHandler = (e, lessonId) => {
+  const onChangeFileHandler = (e, visitId) => {
     const files = e.target.files
     if (files.length > 0) {
-      store.uploadHomework(files, mapVisitOnLesson[lessonId].id).then(res => {
+      store.uploadHomework(files, visitId).then(res => {
         store.showNotification('success', 'Домашняя работа успешно загружена')
         // this.setTip('currentVisits', (visit) => visit.approve_status === "null", 'homeworkUser')
       }).catch(e => {
@@ -120,11 +124,13 @@ const HomeworkUserPage = (props) => {
     }
   }
 
-  const UploadHomeWorkButton = ({lessonId, disabled}) => {
+  const UploadHomeWorkButton = ({visitId, disabled}) => {
+    const classes = useStyles()
+    const id = `icon-button-file-${visitId}`
     return <div className={classes.detailsButton}>
-      <input accept="image/*" className={classes.input} id="icon-button-file1" type="file"
-             onChange={(file) => onChangeFileHandler(file, lessonId)}/>
-      <label htmlFor="icon-button-file1">
+      <input accept="image/*" className={classes.input} id={id} type="file"
+             onChange={file => onChangeFileHandler(file, visitId)}/>
+      <label htmlFor={id}>
         <Tooltip title="Отправить ДЗ на проверку" aria-label="add">
           <Fab size="small" color={disabled ? '' : 'primary'} className={classes.margin}
                disabled={disabled}
@@ -148,7 +154,7 @@ const HomeworkUserPage = (props) => {
             grouping: false,
             render: rowData => {
               const visit = mapVisitOnLesson[rowData.id] || {}
-              return <UploadHomeWorkButton lessonId={rowData.id} disabled={visit.approve_status === 'done_approved'}/>
+              return <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} visitId={visit.id}/>
             }
           },
           {
@@ -188,19 +194,19 @@ const HomeworkUserPage = (props) => {
               return (
                 <div className={classes.description}>
                   <Paper className={classes.text}>
-                    <h3>Домашнее задание:</h3>
-                    {rowData.homework}
-                    {visit.homework_comment && <div>
-                      <h4>Комментарий от учителя:</h4>
-                      {visit.homework_comment}
-                    </div>}
-                    <br/>
-                  </Paper>
-                  <br/>
-                  <Paper className={classes.text}>
                     <h3>Конспект:</h3>
                     {rowData.synopsys}
                   </Paper>
+                  <br/>
+                  <Paper className={classes.text}>
+                    <h3>Домашнее задание:</h3>
+                    {rowData.homework}
+                  </Paper>
+                  <br/>
+                  {visit.homework_comment && <Paper className={classes.text}>
+                    <h3>Комментарий от учителя:</h3>
+                    {visit.homework_comment}
+                  </Paper>}
                 </div>
               )
             }

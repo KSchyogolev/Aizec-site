@@ -79,6 +79,12 @@ body {
     background-color: var(--primary-color) !important;
 }
 
+.MuiButton-containedPrimary.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26) !important;
+    box-shadow: none !important;
+    background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
 .MuiButton-containedPrimary:hover {
     background-color: var(--dark-primary) !important;
 }
@@ -100,10 +106,8 @@ body {
 }
 
 .MuiOutlinedInput-input {
-    padding: 18.5px 14px!important;
+    padding: 18.5px 14px !important;
 }
-
-
 
 /*
 .Mui-focused {
@@ -118,7 +122,11 @@ body {
     padding: 9px !important;
 }
 
-.MuiBadge-colorPrimary{
+.MuiBadge-colorPrimary {
     background-color: #5f89d6 !important;
     /*color: black !important;*/
+}
+
+.MuiPaper-elevetion {
+    z-index: 100000 !important
 }

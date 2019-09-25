@@ -5,6 +5,8 @@ import { inject, observer } from 'mobx-react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 import Paper from '@material-ui/core/Paper'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
@@ -12,6 +14,11 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Button from '@material-ui/core/Button'
 import Link from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { ChildInfoForm, ParentInfoForm } from '../forms'
 
@@ -49,22 +56,65 @@ const useStyles = makeStyles(theme => ({
   },
   finalMessage: {
     padding: 40,
-    borderRadius: 10
+    borderRadius: 10,
+    height: 120,
+    position: 'relative'
+  },
+  link: {
+    '& input': {
+      display: 'none'
+    }
+  },
+  rulesForm: {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 0
   }
 }))
 
+const UserRulesDialog = ({open, handleClose}) => <Dialog open={open} onClose={handleClose}
+                                                         aria-labelledby="form-dialog-title" maxWidth={'md'}>
+  <DialogTitle id="form-dialog-title">Пользоветельское соглашение</DialogTitle>
+  <DialogContent>
+    <DialogContentText>
+
+    </DialogContentText>
+  </DialogContent>
+</Dialog>
+
 const SendDataForm = props => {
   const classes = useStyles()
+  const [usersRulesIsOpen, setVisibleDialog] = useState(false)
+
+  const openRulesDialog = () => setVisibleDialog(true)
+  const closeRulesDialog = () => setVisibleDialog(false)
+
   return <div className={classes.finalMessage}>
-    <Typography variant="h5" component="h3">
-      Проверьте все данные перед отправкой.
+    <Typography variant="h5" component="h5">
+      Проверьте все данные перед отправкой
     </Typography>
     <Typography component="p">
-      Внесение изменений после отправки запрещено.
+      Внесение изменений, до подтверждения анкеты, запрещено
     </Typography>
+    <Typography component="div" className={classes.rulesForm}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={props.checkRules}
+            onChange={(e) => props.setRules(e.target.value)}
+            value="checkRules"
+            color="primary"
+          />
+        }
+        label="Я принимаю пользовательское соглашение"
+      />
+      <Button href="#text-buttons" className={classes.link} onClick={openRulesDialog}>
+        Подробнее...
+      </Button>
+    </Typography>
+    <UserRulesDialog open={usersRulesIsOpen} handleClose={closeRulesDialog}/>
   </div>
 }
-
 
 const steps = ['Родитель', 'Ребенок', 'Подтверждение']
 
@@ -75,7 +125,7 @@ const getStepContent = (step, props) => {
     case 1:
       return <ChildInfoForm {...props}/>
     case 2:
-      return <SendDataForm/>
+      return <SendDataForm {...props}/>
     default:
       throw new Error('Unknown step')
   }
@@ -90,6 +140,9 @@ const Registration = props => {
   initialUser.parents = [{}]
   const [activeStep, setActiveStep] = useState(isRegistered ? steps.length : 0)
   const [currentUser, setUser] = useState(initialUser)
+  const [checkRules, setCheckRules] = useState(false)
+
+  const setRules = (value) => setCheckRules(value)
 
   const handleChange = (e) => {
     const {target: {name, value}} = e
@@ -138,7 +191,7 @@ const Registration = props => {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep, {handleChange, user: currentUser})}
+                {getStepContent(activeStep, {handleChange, user: currentUser, setRules, checkRules})}
                 <div className={classes.buttons}>
                   {activeStep !== 0 && (
                     <Button onClick={handleBack} className={classes.button}>
@@ -147,9 +200,10 @@ const Registration = props => {
                   )}
                   <Button
                     variant="contained"
-                    color="primary"
+                    color={'primary'}
                     onClick={handleNext}
                     className={classes.button}
+                    disabled={!checkRules && activeStep === steps.length - 1}
                   >
                     {activeStep === steps.length - 1 ? 'Отправить данные' : 'Далее'}
                   </Button>

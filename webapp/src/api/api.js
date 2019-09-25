@@ -57,7 +57,12 @@ axios.interceptors.response.use(undefined, err => {
 
 const API = {main: {}}
 
+API.main.sendNewPassword = (data) => post('restapi/users/revoke_password', data)
+
 API.main.getAllObjects = (objects) => get('restapi/' + objects)
+
+API.main.getAllArchived = (objects) => get('restapi/' + objects + '/archivated')
+
 API.main.deleteObject = (objects, id) => del('restapi/' + objects + '/' + id)
 API.main.updateObject = (objects, id, data) => patch('restapi/' + objects + '/' + id, data)
 API.main.addObject = (objects, data) => post('restapi/' + objects, data)
@@ -103,6 +108,7 @@ API.main.getUserObjects = (field, userId) => get('restapi/users/' + userId + '/'
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
+API.main.uploadFile = (data, messageId) => patch('restapi/messages/' + messageId + '.json', data, 'multipart/form-data')
 API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/inbox')
 API.main.downloadFile = (url, type = 'application/json') => {
   return new Promise((resolve, reject) =>
