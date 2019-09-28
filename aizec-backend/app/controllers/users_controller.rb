@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
   before_action :allow_admin, only: [:create, :destroy, :approve]
 
-  wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :level, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents]
+  wrap_parameters :user, include: [:password, :password_confirmation, :first_name, :level, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents, :club]
   
   has_many_methods_for User
   
@@ -166,6 +166,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:password, :password_confirmation, :first_name, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents, :level, :photo)
+      params.require(:user).permit(:password, :password_confirmation, :first_name, :second_name, :third_name, :role, :photo, :bio, :phone, :email, :status, :bonus_count, :gender, :address, :birthday, :parents, :level, :photo, :club)
     end
 end
