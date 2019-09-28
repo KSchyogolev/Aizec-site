@@ -1,9 +1,9 @@
-import ParentInfoForm  from './parentInfo.form'
-import ChildInfoForm  from './childInfo.form'
-import OfferEditForm  from './offerEdiit.form'
-import CourseEditForm  from './courseEdiit.form'
-import ClubsForm  from './clubs.form'
-import GroupsForm  from './groups.form'
+import ParentInfoForm from './parentInfo.form'
+import ChildInfoForm from './childInfo.form'
+import OfferEditForm from './offerEdiit.form'
+import CourseEditForm from './courseEdiit.form'
+import ClubsForm from './clubs.form'
+import GroupsForm from './groups.form'
 import CoursesForm from './courses.form'
 import LessonsForm from './lessons.form'
 import LessonsTypesForm from './lessonsTypes.form'
@@ -13,8 +13,7 @@ import ReportsForm from './reports.form'
 import GroupsTeacherForm from './groupsTeacher.form'
 import UsersMainForm from './users.main.form'
 import UsersArchiveForm from './usersArchive.form'
-
-
+import MerchEditForm from './merchEdiit.form'
 
 export {
   ChildInfoForm,
@@ -31,5 +30,6 @@ export {
   ReportsForm,
   GroupsTeacherForm,
   UsersArchiveForm,
-  UsersMainForm
+  UsersMainForm,
+  MerchEditForm
 }

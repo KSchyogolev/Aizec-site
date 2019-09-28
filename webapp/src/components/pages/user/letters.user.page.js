@@ -82,7 +82,7 @@ const LettersUserPage = (props) => {
   }
 
   useEffect(() => {
-    store.getUserObjects('outbox')
+    store.getUserObjects('outbox', 'outbox', undefined, false)
   }, [])
 
   const openMessageDialog = (message) => {
@@ -111,6 +111,11 @@ const LettersUserPage = (props) => {
             filtering: false,
             type: 'datetime',
             render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
+          },
+          {
+            title: 'Статус',
+            field: 'status',
+            lookup: {'archived': 'Прочитано', 'active': 'Отправлено'},
           }
         ]}
         data={store.outbox.filter(item => item.kind === 'report')}
@@ -134,15 +139,16 @@ const LettersUserPage = (props) => {
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
-          actionsColumnIndex: -1
+          actionsColumnIndex: -1,
+          // filtering: true
         }}
         localization={tableLocalization}
-/*        editable={{
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(res => {
-            store.removeInStore('outbox', oldData.id)
-            resolve()
-          }).catch(reject))
-        }}*/
+        /*        editable={{
+                  onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(res => {
+                    store.removeInStore('outbox', oldData.id)
+                    resolve()
+                  }).catch(reject))
+                }}*/
       />
       <ReportDialog handleClose={closeMessageDialog}
                     isUser={true}

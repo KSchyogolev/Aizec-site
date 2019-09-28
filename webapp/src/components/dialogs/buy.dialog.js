@@ -5,6 +5,10 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputLabel from '@material-ui/core/InputLabel'
+import FormControl from '@material-ui/core/FormControl'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { inject, observer } from 'mobx-react'
 
@@ -12,6 +16,16 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
   const [bonuses, setBonuses] = useState(0)
 
   const {store} = props
+
+  const getBonusesOptions = (count, step) => {
+    let options = [0]
+    let i = step
+    while (i < count) {
+      options.push(i)
+      i += step
+    }
+    return options
+  }
 
   const handleChangeBonuses = (e) => {
     setBonuses(e.target.value)
@@ -27,6 +41,7 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
       status: 'ready',
       user_id: store.currentUser.id
     }).then(() => {
+      store.setCurrentBonuses(store.currentUser.bonus_count - bonuses)
       const offerId = merch_id || course_id || message_id
       const offer = {...store.currentOffers.find(item => item.id === offerId)}
       offer.status = 'ready'
@@ -43,17 +58,23 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
       <DialogTitle id="form-dialog-title">Заявка на покупку</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Вы собираетесь прирбрести <b>{name}</b>
+          <div>Вы собираетесь прирбрести <b>{name}</b></div>
+          <div>У вас <b style={{color: '#FF5722'}}>{store.currentUser.bonus_count || 0}</b> бонусов</div>
         </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="bonuses"
-          label="Потратить бонусов"
-          type="number"
-          fullWidth
-          onChange={handleChangeBonuses}
-        />
+        <FormControl fullWidth>
+          <InputLabel htmlFor="parent_relationship">Потратить</InputLabel>
+          <Select
+            inputProps={{
+              name: 'head_text',
+              id: 'head_text',
+              value: bonuses,
+              onChange: handleChangeBonuses
+            }}
+          >
+            {getBonusesOptions(store.currentUser.bonus_count, 500).map((item, index) => <MenuItem key={index}
+                                                                                value={item}>{item}</MenuItem>)}
+          </Select>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

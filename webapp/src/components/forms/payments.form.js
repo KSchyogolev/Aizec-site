@@ -73,8 +73,8 @@ const PaymentsForm = props => {
     store.getAllCourses()
     store.getAll('payments')
     store.getAll('users')
-    store.getAll('messages')
-    store.getAll('courses')
+    // store.getAll('messages')
+    // store.getAll('courses')
   }, [store.courses && store.courses.length])
 
   return (

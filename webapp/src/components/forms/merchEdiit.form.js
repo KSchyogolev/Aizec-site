@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 const OfferEditForm = ({message = {}, onChange = () => {}}) => {
   const classes = useStyles()
-  const {head_text, full_text, to_entity_type, to_entity_id, cost} = message
+  const {head_text, full_text, cost} = message
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -40,9 +40,6 @@ const OfferEditForm = ({message = {}, onChange = () => {}}) => {
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} md={12}>
-          <EntityInput handleChange={handleChange} entity_type={to_entity_type} entity_id={to_entity_id}/>
-        </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             label="Заголовок"
@@ -70,7 +67,7 @@ const OfferEditForm = ({message = {}, onChange = () => {}}) => {
             margin="normal"
             variant="outlined"
             InputProps={{
-              startAdornment: <InputAdornment position="start">₽</InputAdornment>
+              startAdornment: <InputAdornment position="start">₽</InputAdornment>,
             }}
           />
         </Grid>

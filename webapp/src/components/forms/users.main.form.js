@@ -89,6 +89,7 @@ const UsersMainForm = props => {
             field: 'role',
             lookup: {'admin': 'Администратор', 'teacher': 'Учитель', 'user': 'Ученик'}
           },
+          {title: 'Бонусы', field: 'bonus_count', filtering: false, type: 'numeric'},
           {
             title: 'Статус',
             render: props => getIconByStatus((props && props.isNew && props.role !== 'admin') ? 'new' : ''),

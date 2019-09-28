@@ -12,10 +12,12 @@ import { MultiSearchInput } from '../inputs'
 import moment from 'moment'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import IconButton from '@material-ui/core/IconButton'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
-
+import VisibilityIcon from '@material-ui/icons/Lock'
+import VisibilityOffIcon from '@material-ui/icons/LockOpen'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import ReportIcon from '@material-ui/icons/Error'
@@ -124,6 +126,24 @@ const JournalPage = props => {
     setLessonsByCourseId(course.value)
   }
 
+  const setLessonStatus = (id, status, journalIndex, lessonIndex) => {
+    store.updateIn('lessons', id, {status: status}).then(res => {
+      const journalLesson = {...store.journalLessons[journalIndex]}
+      journalLesson.lessonsByGroups[res.group_id][lessonIndex].status = res.status
+      let journalLessons = [...store.journalLessons]
+      journalLessons[journalIndex] = journalLesson
+      store.setStore('journalLessons', journalLessons)
+    })
+  }
+
+  const VisibilityButton = ({lessonId, status, journalIndex, lessonIndex}) => {
+    const newStatus = status === 'open' ? 'closed' : 'open'
+    return <IconButton aria-label="edit" className={classes.margin}
+                       onClick={() => {setLessonStatus(lessonId, newStatus, journalIndex, lessonIndex)}}>
+      {status === 'open' ? <VisibilityIcon/> : <VisibilityOffIcon style={{color: '#73c56e'}}/>}
+    </IconButton>
+  }
+
   const VisitCell = ({visit = {}}) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
@@ -205,7 +225,11 @@ const JournalPage = props => {
                   <TableHead>
                     <TableRow>
                       <TableCell align="left">Ученик</TableCell>
-                      {lessons.map(lesson => <TableCell>{moment(lesson.start_time).format('DD.MM')}</TableCell>)}
+                      {lessons.map((lesson, i) => <TableCell align={'center'}>
+                        <div><VisibilityButton status={lesson.status} lessonId={lesson.id} journalIndex={index}
+                                               lessonIndex={i}/></div>
+                        <div>{moment(lesson.start_time).format('DD.MM')}</div>
+                      </TableCell>)}
                     </TableRow>
                   </TableHead>
                   <TableBody>

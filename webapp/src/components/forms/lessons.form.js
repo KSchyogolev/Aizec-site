@@ -15,8 +15,13 @@ import Button from '@material-ui/core/Button'
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import WorkIcon from '@material-ui/icons/Work'
 import MoreIcon from '@material-ui/icons/MoreHoriz'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import CloudDownloadIcon from '@material-ui/icons/Description'
 import Typography from '@material-ui/core/Typography'
+import Tooltip from '@material-ui/core/Tooltip'
+import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/MoveToInbox'
+import API from '../../api/api'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +46,8 @@ const useStyles = makeStyles(theme => ({
   text: {
     padding: 10,
     marginLeft: 10,
-    margin: 'auto 20px'
+    margin: 'auto 20px',
+    display: 'flex'
   },
   controlHeader: {
     marginBottom: 15,
@@ -53,6 +59,12 @@ const useStyles = makeStyles(theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing(1)
+  },
+  input: {
+    display: 'none'
+  },
+  detailsButton: {
+    margin: '0 15px'
   }
 }))
 
@@ -83,6 +95,65 @@ const LessonsForm = props => {
   const lessonTypesMap = lessonTypeItems.reduce((res, item) => ({...res, [item.value]: item.label}), {})
   const coursesMap = coursesItems.reduce((res, item) => ({...res, [item.value]: item.label}), {})
 
+  const onChangeFileHandler = (e, lessonId) => {
+    const files = e.target.files
+    if (files.length > 0) {
+      store.uploadImages(files, lessonId, 'lesson_info', 'lesson_infos', 'files').then(res => {
+        store.showNotification('success', 'Материалы к занятию успешно загружены')
+        store.updateInStore('lesson_infos', lessonId, res.data)
+        // this.setTip('currentVisits', (visit) => visit.approve_status === "null", 'homeworkUser')
+      }).catch(e => {
+        store.showNotification('error', 'Произошла ошибка при загрузке материалов')
+      })
+    }
+  }
+
+  const downloadLessonFiles = (lesson) => {
+    lesson.files.forEach(photo => {
+      const ext = photo.url.split('.').pop()
+      API.main.downloadFile(photo.url).then(res => {
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `Конспект.` + ext)
+        document.body.appendChild(link)
+        link.click()
+      })
+    })
+  }
+
+  const DownloadFilesButton = ({lesson, disabled}) => {
+    const classes = useStyles()
+    return <div className={classes.detailsButton}>
+      <Tooltip title="Скачать конспект урока" aria-label="add">
+        <Fab size="small" className={classes.margin} color={disabled ? '' : 'primary'}
+             disabled={disabled}
+             onClick={() => downloadLessonFiles(lesson)}
+             component={'span'}>
+          <CloudDownloadIcon/>
+        </Fab>
+      </Tooltip>
+    </div>
+  }
+
+  const UploadFilesButton = ({lessonId, colored}) => {
+    const classes = useStyles()
+    const id = `icon-button-file-${lessonId}`
+    return <div className={classes.detailsButton}>
+      <input accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+text/plain, application/pdf" className={classes.input} id={id} type="file"
+             onChange={file => onChangeFileHandler(file, lessonId)}/>
+      <label htmlFor={id}>
+        <Tooltip title="Загрузить конспект для урока" aria-label="add">
+          <Fab size="small" color={colored ? '' : 'primary'} className={classes.margin}
+               component={'span'}>
+            <CloudUploadIcon/>
+          </Fab>
+        </Tooltip>
+      </label>
+    </div>
+  }
+
   return (
     <div className={classes.root}>
       <Typography component='div' className={classes.controlHeader}>
@@ -95,32 +166,43 @@ const LessonsForm = props => {
         title="Занятия"
         icons={tableIcons}
         columns={[
+          {
+            title: 'Материалы занятия',
+            filtering: false,
+            grouping: false,
+            render: rowData => {
+              return <div className={classes.text}>
+                <UploadFilesButton lessonId={rowData.id}/>
+                <DownloadFilesButton lesson={rowData} disabled={rowData.files.length === 0}/>
+              </div>
+            }
+          },
           {title: 'Название', field: 'short_description', type: 'text', filtering: false},
           {title: 'Описание', field: 'full_description', type: 'text', filtering: false},
-         /* {
-            title: 'Конспект', field: 'synopsys', type: 'text', filtering: false,
-            render: () => <MoreIcon/>,
-            editComponent: props => <TextField
-              multiline
-              value={props.value}
-              onChange={e => props.onChange(e.target.value)}
-              className={classes.textField}
-              margin="normal"
-            />
-          },
-          {
-            title: 'Домашнее задание',
-            field: 'homework',
-            filtering: false,
-            render: () => <MoreIcon/>,
-            editComponent: props => <TextField
-              multiline
-              value={props.value}
-              onChange={e => props.onChange(e.target.value)}
-              className={classes.textField}
-              margin="normal"
-            />
-          },*/
+          /* {
+             title: 'Конспект', field: 'synopsys', type: 'text', filtering: false,
+             render: () => <MoreIcon/>,
+             editComponent: props => <TextField
+               multiline
+               value={props.value}
+               onChange={e => props.onChange(e.target.value)}
+               className={classes.textField}
+               margin="normal"
+             />
+           },
+           {
+             title: 'Домашнее задание',
+             field: 'homework',
+             filtering: false,
+             render: () => <MoreIcon/>,
+             editComponent: props => <TextField
+               multiline
+               value={props.value}
+               onChange={e => props.onChange(e.target.value)}
+               className={classes.textField}
+               margin="normal"
+             />
+           },*/
           {title: 'Продолжительность', field: 'duration', type: 'numeric', filtering: false},
           {
             title: 'Предмет',
@@ -146,34 +228,6 @@ const LessonsForm = props => {
           }
         ]}
         data={store.lesson_infos}
-        detailPanel={[
-          {
-            tooltip: 'Конспект',
-            render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>
-                    {rowData.synopsys}
-                  </Paper>
-                </div>
-              )
-            }
-          }/*,
-          {
-            icon: () => <WorkOutlineIcon/>,
-            openIcon: () => <WorkIcon/>,
-            tooltip: 'Домашнее задание',
-            render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>
-                    {rowData.homework}
-                  </Paper>
-                </div>
-              )
-            }
-          }*/
-        ]}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],

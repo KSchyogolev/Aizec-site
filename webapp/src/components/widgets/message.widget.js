@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     transform: 'rotate(180deg)'
   },
   newOffer: {
-    backgroundColor: '#d5ffdc'
+    border: '2px solid #ff572261'
   }
 }))
 
@@ -103,7 +103,7 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
   }
 
   return (
-    <Card className={clsx(classes.card, isNew && classes.newOffer)} key={index}>
+    <Card className={clsx(classes.card, isNew && status !== 'done' && classes.newOffer)} key={index}>
       <CardActionArea onClick={handleOpenInfo}>
         <CardMedia
           className={classes.media}

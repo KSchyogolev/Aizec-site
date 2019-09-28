@@ -45,7 +45,8 @@ const OffersPage = props => {
   const {store} = props
 
   const messageKinds = {
-    offer: 'Предложение'
+    offer: 'Предложение',
+    merch: 'Товар'
   }
 
   useEffect(() => {
@@ -93,15 +94,17 @@ const OffersPage = props => {
               <TableCell align="left">Тип</TableCell>
               <TableCell align="left">Заголовок</TableCell>
               <TableCell align="left">Текст</TableCell>
+              <TableCell align="left">Цена</TableCell>
               <TableCell align="left"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {store.messages && store.messages.filter(item => item.kind === 'offer').map((row, index) => (
+            {store.messages && store.messages.filter(item => item.kind === 'offer' || item.kind === 'merch').map((row, index) => (
               <TableRow key={index}>
                 <TableCell align="left">{messageKinds[row.kind]}</TableCell>
                 <TableCell align="left">{row.head_text}</TableCell>
                 <TableCell align="left">{row.full_text}</TableCell>
+                <TableCell align="left">{row.cost}</TableCell>
                 <TableCell align="right" className={classes.actionCell}>
                   <IconButton aria-label="edit" className={classes.margin} onClick={() => openUploadDialog(row)}>
                     <CollectionsIcon fontSize="small"/>
@@ -122,10 +125,10 @@ const OffersPage = props => {
       <MessageDialog handleClose={closeMessageDialog} handleSave={saveMessage} message={currentMessage}
                      handleChange={handleChange}
                      open={messageDialogIsOpen}
-                     types={['offer', 'product', 'course']}/>
+                     types={['offer', 'merch']}/>
 
       <FileUploadDialog handleClose={closeUploadDialog} message={currentMessage}
-                        label={`Загрузка файлов к предложению "${currentMessage.head_text}"`}
+                        label={`Загрузка файлов к "${currentMessage.head_text}"`}
                         open={uploadDialogIsOpen}/>
     </div>
   )

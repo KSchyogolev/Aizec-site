@@ -16,7 +16,6 @@ import Select from '@material-ui/core/Select'
 import Grid from '@material-ui/core/Grid'
 import { FileUploadInput } from '../inputs'
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     // padding: '15px'
@@ -44,13 +43,15 @@ const teacherThemes = {
   5: 'Другое'
 }
 
-const ReportDialog = ({handleClose, open, isUser, ...props}) => {
+const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entity_id, label, sucess_message, onSuccess, ...props}) => {
   const classes = useStyles()
   const {store} = props
   const [message, setMessage] = useState({})
   const [photos, setPhotos] = useState([])
 
   const themes = isUser ? userThemes : teacherThemes
+
+  const showText = kind !== 'skip'
 
   const handleDrop = (img) => {
     setPhotos(img)
@@ -62,23 +63,34 @@ const ReportDialog = ({handleClose, open, isUser, ...props}) => {
   }
 
   const handleSave = () => {
-    store.addMessage({...message, kind: 'report', to_entity_type: 'admin'}).then((res) => {
-      store.addInStore('outbox', res)
+    if (kind === 'skip' && !photos.length) {
+      return
+    }
+    store.addMessage({
+      ...message,
+      kind: kind || 'report',
+      to_entity_type: to_entity_type || 'admin',
+      to_entity_id
+    }).then((res) => {
+
+      if (!kind || kind === 'report')
+        store.addInStore('outbox', res)
+
       if (!photos.length) {
-        store.showNotification('success', 'Обращение отправлено успешно')
+        store.showNotification('success', sucess_message || 'Обращение отправлено успешно')
         onClose()
         return
       }
       store.uploadImages(photos, res.id).then(res => {
-        store.showNotification('success', 'Обращение отправлено успешно')
+        store.showNotification('success', sucess_message || 'Обращение отправлено успешно')
+        if (onSuccess) onSuccess()
         onClose()
       })
     }).catch(err => {
-      store.showNotification('error', 'Ошибка при отправке обращения')
+      store.showNotification('error', 'Ошибка при отправке')
       console.log(err)
     })
   }
-
 
   const onClose = () => {
     setMessage({})
@@ -89,11 +101,11 @@ const ReportDialog = ({handleClose, open, isUser, ...props}) => {
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}
             className={classes.root}>
       <DialogTitle id="form-dialog-title">
-        Сообщение администратору
+        {label || 'Сообщение администратору'}
       </DialogTitle>
       <DialogContent dividers className={classes.content}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+          {showText ? [<Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <InputLabel htmlFor="parent_relationship">Тема</InputLabel>
               <Select
@@ -104,25 +116,26 @@ const ReportDialog = ({handleClose, open, isUser, ...props}) => {
                   onChange: handleChange
                 }}
               >
-                {Object.keys(themes).map((key,index) => <MenuItem key={index} value={themes[key]}>{themes[key]}</MenuItem>)}
+                {Object.keys(themes).map((key, index) => <MenuItem key={index}
+                                                                   value={themes[key]}>{themes[key]}</MenuItem>)}
               </Select>
             </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}></Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <TextField
-              multiline
-              label="Сообщение"
-              className={classes.textField}
-              value={message.full_text}
-              name={'full_text'}
-              onChange={handleChange}
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              rows={10}
-            />
-          </Grid>
+          </Grid>,
+            <Grid item xs={12} sm={6}></Grid>,
+            <Grid item xs={12} sm={12} md={12}>
+              <TextField
+                multiline
+                label="Сообщение"
+                className={classes.textField}
+                value={message.full_text}
+                name={'full_text'}
+                onChange={handleChange}
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                rows={10}
+              />
+            </Grid>] : null}
           <Grid item xs={12} sm={12} md={12}>
             <FileUploadInput pictures={photos} onDrop={handleDrop}/>
           </Grid>

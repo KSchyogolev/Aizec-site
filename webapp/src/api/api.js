@@ -59,7 +59,7 @@ const API = {main: {}}
 
 API.main.sendNewPassword = (data) => post('restapi/users/revoke_password', data)
 
-API.main.getAllObjects = (objects) => get('restapi/' + objects)
+API.main.getAllObjects = (objects, withArchived) => get('restapi/' + objects + (withArchived ? '/with_archivated' : '' ))
 
 API.main.getAllArchived = (objects) => get('restapi/' + objects + '/archivated')
 
@@ -106,7 +106,7 @@ API.main.getUserLessons = (userId) => get('restapi/lessons/by_user_id/' + userId
 API.main.getUserVisits = (userId) => get('restapi/users/' + userId + '/visits')
 API.main.getUserMessages = (userId) => get('restapi/users/' + userId + '/messages')
 
-API.main.getUserObjects = (field, userId) => get('restapi/users/' + userId + '/' + field)
+API.main.getUserObjects = (field, userId, withArchived) => get('restapi/users/' + userId + '/' + field + (withArchived ? '/with_archivated' : '' ))
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')

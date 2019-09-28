@@ -35,6 +35,10 @@ const ScheduleUserPage = (props) => {
     })
   }
 
+  const changeVisitStatus = (visitId, status) => {
+    store.updateUserVisit(visitId, {status})
+  }
+
   useEffect(() => {
     store.getUserLessons()
     store.getUserVisits()
@@ -44,7 +48,8 @@ const ScheduleUserPage = (props) => {
   return (
     <div className={classes.root}>
       <Paper>
-        <ScheduleWidget events={getEvents(store.currentLessons)}/>
+        <ScheduleWidget events={getEvents(store.currentLessons)}
+                        onLoadDocument={(visitId => changeVisitStatus(visitId, 'skip_not_approved'))}/>
       </Paper>
     </div>
   )

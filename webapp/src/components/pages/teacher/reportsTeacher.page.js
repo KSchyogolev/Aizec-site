@@ -60,10 +60,6 @@ const ReportsTeacherPage = (props) => {
   const [currentMessage, setCurrentMessage] = useState({})
   const {store} = props
 
-  const messageKinds = {
-    offer: 'Предложение'
-  }
-
   useEffect(() => {
     store.getUserObjects('outbox')
   }, [])
@@ -94,6 +90,11 @@ const ReportsTeacherPage = (props) => {
             filtering: false,
             type: 'datetime',
             render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
+          },
+          {
+            title: 'Статус',
+            field: 'status',
+            lookup: {'archived': 'Прочитано', 'active': 'Отправлено'},
           }
         ]}
         data={store.outbox.filter(item => item.kind === 'report')}

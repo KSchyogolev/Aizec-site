@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { OfferEditForm, CourseEditForm } from '../forms'
+import { OfferEditForm, CourseEditForm, MerchEditForm } from '../forms'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -37,7 +37,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
   const messageTypes = [
     {name: 'Бонус', value: 'bonus'},
     {name: 'Курс', value: 'course'},
-    {name: 'Товар', value: 'product'},
+    {name: 'Товар', value: 'merch'},
     {name: 'Предложение', value: 'offer'}
   ].filter(item => types.indexOf(item.value) !== -1)
   const handleChangeType = (e) => handleChange('kind', e.target.value)
@@ -52,8 +52,8 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
       case 'course' :
         contentBody = <CourseEditForm onChange={handleChange} course={message}/>
         break
-      case 'product' :
-        contentBody = 'product'
+      case 'merch' :
+        contentBody = <MerchEditForm onChange={handleChange} message={message}/>
         break
       case 'offer' :
         contentBody = <OfferEditForm onChange={handleChange} message={message}/>

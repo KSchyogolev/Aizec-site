@@ -360,9 +360,9 @@ class Store {
   }
 
   @action
-  getAll (field, tipsCountFunction, page) {
+  getAll (field, tipsCountFunction, page, withArchived) {
     return new Promise((resolve, reject) => {
-      API.main.getAllObjects(field).then(res => {
+      API.main.getAllObjects(field, withArchived).then(res => {
         this.setStore(field, res.data)
         if (tipsCountFunction) {
           this.setTip(field, tipsCountFunction, page)
@@ -407,6 +407,16 @@ class Store {
     return new Promise((resolve, reject) => {
       API.main.updateObject(field, id, data).then(res => {
         this.updateInStore(field, id, res.data)
+        resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
+  updateUserVisit (id, data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateObject('visits', id, data).then(res => {
+        this.updateInStore('currentVisits', id, res.data)
         resolve(res.data)
       }).catch(reject)
     })
@@ -479,9 +489,9 @@ class Store {
   }
 
   @action
-  getUserObjects (field, storeField, userId = this.currentUser.id) {
+  getUserObjects (field, storeField, userId = this.currentUser.id, withArchivated) {
     return new Promise((resolve, reject) => {
-      API.main.getUserObjects(field, userId).then(res => {
+      API.main.getUserObjects(field, userId, withArchivated).then(res => {
         this.setStore(storeField || field, res.data)
         resolve(res)
       }).catch(reject)
@@ -569,16 +579,16 @@ class Store {
   }
 
   @action
-  uploadImages (files, messageId, field = 'message', requestField = 'messages') {
+  uploadImages (files, messageId, field = 'message', requestField = 'messages', type = 'photos') {
     return new Promise((resolve, reject) => {
       const formData = new FormData()
 
       for (let i = 0; i < files.length; i++)
-        formData.append(field + '[photos][]', files[i])
+        formData.append(field + `[${type}][]`, files[i])
 
       API.main.uploadFile(formData, messageId, requestField).then(res => {
         if (field === 'message') this.updateInStore('outbox', messageId, res.data)
-        resolve()
+        resolve(res)
       })
     })
   }
@@ -666,7 +676,7 @@ class Store {
         notifications.push(getNotification(3, 'Ближайшее занятие - ' + closestLesson.short_description + ' (' + moment(closestLesson.start_time).format('DD.MM.YYYY HH:mm') + ')'))
       }
       if (hasTwoMiss) {
-        notifications.push(getNotification(1, 'Внимание! У вас пропущено 2 или более занятий подряд, рекомендуем записаться на индивидуальное занятие!'))
+        notifications.push(getNotification(1, 'Внимание! У вас пропущено 2 или более уроков подряд, рекомендуем записаться на индивидуальное занятие!'))
       }
 
       this.setStore('autoNotifications', notifications)
@@ -761,6 +771,16 @@ class Store {
       this.setStore('journalLessons', currentLessons)
       this.setStore('currentVisitsMap', visitsMap)
       this.setStore('currentCourseId', courseId)
+    })
+  }
+
+  @action
+  setCurrentBonuses = (bonuses, userId = this.currentUser.id) => {
+    return new Promise((resolve, reject) => {
+      API.main.updateUser(userId, {bonus_count: bonuses}).then(res => {
+        this.setStore('currentUser', res.data)
+        resolve()
+      }).catch(reject)
     })
   }
 

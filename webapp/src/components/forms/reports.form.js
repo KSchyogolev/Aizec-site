@@ -7,6 +7,8 @@ import { tableIcons } from '../../config/config'
 import { tableLocalization } from '../../config/config'
 import ImageGallery from 'react-image-gallery'
 import 'react-image-gallery/styles/css/image-gallery.css'
+import DoneIcon from '@material-ui/icons/Done'
+
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
@@ -49,7 +51,6 @@ const getImgResources = (photos) => photos.map(item => ({
   thumbnail: item.url
 }))
 
-
 const roleName = {
   admin: 'Администратор',
   teacher: 'Учитель',
@@ -68,7 +69,7 @@ const ReportsPage = props => {
   const mapGroups = store.groups.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
   useEffect(() => {
-    store.getAll('messages', message => message.kind === 'report', 'reports')
+    store.getAll('messages', message => message.kind === 'report' && message.status === 'active', 'reports', true)
     store.getAll('groups')
     store.getAll('users')
   }, [])
@@ -80,7 +81,7 @@ const ReportsPage = props => {
         title="Обращения"
         icons={tableIcons}
         columns={[
-          {title: 'Тема', field: 'head_text', type: 'text', filtering: false},
+          {title: 'Тема', field: 'head_text', type: 'text'},
           {
             title: 'Создано',
             field: 'created_at',
@@ -102,6 +103,11 @@ const ReportsPage = props => {
             render: rowData => roleName[mapUsers[rowData.user_id].role],
             lookup: roleName,
             customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(mapUsers[rowData.user_id].role) !== -1
+          },
+          {
+            title: 'Статус',
+            field: 'status',
+            lookup: {'archived': 'Прочитано', 'active': 'Новое'}
           }
         ]}
         data={store.messages.filter(item => item.kind === 'report')}
@@ -129,13 +135,16 @@ const ReportsPage = props => {
           filtering: true
         }}
         localization={tableLocalization}
-        editable={{
-          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(() => {
+        actions={[
+          rowData => ({
+            icon: () => <DoneIcon/>,
+            tooltip: 'Пометить как прочитанное',
+            onClick: (event, rowData) => store.updateMessage(rowData.id, {status: 'archived'}).then(() => {
               store.setStore('tips', {...store.tips, reports: store.tips.reports - 1})
-              resolve()
-            }
-          ).catch(reject))
-        }}
+            }),
+            disabled: rowData.status !== 'active'
+          })
+        ]}
       />
     </div>
   )
