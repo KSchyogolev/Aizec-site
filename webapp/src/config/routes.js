@@ -22,6 +22,7 @@ import {
   ReportsPage,
   BonusesPage,
   StatisticPage,
+  HomeworkPage
 } from '../components/pages'
 
 import {
@@ -158,7 +159,7 @@ const routes = {
   }),
   homework: new Route({
     path: '/homework',
-    component: <div>HOMEWORK</div>,
+    component: <HomeworkPage/>,
     beforeEnter: () => userIsLoggedIn('admin')
   }),
   table: new Route({

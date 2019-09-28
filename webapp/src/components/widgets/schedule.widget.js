@@ -93,7 +93,7 @@ const getHomeworkInfo = (status) => {
     case 'done_not_approved':
       return {
         title: 'Домашняя работа проверяется преподавателем',
-        icon: <NextWeek style={{color: '#668bc5'}}/>
+        icon: <NextWeek style={{color: '#ffc335'}}/>
       }
     case 'done_approved':
       return {

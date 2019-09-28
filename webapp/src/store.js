@@ -644,7 +644,7 @@ class Store {
 
       const mapVisitOnLesson = visits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
 
-      const homeworkNotSend = visits.filter(item => item.status !== 'null' && item.approve_status === 'null').map(item => mapLessons[item.lesson_id].short_description)
+      const homeworkNotSend = visits.filter(item => item.status !== 'null' && item.approve_status === 'null').map(item => mapLessons[item.lesson_id] && mapLessons[item.lesson_id].short_description)
 
       const closestLesson = findClosestItem(lessons, 'start_time')
 
@@ -652,7 +652,7 @@ class Store {
       const beforeVisit = {}
       visits.forEach(visit => {
         if (visit.status === 'skip_without_reason') {
-          const nextLesson = findClosestItem(lessons, 'start_time', moment(mapLessons[visit.lesson_id].start_time))
+          const nextLesson = findClosestItem(lessons, 'start_time', moment(mapLessons[visit.lesson_id] && mapLessons[visit.lesson_id].start_time))
           if (nextLesson) {
             hasTwoMiss = mapVisitOnLesson[nextLesson.id].status === 'skip_without_reason'
           }
@@ -748,7 +748,8 @@ class Store {
       const lessonsWithVisits = lessons.map(item => ({
         ...item,
         visits: visitsMap[item.id] || []
-      }))
+      })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+
       const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
 
       const currentLessons = Object.keys(lessonsGroupByType).map(key => {
@@ -774,10 +775,12 @@ class Store {
         visits[index] = res.data
 
         const lessons = this.lesson_infos.filter(item => item.course_id === this.currentCourseId).reduce((res, item) => ([...item.lessons, ...res]), [])
+
         const lessonsWithVisits = lessons.map(item => ({
           ...item,
           visits: visitsMap[item.id] || []
-        }))
+        })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+
         const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
         const currentLessons = Object.keys(lessonsGroupByType).map(key => {
           return {
@@ -785,7 +788,6 @@ class Store {
             lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
           }
         })
-
         this.setStore('journalLessons', currentLessons)
         this.setStore('currentVisitsMap', visitsMap)
         resolve()

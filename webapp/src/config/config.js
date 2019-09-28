@@ -59,8 +59,8 @@ export const pages = {
           subPages: []
         },
         {
-          name: 'calendar',
-          label: 'Календарь',
+          name: 'homework',
+          label: 'Домашняя работа',
           subPages: []
         },
         {
