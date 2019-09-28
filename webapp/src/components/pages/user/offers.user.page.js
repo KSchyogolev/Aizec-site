@@ -99,7 +99,7 @@ const OffersUserPage = (props) => {
         </AppBar>
         <TabPanel value={value} index={0}>
           <Grid container spacing={3}>
-            {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'offer' || item.kind === 'merch') && item.status !== 'done'))}
+            {getCurrentOffers(store.currentOffers.filter(item => item.kind === 'merch' && item.status !== 'done'))}
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>

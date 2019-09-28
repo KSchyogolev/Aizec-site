@@ -73,7 +73,7 @@ const getIconByStatus = (status) => {
 
   switch (status) {
     case 'done_not_approved':
-      component = <NextWeek style={{color: '#668bc5'}}/>
+      component = <NextWeek style={{color: '#ffc335'}}/>
       title = 'Домашняя работа проверяется преподавателем'
       break
     case 'done_approved':

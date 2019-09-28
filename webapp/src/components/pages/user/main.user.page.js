@@ -99,8 +99,8 @@ const MainUserPage = (props) => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && item.isNew), 4)}
-        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && !item.isNew), 4)}
+        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && item.isNew))}
+        {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && !item.isNew))}
       </Grid>
       <Paper className={classes.notificationBox}>
         {[...store.inbox.filter(item => item.kind === 'notification'), ...store.autoNotifications].sort((a, b) => parseInt(a.head_text) - parseInt(b.head_text)).map(item =>

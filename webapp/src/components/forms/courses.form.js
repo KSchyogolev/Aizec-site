@@ -75,9 +75,9 @@ const CoursesForm = props => {
         columns={[
           {title: 'Название', field: 'short_description', filtering: false},
           {title: 'Полное описание', field: 'full_description', filtering: false},
-          {title: 'Длительность (нед.)', field: 'duration', filtering: false, type: 'numeric'},
+          {title: 'Длительность (мес.)', field: 'duration', filtering: false, type: 'numeric'},
           {title: 'Занятий в неделю', field: 'lessonsWeek', filtering: false, type: 'numeric'},
-          {title: 'Стоимость', field: 'cost', filtering: false},
+          {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},
           {
             title: 'Тип',
             field: 'kind',
@@ -114,6 +114,7 @@ const CoursesForm = props => {
                      types={['course']}/>
       <FileUploadDialog handleClose={closeUploadDialog} message={currentCourse}
                         field={'course'}
+                        label={`Загрузка файлов к курсу "${currentCourse.short_description}"`}
                         requestField={'courses'}
                         open={uploadDialogIsOpen}/>
     </div>

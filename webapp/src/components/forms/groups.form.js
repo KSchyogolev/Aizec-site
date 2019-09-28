@@ -126,7 +126,7 @@ const LessonsForm = props => {
           {
             title: 'Преподаватель',
             field: 'teacher',
-            render: rowData => rowData.users.filter(user => user.role === 'teacher').map(item =>
+            render: rowData => rowData && rowData.users.filter(user => user.role === 'teacher').map(item =>
               <div>{item.second_name + ' ' + item.first_name}</div>)
             ,
             filtering: false,

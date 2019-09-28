@@ -7,6 +7,8 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/IconButton'
 import { Paper } from '@material-ui/core/'
 import { MultiSearchInput } from '../../inputs'
 import moment from 'moment'
@@ -20,6 +22,8 @@ import Menu from '@material-ui/core/Menu'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import ReportIcon from '@material-ui/icons/Error'
+import VisibilityIcon from '@material-ui/icons/Lock'
+import VisibilityOffIcon from '@material-ui/icons/LockOpen'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,6 +53,9 @@ const useStyles = makeStyles(theme => ({
     '& .MuiListItem-button': {
       height: 36
     }
+  },
+  disabledCell: {
+    cursor: 'not-allowed'
   }
 }))
 const options = [
@@ -122,7 +129,25 @@ const JournalTeacherPage = props => {
     setLessonsByCourseId(course.value)
   }
 
-  const VisitCell = ({visit = {}}) => {
+  const setLessonStatus = (id, status, journalIndex, lessonIndex) => {
+    store.updateIn('lessons', id, {status: status}).then(res => {
+      const journalLesson = {...store.journalLessons[journalIndex]}
+      journalLesson.lessonsByGroups[res.group_id][lessonIndex].status = res.status
+      let journalLessons = [...store.journalLessons]
+      journalLessons[journalIndex] = journalLesson
+      store.setStore('journalLessons', journalLessons)
+    })
+  }
+
+  const VisibilityButton = ({lessonId, status, journalIndex, lessonIndex}) => {
+    const newStatus = status === 'open' ? 'closed' : 'open'
+    return <IconButton aria-label="edit" className={classes.margin}
+                       onClick={() => {setLessonStatus(lessonId, newStatus, journalIndex, lessonIndex)}}>
+      {status === 'open' ? <VisibilityIcon/> : <VisibilityOffIcon style={{color: '#73c56e'}} />}
+    </IconButton>
+  }
+
+  const VisitCell = ({visit = {}, disabled = false}) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -161,6 +186,7 @@ const JournalTeacherPage = props => {
       >
         {options.map((item, index) => (
           <MenuItem
+            disabled={disabled}
             key={index}
             selected={visit.status === item.value}
             onClick={() => handleMenuItemClick(item)}
@@ -203,7 +229,11 @@ const JournalTeacherPage = props => {
                   <TableHead>
                     <TableRow>
                       <TableCell align="left">Ученик</TableCell>
-                      {lessons.map(lesson => <TableCell>{moment(lesson.start_time).format('DD.MM')}</TableCell>)}
+                      {lessons.map((lesson, i) => <TableCell align={'center'} key={index}>
+                        <div><VisibilityButton status={lesson.status} lessonId={lesson.id} journalIndex={index}
+                                               lessonIndex={i}/></div>
+                        <div>{moment(lesson.start_time).format('DD.MM')}</div>
+                      </TableCell>)}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -213,8 +243,10 @@ const JournalTeacherPage = props => {
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
                             ({user.email})</TableCell>
                           {lessons.map(lesson => {
+                            const disabled = (moment().diff(moment(lesson.start_time), 'minutes')) > 120 + lesson.duration || 0
                             const userVisit = lesson.visits.find(item => item.user_id === user.id)
-                            return <TableCell style={{padding: '0'}}><VisitCell visit={userVisit}/></TableCell>
+                            return <TableCell style={{padding: '0'}}><VisitCell visit={userVisit}
+                                                                                disabled={disabled}/></TableCell>
                           })}
                         </TableRow>
                       })
@@ -226,9 +258,8 @@ const JournalTeacherPage = props => {
           </Paper>
         })}
       </div>
-      <
-      /div>
-      )
-      }
+    </div>
+  )
+}
 
-      export default inject('store')(observer(JournalTeacherPage))
+export default inject('store')(observer(JournalTeacherPage))

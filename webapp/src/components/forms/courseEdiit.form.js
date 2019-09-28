@@ -48,7 +48,7 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
     value: 'individual'
   }]
 
-  const {name, short_description, full_description, duration, kind, cost, ancestry, lessonsWeek} = course
+  const {name, short_description, full_description, duration, kind, cost_month, ancestry, lessonsWeek} = course
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -89,11 +89,11 @@ const CourseEditForm = ({course = {}, onChange = () => {}}) => {
         <Grid item xs={12} sm={6}></Grid>
         <Grid item xs={6} sm={3}>
           <TextField
-            label="Стоимость"
-            value={cost}
+            label="Стоимость в месяц"
+            value={cost_month}
             onChange={handleChange}
             type="number"
-            name={'cost'}
+            name={'cost_month'}
             className={classes.textField}
             InputLabelProps={{
               shrink: true

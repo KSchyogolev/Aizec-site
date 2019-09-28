@@ -9,7 +9,7 @@ import { FileUploadInput } from '../inputs'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { inject, observer } from 'mobx-react'
 
-const FileUploadDialog = ({handleClose, open, message, field, requestField, ...props}) => {
+const FileUploadDialog = ({handleClose, open, message, field, requestField, label, ...props}) => {
 
   const [photos, setPhotos] = useState([])
 
@@ -27,7 +27,7 @@ const FileUploadDialog = ({handleClose, open, message, field, requestField, ...p
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'}>
-      <DialogTitle id="form-dialog-title">Загрузка файлов к {message.head_text || message.short_description}</DialogTitle>
+      <DialogTitle id="form-dialog-title">{label}</DialogTitle>
       <DialogContent>
         <FileUploadInput pictures={photos} onDrop={handleDrop}/>
       </DialogContent>
@@ -36,7 +36,7 @@ const FileUploadDialog = ({handleClose, open, message, field, requestField, ...p
           Отмена
         </Button>
         <Button onClick={handleSave} color="primary">
-          Сохранить
+          Загрузить
         </Button>
       </DialogActions>
     </Dialog>

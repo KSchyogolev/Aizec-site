@@ -97,7 +97,7 @@ const LessonsForm = props => {
         columns={[
           {title: 'Название', field: 'short_description', type: 'text', filtering: false},
           {title: 'Описание', field: 'full_description', type: 'text', filtering: false},
-          {
+         /* {
             title: 'Конспект', field: 'synopsys', type: 'text', filtering: false,
             render: () => <MoreIcon/>,
             editComponent: props => <TextField
@@ -120,7 +120,7 @@ const LessonsForm = props => {
               className={classes.textField}
               margin="normal"
             />
-          },
+          },*/
           {title: 'Продолжительность', field: 'duration', type: 'numeric', filtering: false},
           {
             title: 'Предмет',
@@ -158,7 +158,7 @@ const LessonsForm = props => {
                 </div>
               )
             }
-          },
+          }/*,
           {
             icon: () => <WorkOutlineIcon/>,
             openIcon: () => <WorkIcon/>,
@@ -172,7 +172,7 @@ const LessonsForm = props => {
                 </div>
               )
             }
-          }
+          }*/
         ]}
         options={{
           pageSize: 10,

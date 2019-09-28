@@ -62,7 +62,7 @@ const CoursesPage = props => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'regular' || item.kind === 'intensive') && item.status === 'done'), 4)}
+        {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'regular' || item.kind === 'intensive' || item.kind === 'individual')), 4)}
       </Grid>
 
       {/*<MaterialTable

@@ -125,6 +125,7 @@ const OffersPage = props => {
                      types={['offer', 'product', 'course']}/>
 
       <FileUploadDialog handleClose={closeUploadDialog} message={currentMessage}
+                        label={`Загрузка файлов к предложению "${currentMessage.head_text}"`}
                         open={uploadDialogIsOpen}/>
     </div>
   )

@@ -137,12 +137,12 @@ const LettersUserPage = (props) => {
           actionsColumnIndex: -1
         }}
         localization={tableLocalization}
-        editable={{
+/*        editable={{
           onRowDelete: oldData => new Promise((resolve, reject) => store.deleteMessage(oldData.id).then(res => {
             store.removeInStore('outbox', oldData.id)
             resolve()
           }).catch(reject))
-        }}
+        }}*/
       />
       <ReportDialog handleClose={closeMessageDialog}
                     isUser={true}
