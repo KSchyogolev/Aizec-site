@@ -140,7 +140,7 @@ const JournalPage = props => {
     const newStatus = status === 'open' ? 'closed' : 'open'
     return <IconButton aria-label="edit" className={classes.margin}
                        onClick={() => {setLessonStatus(lessonId, newStatus, journalIndex, lessonIndex)}}>
-      {status === 'open' ? <VisibilityIcon/> : <VisibilityOffIcon style={{color: '#73c56e'}}/>}
+      {status === 'closed' ? <VisibilityIcon/> : <VisibilityOffIcon style={{color: '#73c56e'}}/>}
     </IconButton>
   }
 
