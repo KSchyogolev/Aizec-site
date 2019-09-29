@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -8,9 +8,18 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
+import { inject, observer } from 'mobx-react'
 
 const ChildInfoForm = props => {
-  const {user, handleChange} = props
+  const {user, handleChange, store} = props
+
+  useEffect(() => {
+    store.getAll('clubs')
+  }, [])
+
+  const handleSelect = (name, e) => {
+    handleChange({target: {name, value: e.target.value}})
+  }
 
   return (
     <React.Fragment>
@@ -122,29 +131,32 @@ const ChildInfoForm = props => {
               }}
               name='level'
               value={user.level}
-              onChange={handleChange}
+              onChange={(e) => handleSelect('level', e)}
             >
               {[1, 2, 3, 4].map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}
             </Select>
           </FormControl>
         </Grid>
-        {/*<Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={8}>
           <FormControl fullWidth>
             <InputLabel htmlFor="place">Клуб</InputLabel>
             <Select
               inputProps={{
                 name: 'Клуб',
-                id: 'level'
+                id: 'club'
               }}
+              name='club'
+              value={user.club}
+              onChange={(e) => handleSelect('club', e)}
             >
-              {[1, 2, 3, 4].map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}
+              {store.clubs.map((item, index) => <MenuItem value={item.id} key={index}>{item.name}</MenuItem>)}
             </Select>
           </FormControl>
-        </Grid>*/}
+        </Grid>
       </Grid>
       <br/>
     </React.Fragment>
   )
 }
 
-export default ChildInfoForm
+export default inject('store')(observer(ChildInfoForm))

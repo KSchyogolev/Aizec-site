@@ -16,11 +16,7 @@ import WorkIcon from '@material-ui/icons/Work'
 import NextWeek from '@material-ui/icons/NextWeek'
 import WorkOff from '@material-ui/icons/WorkOff'
 import WarningIcon from '@material-ui/icons/Warning'
-import LockIcon from '@material-ui/icons/Lock'
-
-import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
-import ReportIcon from '@material-ui/icons/Error'
 import UnarchiveIcon from '@material-ui/icons/Unarchive'
 import { ReportDialog, FileUploadDialog } from '../dialogs'
 
@@ -137,7 +133,7 @@ const DownloadDocumentButton = ({handleClick}) => {
 
 const LessonInfo = ({lesson}) => <div>
   {lesson.status === 'closed' && <div><b>ДОСТУП К МАТЕРИАЛАМ ЗАКРЫТ</b></div>}
-  <div><b>КУРС </b>"{lesson.course.short_description}"</div>
+  <div><b>КУРС </b>"{lesson.course && lesson.course.short_description}"</div>
   <div><b>ЗАНЯТИЕ </b>"{lesson.title}"</div>
   <div>{getHomeworkInfo(lesson.visit.approve_status).title}</div>
   <div>{getLessonInfo(lesson.visit.status).title}</div>

@@ -73,6 +73,34 @@ const label = {
   course_id: 'Курс'
 }
 
+const downloadLessonFiles = (lesson) => {
+  lesson.files.forEach(photo => {
+    const ext = photo.url.split('.').pop()
+    API.main.downloadFile(photo.url).then(res => {
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `Конспект.` + ext)
+      document.body.appendChild(link)
+      link.click()
+    })
+  })
+}
+
+export const DownloadFilesButton = ({lesson, disabled}) => {
+  const classes = useStyles()
+  return <div className={classes.detailsButton}>
+    <Tooltip title="Скачать конспект урока" aria-label="add">
+      <Fab size="small" className={classes.margin} color={disabled ? '' : 'primary'}
+           disabled={disabled}
+           onClick={() => downloadLessonFiles(lesson)}
+           component={'span'}>
+        <CloudDownloadIcon/>
+      </Fab>
+    </Tooltip>
+  </div>
+}
+
 const LessonsForm = props => {
   const classes = useStyles()
   const {store} = props
@@ -108,33 +136,6 @@ const LessonsForm = props => {
     }
   }
 
-  const downloadLessonFiles = (lesson) => {
-    lesson.files.forEach(photo => {
-      const ext = photo.url.split('.').pop()
-      API.main.downloadFile(photo.url).then(res => {
-        const url = window.URL.createObjectURL(new Blob([res.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', `Конспект.` + ext)
-        document.body.appendChild(link)
-        link.click()
-      })
-    })
-  }
-
-  const DownloadFilesButton = ({lesson, disabled}) => {
-    const classes = useStyles()
-    return <div className={classes.detailsButton}>
-      <Tooltip title="Скачать конспект урока" aria-label="add">
-        <Fab size="small" className={classes.margin} color={disabled ? '' : 'primary'}
-             disabled={disabled}
-             onClick={() => downloadLessonFiles(lesson)}
-             component={'span'}>
-          <CloudDownloadIcon/>
-        </Fab>
-      </Tooltip>
-    </div>
-  }
 
   const UploadFilesButton = ({lessonId, colored}) => {
     const classes = useStyles()
@@ -154,6 +155,8 @@ text/plain, application/pdf" className={classes.input} id={id} type="file"
     </div>
   }
 
+
+
   return (
     <div className={classes.root}>
       <Typography component='div' className={classes.controlHeader}>
@@ -171,7 +174,7 @@ text/plain, application/pdf" className={classes.input} id={id} type="file"
             filtering: false,
             grouping: false,
             render: rowData => {
-              return <div className={classes.text}>
+              return rowData && <div className={classes.text}>
                 <UploadFilesButton lessonId={rowData.id}/>
                 <DownloadFilesButton lesson={rowData} disabled={rowData.files.length === 0}/>
               </div>

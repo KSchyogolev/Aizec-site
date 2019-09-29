@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationMessage from '../notification.component'
 import { HomeworkControlDialog } from '../dialogs'
+import { DownloadFilesButton } from '../forms/lessons.form'
 
 const moment = require('moment')
 
@@ -110,9 +111,10 @@ const HomeworkPage = (props) => {
   const closeDialog = () => {
     setVisibleControlDialog(false)
   }
-
+  const mapLessonsInfos = store.lesson_infos.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
   useEffect(() => {
     store.getAll('lessons')
+    store.getAll('lesson_infos')
   }, [])
 
   return (
@@ -122,40 +124,33 @@ const HomeworkPage = (props) => {
         icons={tableIcons}
         columns={[
           {
-            title: 'Дата урока',
-            field: 'start_time',
-            type: 'datetime',
+            title: 'Материалы занятия',
             filtering: false,
-            render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+            grouping: false,
+            render: rowData => {
+              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id] || {files: []}
+              return <DownloadFilesButton lesson={lessonInfo} disabled={lessonInfo.files.length === 0}/>
+            }
           },
           {title: 'Предмет', field: 'lesson_type'},
           {title: 'Название', field: 'short_description'},
-          {title: 'Полное описание', field: 'full_description', filtering: false}
-        ]}
-        detailPanel={[
+          {title: 'Полное описание', field: 'full_description'},
           {
-            tooltip: 'Констпект',
+            title: 'Группа', field: 'group',
+            filtering: false,
             render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>
-                    {rowData.synopsys}
-                  </Paper>
-                </div>
-              )
+              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id]
+              const group = lessonInfo && lessonInfo.groups.find(item => item.id === rowData.group_id)
+              return group && group.name
             }
           },
           {
-            icon: () => <WorkOutlineIcon/>,
-            openIcon: () => <WorkIcon/>,
-            tooltip: 'Домашняя работа',
-            render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>{rowData.homework}</Paper>
-                </div>
-              )
-            }
+            title: 'Дата урока',
+            field: 'start_time',
+            type: 'datetime',
+            defaultSort: 'asc',
+            filtering: false,
+            render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
           }
         ]}
         data={store.lessons}

@@ -15,6 +15,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import NotifIcon from '@material-ui/icons/PriorityHigh'
 
+const moment = require('moment')
+
 const useStyles = makeStyles(theme => ({
   root: {
     margin: 15
@@ -102,7 +104,7 @@ const ParentCard = ({parent, ...props}) => {
           </div>
           <div className={classes.infoRow}>
             <div>Дата рождения</div>
-            <div>{parent.birthday}</div>
+            <div>{moment(parent.birthday).format('DD.MM.YYYY')}</div>
           </div>
         </Typography>
       </CardContent>
@@ -152,7 +154,11 @@ const ProfileUserPage = (props) => {
             </div>
             <div className={classes.infoRow}>
               <div>Дата рождения</div>
-              <div>{user.birthday}</div>
+              <div>{moment(user.birthday).format('DD.MM.YYYY')}</div>
+            </div>
+            <div className={classes.infoRow}>
+              <div>Клуб</div>
+              <div>{user.club || 'Не выбран'}</div>
             </div>
             <div className={classes.infoRow}>
               <div>Уровень знаний</div>

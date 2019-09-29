@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
 import { tableIcons, tableLocalization } from '../../config/config'
 
-
 const useStyles = makeStyles(theme => ({
   root: {},
   controlHeader: {
@@ -119,7 +118,7 @@ const PaymentsForm = props => {
         }}
         localization={tableLocalization}
         editable={{
-          // onRowDelete: oldData => new Promise((resolve, reject) => store.deleteCourse(oldData.id).then(resolve).catch(reject))
+          onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('payments', oldData.id).then(resolve).catch(reject)),
           onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('payments', oldData.id, newData).then(resolve).catch(reject))
         }}
       />

@@ -99,11 +99,10 @@ const GenerateLessonsDialog = ({handleClose, open, ...props}) => {
     const week = weekDays.sort((a,b) => a - b)
     const timeArr = time.split(':')
     store.getCourseLessons(course.value).then(res => {
-      const lessons = res.data
-      let weekNumber = 1,
+      const lessons = res.data.sort((a, b) => moment(a.created_at).unix() - moment(b.created_at).unix())
+      let weekNumber = 0,
         dayIndex = 0
       const pArray = lessons.map(async lesson => {
-        console.log(week[dayIndex], weekNumber)
         const date = moment().add('week', weekNumber).day(week[dayIndex])
         dayIndex ++
         if (dayIndex >= week.length) {
@@ -111,7 +110,7 @@ const GenerateLessonsDialog = ({handleClose, open, ...props}) => {
           dayIndex = 0
         }
         return await store.addTo('lessons', 'lesson', {
-          start_time: date.utcOffset(0).set({hour:timeArr[0],minute:timeArr[1]}),
+          start_time: date.set({hour:timeArr[0],minute:timeArr[1]}),
           status: 'closed',
           group_id: group.value,
           lesson_info_id: lesson.id

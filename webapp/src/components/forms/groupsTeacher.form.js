@@ -52,15 +52,6 @@ const GroupsTeacherForm = props => {
   }
   const closeUsersDialog = () => setUsersDialogVisible(false)
 
-  useEffect(() => {
-    // store.getLessonsInfos()
-
-  }, [])
-
-  const handleSelectTeacher = (value) => {
-    setSelectedTeacher(value)
-  }
-
   const clubsItems = store.clubs.map(item => ({label: item.name, value: item.id}))
   const coursesItems = store.courses.map(item => ({label: item.short_description, value: item.id}))
 
@@ -79,6 +70,13 @@ const GroupsTeacherForm = props => {
             field: 'daysWeek',
             render: rowData => rowData.daysWeek && rowData.daysWeek.map(item => <span>{weekDays[item]} </span>),
             lookup: weekDays,
+            customFilterAndSearch: (term, rowData) => {
+              const findTerm = rowData.daysWeek.some(item => {
+                  return term.indexOf(String(item)) !== -1
+                }
+              )
+              return !term.length || findTerm
+            },
             editable: false
           },
           {

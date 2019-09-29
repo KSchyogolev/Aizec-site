@@ -128,5 +128,5 @@ body {
 }
 
 .MuiPaper-elevetion {
-    z-index: 100000 !important
+    z-index: 99999999 !important
 }

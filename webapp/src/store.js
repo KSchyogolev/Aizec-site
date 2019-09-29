@@ -242,7 +242,14 @@ class Store {
   @action
   addMessage (data) {
     return new Promise((resolve, reject) => {
-      API.main.addMessage({message: {...data, status: 'active', user_id: this.currentUser.id}}).then(res => {
+      API.main.addMessage({
+        message: {
+          ...data,
+          to_entity_type: data.to_entity_type || 'all',
+          status: 'active',
+          user_id: this.currentUser.id
+        }
+      }).then(res => {
         this.addInStore('messages', res.data)
         resolve(res.data)
       }).catch(reject)
@@ -469,6 +476,24 @@ class Store {
   }
 
   @action
+  getTeacherLessons (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserLessons(userId).then(res => {
+        const lessons = res.data
+        getLessonsVisits(lessons).then(res => {
+          const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
+          const lessonsWithVisits = lessons.map(item => ({
+            ...item,
+            visits: visitsMap[item.id] || []
+          }))
+          this.setStore('currentLessons', lessonsWithVisits)
+        })
+        resolve(res)
+      }).catch(reject)
+    })
+  }
+
+  @action
   getUserEvents (userId = this.currentUser.id) {
     return new Promise((resolve, reject) => {
       API.main.getUserEvents(userId).then(res => {
@@ -604,9 +629,9 @@ class Store {
   }
 
   @action
-  getHomework = (visitId) => {
+  getVisitFiles = (visitId) => {
     return new Promise((resolve, reject) => {
-      API.main.getHomework(visitId).then(res => {
+      API.main.getVisitFiles(visitId).then(res => {
         resolve(res.data)
       }).catch(reject)
     })
@@ -654,7 +679,7 @@ class Store {
 
       const mapVisitOnLesson = visits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
 
-      const homeworkNotSend = visits.filter(item => item.status !== 'null' && item.approve_status === 'null').map(item => mapLessons[item.lesson_id] && mapLessons[item.lesson_id].short_description)
+      const homeworkNotSend = visits.filter(item => item.status !== 'null' && item.approve_status === 'null' && mapLessons[item.lesson_id]).map(item => mapLessons[item.lesson_id].short_description)
 
       const closestLesson = findClosestItem(lessons, 'start_time')
 
@@ -721,7 +746,7 @@ class Store {
             if (groupLessons[item.id]) {
               groupLessons[item.id].forEach(lesson => {
                 const day = moment(lesson.start_time).isoWeekday()
-                const time = moment(lesson.start_time).format('hh:mm')
+                const time = moment(lesson.start_time).format('HH:mm')
                 if (daysWeek.indexOf(day) === -1) {
                   daysWeek.push(day)
                 }
@@ -734,7 +759,7 @@ class Store {
               ...grp,
               daysWeek: daysWeek,
               times: times,
-              teachers: grp.users.filtr
+              teachers: grp.users.filter(item => item.role === 'teacher')
             }
           })
           this.setStore('groups', newGroups)
@@ -788,29 +813,7 @@ class Store {
   updateVisit = (visitId, data) => {
     return new Promise((resolve, reject) => {
       API.main.updateObject('visits', visitId, data).then(res => {
-
-        const visitsMap = {...this.currentVisitsMap}
-        const visits = visitsMap[res.data.lesson_id]
-        const index = visits.findIndex(item => item.id === visitId)
-        visits[index] = res.data
-
-        const lessons = this.lesson_infos.filter(item => item.course_id === this.currentCourseId).reduce((res, item) => ([...item.lessons, ...res]), [])
-
-        const lessonsWithVisits = lessons.map(item => ({
-          ...item,
-          visits: visitsMap[item.id] || []
-        })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
-
-        const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
-        const currentLessons = Object.keys(lessonsGroupByType).map(key => {
-          return {
-            lesson_type: key,
-            lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
-          }
-        })
-        this.setStore('journalLessons', currentLessons)
-        this.setStore('currentVisitsMap', visitsMap)
-        resolve()
+        resolve(res)
       }).catch(reject)
     })
   }

@@ -89,7 +89,7 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
               title: 'Дата создания',
               field: 'first_name',
               filtering: false,
-              render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+              render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
             }
           ]}
           data={store.currentCourses}
@@ -111,7 +111,7 @@ const UserInfoDialog = ({handleClose, open, user = {}, store}) => {
               title: 'Дата создания',
               field: 'first_name',
               filtering: false,
-              render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+              render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
             }
           ]}
           data={store.currentClubs}

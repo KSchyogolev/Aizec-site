@@ -5,7 +5,7 @@ import MaterialTable from 'material-table'
 import { tableIcons, tableLocalization } from '../../../config/config'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import CloudUploadIcon from '@material-ui/icons/Work'
 import Fab from '@material-ui/core/Fab'
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import WorkIcon from '@material-ui/icons/Work'
@@ -15,12 +15,16 @@ import WarningIcon from '@material-ui/icons/Warning'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationMessage from '../../notification.component'
+import { DownloadFilesButton } from '../../forms/lessons.form'
 
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: '15px'
+    margin: '15px',
+    '& .MuiToolbar-gutters': {
+      display: 'none'
+    }
   },
   rightIcon: {
     marginLeft: theme.spacing(1)
@@ -41,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     padding: 10,
     marginLeft: 10,
     margin: 'auto 20px'
+  },
+  controlCell: {
+    marginLeft: 10,
+    margin: 'auto 20px',
+    display: 'flex'
   },
   detailsButton: {
     margin: 'auto 10px'
@@ -102,10 +111,13 @@ const HomeworkUserPage = (props) => {
     return lesson
   })
 
+  const mapLessonsInfos = store.lesson_infos.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+
   useEffect(() => {
     store.getUserLessons()
     store.getUserVisits()
     store.getCurrentCourses()
+    store.getAll('lesson_infos')
   }, [store.currentVisits.length, store.currentLessons.length])
 
   const onChangeFileHandler = (e, visitId) => {
@@ -145,12 +157,16 @@ const HomeworkUserPage = (props) => {
         icons={tableIcons}
         columns={[
           {
-            title: '',
+            title: 'Материалы занятия',
             filtering: false,
             grouping: false,
             render: rowData => {
               const visit = mapVisitOnLesson[rowData.id] || {}
-              return <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} visitId={visit.id}/>
+              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id] || {files: []}
+              return <div className={classes.controlCell}>
+                <DownloadFilesButton lesson={lessonInfo} disabled={lessonInfo.files.length === 0}/>
+                <UploadHomeWorkButton disabled={visit.approve_status === 'done_approved'} visitId={visit.id}/>
+              </div>
             }
           },
           {
@@ -161,13 +177,17 @@ const HomeworkUserPage = (props) => {
             // render: rowData => mapCourses[rowData.course_id] && mapCourses[rowData.course_id].short_description
           },
           {
-            title: 'Предмет', field: 'lesson_type', filtering: true
+            title: 'Предмет', field: 'lesson_type', filtering: true, grouping: false
           },
           {title: 'Название', field: 'short_description', filtering: false, grouping: false},
           {title: 'Полное описание', field: 'full_description', filtering: false, grouping: false},
           {
-            title: 'Дата урока', field: 'full_description', filtering: false, grouping: false,
+            title: 'Дата урока',
+            field: 'start_time',
+            filtering: false,
+            grouping: false,
             type: 'datetime',
+            defaultSort: 'asc',
             render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
           },
           {
@@ -178,6 +198,7 @@ const HomeworkUserPage = (props) => {
                 {getIconByStatus(visit.approve_status)}
               </div>
             },
+            grouping: false,
             lookup: homeworkMap,
             customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(mapVisitOnLesson[rowData.id].approve_status) !== -1
           }
@@ -189,7 +210,7 @@ const HomeworkUserPage = (props) => {
               const visit = mapVisitOnLesson[rowData.id] || {}
               return (
                 <div className={classes.description}>
-                  <Paper className={classes.text}>
+                  {/*                  <Paper className={classes.text}>
                     <h3>Конспект:</h3>
                     {rowData.synopsys}
                   </Paper>
@@ -198,9 +219,9 @@ const HomeworkUserPage = (props) => {
                     <h3>Домашнее задание:</h3>
                     {rowData.homework}
                   </Paper>
-                  <br/>
+                  <br/>*/}
                   {visit.homework_comment && <Paper className={classes.text}>
-                    <h3>Комментарий от учителя:</h3>
+                    <h4>Комментарий от учителя:</h4>
                     {visit.homework_comment}
                   </Paper>}
                 </div>

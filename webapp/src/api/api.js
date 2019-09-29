@@ -111,7 +111,7 @@ API.main.getUserObjects = (field, userId, withArchived) => get('restapi/users/' 
 
 API.main.uploadHomework = (data) => post('restapi/messages.json', data, 'multipart/form-data')
 API.main.uploadFile = (data, id, field = 'messages') => patch('restapi/' + field + '/' + id + '.json', data, 'multipart/form-data')
-API.main.getHomework = (visitId) => get('restapi/visits/' + visitId + '/inbox')
+API.main.getVisitFiles = (visitId) => get('restapi/visits/' + visitId + '/inbox')
 API.main.downloadFile = (url, type = 'application/json') => {
   return new Promise((resolve, reject) =>
     axios({

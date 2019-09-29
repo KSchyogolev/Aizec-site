@@ -78,20 +78,21 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
   const {store} = props
 
   const downloadHomework = (visitId) => {
-    store.getHomework(visitId).then(res => {
+    store.getVisitFiles(visitId).then(res => {
       res.forEach(item => {
-        item.photos.forEach(photo => {
-          const ext = photo.url.split('.').pop()
-          API.main.downloadFile(photo.url).then(res => {
-            const url = window.URL.createObjectURL(new Blob([res.data]))
-            const link = document.createElement('a')
-            link.href = url
-            link.setAttribute('download', 'file.' + ext)
-            document.body.appendChild(link)
-            link.click()
-            // FileDownload(res.data, 'homework.' + ext )
+        if (item.kind === 'homework')
+          item.photos.forEach(photo => {
+            const ext = photo.url.split('.').pop()
+            API.main.downloadFile(photo.url).then(res => {
+              const url = window.URL.createObjectURL(new Blob([res.data]))
+              const link = document.createElement('a')
+              link.href = url
+              link.setAttribute('download', 'file.' + ext)
+              document.body.appendChild(link)
+              link.click()
+              // FileDownload(res.data, 'homework.' + ext )
+            })
           })
-        })
       })
     })
   }
@@ -134,23 +135,23 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
               field: 'approve_status',
               lookup: {
                 'done_approved': 'Зачтена',
-                'need_fix': 'Не зачтена',
+                'need_fix': 'Не зачтена'
               }
             },
             {
               title: 'Комментарий к ДЗ',
               field: 'homework_comment'
-            },
-/*            {
-              title: 'Посещение',
-              field: 'status',
-              lookup: {
-                'ok': 'Был на занятии',
-                'skip_without_reason': 'Пропуск без ув.причины',
-                'skip_not_approved': 'Прислал справку',
-                'skip_approved': 'Пропуск с ув.причиной'
-              }
-            }*/
+            }
+            /*            {
+                          title: 'Посещение',
+                          field: 'status',
+                          lookup: {
+                            'ok': 'Был на занятии',
+                            'skip_without_reason': 'Пропуск без ув.причины',
+                            'skip_not_approved': 'Прислал справку',
+                            'skip_approved': 'Пропуск с ув.причиной'
+                          }
+                        }*/
           ]}
           actions={[
             rowData => ({
@@ -169,11 +170,12 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
           }}
           editable={{
             onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then((res) => {
+              let lessons = [...store.currentLessons]
+              const lessonIndex = lessons.findIndex(item => item.id === lesson.id)
+              const visitIndex = lessons[lessonIndex].visits.findIndex(item => item.id === oldData.id)
+              lessons[lessonIndex].visits[visitIndex] = newData
+              store.setStore('currentLessons', lessons)
               store.updateInStore('lessonVisits', oldData.id, newData)
-/*              if (oldData.approve_status === 'done_not_approved' && newData.approve_status !== 'done_not_approved')
-                this.setStore('tips', {...this.tips, homeworkTeacher: 0})
-              else if (oldData.approve_status !== 'done_not_approved' && newData.approve_status === 'done_not_approved')
-                this.setStore('tips', {...this.tips, homeworkTeacher: 100})*/
               resolve()
             }).catch(reject))
           }}

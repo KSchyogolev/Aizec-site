@@ -21,8 +21,9 @@ import VisibilityOffIcon from '@material-ui/icons/LockOpen'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import ReportIcon from '@material-ui/icons/Error'
-
-const _ = require('lodash')
+import Button from '@material-ui/core/Button'
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
+import API from '../../api/api'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,6 +53,13 @@ const useStyles = makeStyles(theme => ({
     '& .MuiListItem-button': {
       height: 36
     }
+  },
+  menuButton: {
+    display: 'flex',
+    margin: '10px auto'
+  },
+  leftIcon: {
+    marginRight: theme.spacing(1)
   }
 }))
 const options = [
@@ -120,6 +128,25 @@ const JournalPage = props => {
     [item.id]: item
   }), {})
 
+  const downloadDocument = (visitId, fileName = 'Справка') => {
+    store.getVisitFiles(visitId).then(res => {
+      res.forEach(item => {
+        if (item.kind === 'skip')
+          item.photos.forEach(photo => {
+            const ext = photo.url.split('.').pop()
+            API.main.downloadFile(photo.url).then(res => {
+              const url = window.URL.createObjectURL(new Blob([res.data]))
+              const link = document.createElement('a')
+              link.href = url
+              link.setAttribute('download', `${fileName}.${ext}`)
+              document.body.appendChild(link)
+              link.click()
+            })
+          })
+      })
+    })
+  }
+
   const handleSelectCourse = (course) => {
     console.log(course)
     setSelectedCourse(course)
@@ -144,7 +171,7 @@ const JournalPage = props => {
     </IconButton>
   }
 
-  const VisitCell = ({visit = {}}) => {
+  const VisitCell = ({visit = {}, disabled = false, jIndex = 0, lIndex = 0, vIndex = 0, grpId = 0}) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -152,9 +179,15 @@ const JournalPage = props => {
       setAnchorEl(event.currentTarget)
     }
 
-    function handleMenuItemClick (item) {
+    function handleMenuItemClick (item, jIndex, lIndex, vIndex, grpId) {
       setAnchorEl(null)
-      store.updateVisit(visit.id, {status: item.value})
+      store.updateVisit(visit.id, {status: item.value}).then(res => {
+        const journalLesson = {...store.journalLessons[jIndex]}
+        journalLesson.lessonsByGroups[grpId][lIndex].visits[vIndex] = res.data
+        let journalLessons = [...store.journalLessons]
+        journalLessons[jIndex] = journalLesson
+        store.setStore('journalLessons', journalLessons)
+      })
     }
 
     function handleClose () {
@@ -183,13 +216,18 @@ const JournalPage = props => {
       >
         {options.map((item, index) => (
           <MenuItem
+            disabled={disabled}
             key={index}
             selected={visit.status === item.value}
-            onClick={() => handleMenuItemClick(item)}
+            onClick={() => handleMenuItemClick(item, jIndex, lIndex, vIndex, grpId)}
           >
             {getLessonInfo(item.value).icon}{item.label}
           </MenuItem>
         ))}
+        <Button variant="contained" color="primary" disabled={visit.status !== 'skip_not_approved'}
+                className={classes.menuButton} onClick={() => downloadDocument(visit.id)}>
+          <CloudDownloadIcon className={classes.leftIcon}/> Скачать справку
+        </Button>
       </Menu></div>
   }
 
@@ -212,9 +250,9 @@ const JournalPage = props => {
                           items={coursesItems}/>
       </div>
       <div>
-        {store.journalLessons.map((item, index) => {
+        {store.journalLessons.map((item, jIndex) => {
           const {lessonsByGroups} = item
-          return <Paper key={index} className={classes.objectBox}>
+          return <Paper key={jIndex + '0'} className={classes.objectBox}>
             <Typography component={'h6'} variant={'h6'}>{item.lesson_type}</Typography>
             {Object.keys(lessonsByGroups).map(key => {
               const group = groupsMap[key]
@@ -226,7 +264,7 @@ const JournalPage = props => {
                     <TableRow>
                       <TableCell align="left">Ученик</TableCell>
                       {lessons.map((lesson, i) => <TableCell align={'center'}>
-                        <div><VisibilityButton status={lesson.status} lessonId={lesson.id} journalIndex={index}
+                        <div><VisibilityButton status={lesson.status} lessonId={lesson.id} journalIndex={jIndex}
                                                lessonIndex={i}/></div>
                         <div>{moment(lesson.start_time).format('DD.MM')}</div>
                       </TableCell>)}
@@ -238,9 +276,11 @@ const JournalPage = props => {
                         return <TableRow>
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
                             ({user.email})</TableCell>
-                          {lessons.map(lesson => {
-                            const userVisit = lesson.visits.find(item => item.user_id === user.id)
-                            return <TableCell style={{padding: '0'}}><VisitCell visit={userVisit}/></TableCell>
+                          {lessons.map((lesson, lIndex) => {
+                            const vIndex = lesson.visits.findIndex((item, ) => item.user_id === user.id)
+                            return <TableCell style={{padding: '0'}}><VisitCell visit={lesson.visits[vIndex]} lIndex={lIndex}
+                                                                                vIndex={vIndex} jIndex={jIndex}
+                                                                                grpId={lesson.group_id}/></TableCell>
                           })}
                         </TableRow>
                       })

@@ -98,16 +98,16 @@ const ParentInput = props => {
             onChange={handleChange}
           />
         </Grid>
-{/*        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4}>
           <TextField
             id="email"
             name="email"
             label="Почта"
             fullWidth
-            value={user.mail}
+            value={parent.email}
             onChange={handleChange}
           />
-        </Grid>*/}
+        </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
             <InputLabel htmlFor="parent_relationship">Статус</InputLabel>

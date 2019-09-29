@@ -288,6 +288,10 @@ const Registration = props => {
     setActiveStep(activeStep - 1)
   }
 
+  if (activeStep === steps.length) {
+    localStorage.clear()
+  }
+
   return (
     <React.Fragment>
       <main className={classes.layout}>

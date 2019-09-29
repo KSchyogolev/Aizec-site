@@ -17,6 +17,8 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import NotificationMessage from '../../notification.component'
 import { HomeworkControlDialog } from '../../dialogs'
+import { DownloadFilesButton } from '../../forms/lessons.form'
+
 const moment = require('moment')
 
 const useStyles = makeStyles(theme => ({
@@ -57,6 +59,9 @@ const useStyles = makeStyles(theme => ({
   },
   blue: {
     color: '#507ab4'
+  },
+  hide: {
+    display: 'none'
   }
 }))
 
@@ -110,10 +115,12 @@ const HomeworkTeacherPage = (props) => {
     setVisibleControlDialog(false)
   }
 
-  useEffect(() => {
-    store.getUserLessons()
-  }, [store.currentVisits.length, store.currentLessons.length])
+  const mapLessonsInfos = store.lesson_infos.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
+  useEffect(() => {
+    store.getTeacherLessons()
+    store.getAll('lesson_infos')
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -122,38 +129,43 @@ const HomeworkTeacherPage = (props) => {
         icons={tableIcons}
         columns={[
           {
-            title: 'Дата урока',
-            field: 'start_time',
-            type: 'datetime',
-            render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
-          },
-          {title: 'Предмет', field: 'lesson_type', filtering: false},
-          {title: 'Название', field: 'short_description', filtering: false},
-          {title: 'Полное описание', field: 'full_description', filtering: false},
-        ]}
-        detailPanel={[
-          {
-            tooltip: 'Констпект',
+            title: 'Материалы занятия',
+            filtering: false,
+            grouping: false,
             render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>
-                    {rowData.synopsys}
-                  </Paper>
-                </div>
-              )
+              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id] || {files: []}
+              return <DownloadFilesButton lesson={lessonInfo} disabled={lessonInfo.files.length === 0}/>
+            }
+          },
+          {title: 'Предмет', field: 'lesson_type'},
+          {title: 'Название', field: 'short_description'},
+          {title: 'Полное описание', field: 'full_description'},
+          {
+            title: 'Группа', field: 'group',
+            filtering: false,
+            render: rowData => {
+              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id]
+              const group = lessonInfo && lessonInfo.groups.find(item => item.id === rowData.group_id)
+              return group && group.name
             }
           },
           {
-            icon: () => <WorkOutlineIcon/>,
-            openIcon: () => <WorkIcon/>,
-            tooltip: 'Домашняя работа',
+            title: 'Дата урока',
+            field: 'start_time',
+            type: 'datetime',
+            defaultSort: 'asc',
+            filtering: false,
+            render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
+          },
+          {
+            title: 'Статус',
+            field: 'not_reacted',
+            filtering: false,
             render: rowData => {
-              return (
-                <div className={classes.description}>
-                  <Paper className={classes.text}>{rowData.homework}</Paper>
-                </div>
-              )
+              const notApproveCount = rowData.visits && rowData.visits.filter(visit => visit.approve_status === 'done_not_approved').length
+              return <Tooltip title={'Есть непроверенные работы'} aria-label="icon" className={notApproveCount === 0 && classes.hide}>
+                <WarningIcon style={{color: '#c54436'}}/>
+              </Tooltip>
             }
           }
         ]}
@@ -161,7 +173,8 @@ const HomeworkTeacherPage = (props) => {
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
-          actionsColumnIndex: -1
+          actionsColumnIndex: -1,
+          filtering: true
         }}
         actions={[
           {

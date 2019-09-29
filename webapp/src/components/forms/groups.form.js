@@ -50,10 +50,10 @@ const LessonsForm = props => {
     label: item.second_name + ' ' + item.first_name,
     value: item.id
   }))
-  console.log(teachersItems.push({
+  teachersItems.push({
     label: '-= Не выбран =-',
     value: null
-  }))
+  })
 
   const openUsersDialog = (group) => {
     setCurrentGroup(group)
@@ -90,7 +90,15 @@ const LessonsForm = props => {
           {
             title: 'Дни недели',
             field: 'daysWeek',
-            render: rowData => rowData && rowData.daysWeek && rowData.daysWeek.map(item => <span>{weekDays[item]} </span>),
+            customFilterAndSearch: (term, rowData) => {
+              const findTerm = rowData.daysWeek.some(item => {
+                  return term.indexOf(String(item)) !== -1
+                }
+              )
+              return !term.length || findTerm
+            },
+            render: rowData => rowData && rowData.daysWeek && rowData.daysWeek.map(item =>
+              <span>{weekDays[item]} </span>),
             lookup: weekDays,
             editable: false
           },
