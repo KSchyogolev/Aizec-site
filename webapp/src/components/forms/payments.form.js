@@ -106,6 +106,7 @@ const PaymentsForm = props => {
           {
             title: 'Статус',
             field: 'status',
+            defaultSort: 'asc',
             lookup: {'ready': 'Ожидает оплаты', 'done': 'Оплачено'}
           }
         ]}

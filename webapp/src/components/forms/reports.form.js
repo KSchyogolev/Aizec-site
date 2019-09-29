@@ -107,6 +107,7 @@ const ReportsPage = props => {
           {
             title: 'Статус',
             field: 'status',
+            defaultSort: 'asc',
             lookup: {'archived': 'Прочитано', 'active': 'Новое'}
           }
         ]}
