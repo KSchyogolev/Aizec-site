@@ -6,3 +6,8 @@ end
 json.groups do 
   json.array! lesson_info.course.groups, partial: "groups/group", as: :group
 end
+json.files do 
+  json.array! lesson_info.files do |file|
+    json.url url_for(file)
+  end
+end

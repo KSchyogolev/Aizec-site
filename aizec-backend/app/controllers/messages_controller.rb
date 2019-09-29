@@ -3,6 +3,8 @@ class MessagesController < ApplicationController
 
   before_action :set_message, only: [:show, :update, :destroy]
 
+  has_many_methods_for Message
+  
   # GET /messages
   # GET /messages.json
   def index
@@ -58,6 +60,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:kind, :status, :user_id, :to_entity_type, :to_entity_id, :head_text, :full_text, photos: [])
+      params.require(:message).permit(:kind, :status, :user_id, :to_entity_type, :to_entity_id, :head_text, :full_text, :price, photos: [])
     end
 end
