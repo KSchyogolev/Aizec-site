@@ -117,8 +117,11 @@ class UsersController < ApplicationController
         user.groups, 
         user.clubs,
         user.courses
-      ].flatten.map{ |receivable| receivable.received_messages.where(kind: 'offer') } + 
-      Message.where(to_entity_type: 'all', kind: 'offer')
+      ].flatten.map{ |receivable| receivable.received_messages.where(kind: 'offer').or(
+        receivable.received_messages.where(kind: 'merch')
+      ) } + 
+      Message.where(to_entity_type: 'all', kind: 'offer') + 
+      Message.where(to_entity_type: 'all', kind: 'merch')
     @render_entities = (messages.flatten + relevant_course).sort_by(&:created_at)
   end
 
