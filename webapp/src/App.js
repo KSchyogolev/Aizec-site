@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
     minWidth: 600
   }
 }))
-document.title = 'Школа робототехники Азимов'
 const App = props => {
   const classes = useStyles()
   const {router, currentUser} = props.store
