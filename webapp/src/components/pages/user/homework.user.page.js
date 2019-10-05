@@ -56,12 +56,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const getHomeWorkStatus = {
-  done_not_approved: 'waiting',
-  done_approved: 'success',
-  need_fix: 'error'
-}
-
 const getIconByStatus = (status) => {
 
   let component = <WarningIcon/>,
@@ -210,16 +204,6 @@ const HomeworkUserPage = (props) => {
               const visit = mapVisitOnLesson[rowData.id] || {}
               return (
                 <div className={classes.description}>
-                  {/*                  <Paper className={classes.text}>
-                    <h3>Конспект:</h3>
-                    {rowData.synopsys}
-                  </Paper>
-                  <br/>
-                  <Paper className={classes.text}>
-                    <h3>Домашнее задание:</h3>
-                    {rowData.homework}
-                  </Paper>
-                  <br/>*/}
                   {visit.homework_comment && <Paper className={classes.text}>
                     <h4>Комментарий от учителя:</h4>
                     {visit.homework_comment}

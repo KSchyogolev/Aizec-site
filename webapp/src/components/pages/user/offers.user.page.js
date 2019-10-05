@@ -64,8 +64,8 @@ export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers
                  isNew={message.isNew}
                  status={message.status}
                  key={index}
-                 message_id={message.kind === 'offer' ? message.id : null}
-                 merch_id={message.kind === 'merch' ? message.id : null}
+                 message_id={message.kind === 'offer' || message.kind === 'merch' ? message.id : null}
+                 // merch_id={message.kind === 'merch' ? message.id : null}
                  course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
                  images={message.photos}/>
 </Grid>)

@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   legendPaper: {
     padding: 10,
+    float: 'left'
   },
   legendTitle: {
     background: 'none'
@@ -180,15 +181,17 @@ const ScheduleUserPage = (props) => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.scheduleHeader}>
+{/*      <div className={classes.scheduleHeader}>
         <Tooltip title={<LegendTitle/>} aria-label="icon" classes={classes.legendTitle}>
           <HelpIcon style={{color: '#757575'}} size={'big'}/>
         </Tooltip>
-      </div>
+      </div>*/}
       <Paper>
         <ScheduleWidget events={getEvents(store.currentLessons)}
                         onLoadDocument={(visitId => changeVisitStatus(visitId, 'skip_not_approved'))}/>
       </Paper>
+      <br/>
+      <LegendTitle/>
     </div>
   )
 

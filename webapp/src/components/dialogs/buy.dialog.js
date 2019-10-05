@@ -20,7 +20,7 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
   const getBonusesOptions = (count, step) => {
     let options = [0]
     let i = step
-    while (i < count) {
+    while (i <= count) {
       options.push(i)
       i += step
     }
@@ -58,7 +58,7 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
       <DialogTitle id="form-dialog-title">Заявка на покупку</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <div>Вы собираетесь прирбрести <b>{name}</b></div>
+          <div>Вы собираетесь приобрести <b>{name}</b></div>
           <div>У вас <b style={{color: '#FF5722'}}>{store.currentUser.bonus_count || 0}</b> бонусов</div>
         </DialogContentText>
         <FormControl fullWidth>

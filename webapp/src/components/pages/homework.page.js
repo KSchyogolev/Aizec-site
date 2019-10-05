@@ -138,8 +138,9 @@ const HomeworkPage = (props) => {
           {
             title: 'Группа', field: 'group',
             filtering: false,
+            grouping: false,
             render: rowData => {
-              const lessonInfo = mapLessonsInfos[rowData.lesson_info_id]
+              const lessonInfo = rowData && mapLessonsInfos[rowData.lesson_info_id]
               const group = lessonInfo && lessonInfo.groups.find(item => item.id === rowData.group_id)
               return group && group.name
             }
@@ -150,6 +151,7 @@ const HomeworkPage = (props) => {
             type: 'datetime',
             defaultSort: 'asc',
             filtering: false,
+            grouping: false,
             render: rowData => <div>{moment(rowData.start_time).format('DD.MM.YYYY HH:mm')}</div>
           }
         ]}
@@ -158,7 +160,8 @@ const HomeworkPage = (props) => {
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
           actionsColumnIndex: -1,
-          filtering: true
+          filtering: true,
+          // grouping: true
         }}
         actions={[
           {

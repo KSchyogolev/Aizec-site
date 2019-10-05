@@ -561,7 +561,7 @@ class Store {
 
             return {
               ...offer,
-              isNew: a.diff(b, 'days') < 7,
+              isNew: a.diff(b, 'days') < 30,
               status: payIndex === -1 ? 'null' : payments[payIndex].status
             }
           })
@@ -595,9 +595,7 @@ class Store {
 
       API.main.uploadHomework(formData).then((res) => {
         const currentVisit = this.currentVisits.find(item => item.id === visitId)
-        if (currentVisit.approve_status === 'null') {
-          this.updateInStore('currentVisits', visitId, {...currentVisit, approve_status: 'done_not_approved'})
-        }
+        this.updateInStore('currentVisits', visitId, {...currentVisit, approve_status: 'done_not_approved'})
         resolve()
       }).catch(reject)
     })

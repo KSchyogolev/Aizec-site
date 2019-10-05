@@ -56,30 +56,11 @@ const getImgResources = (photos) => photos.map(item => ({
   thumbnail: item.url
 }))
 
-/*const images = [
-  {
-    original: 'https://picsum.photos/id/1018/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1018/1000/600/'
-  },
-  {
-    original: 'https://picsum.photos/id/1015/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1015/1000/600/'
-  },
-  {
-    original: 'https://picsum.photos/id/1019/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1019/1000/600/'
-  }
-]*/
-
 const LettersUserPage = (props) => {
   const classes = useStyles()
   const [messageDialogIsOpen, setMessageDialogVisible] = useState(false)
   const [currentMessage, setCurrentMessage] = useState({})
   const {store} = props
-
-  const messageKinds = {
-    offer: 'Предложение'
-  }
 
   useEffect(() => {
     store.getUserObjects('outbox', 'outbox', undefined, false)
