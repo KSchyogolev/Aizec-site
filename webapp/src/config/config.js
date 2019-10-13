@@ -115,11 +115,6 @@ export const pages = {
       subPages: []
     },
     {
-      name: 'offersUser',
-      label: 'Магазин',
-      subPages: []
-    },
-    {
       name: 'progressUser',
       label: 'Прогресс',
       subPages: [
@@ -144,22 +139,12 @@ export const pages = {
       name: 'coursesUser',
       label: 'Курсы',
       subPages: [
-        /*{
-          name: 'regular.course.user',
-          label: 'Регулярные',
-          subPages: []
-        },
-        {
-          name: 'intense.course.user',
-          label: 'Интенсивные',
-          subPages: []
-        },
-        {
-          name: 'solo.course.user',
-          label: 'Индивидуальные',
-          subPages: []
-        }*/
       ]
+    },
+    {
+      name: 'offersUser',
+      label: 'Магазин',
+      subPages: []
     },
     {
       name: 'lettersUser',

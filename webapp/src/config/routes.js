@@ -79,7 +79,7 @@ const routes = {
   }),
   journalTeacher: new Route({
     path: '/journalTeacher',
-    component: <JournalTeacherPage/>,
+    component: <JournalPage/>,
     beforeEnter: () => userIsLoggedIn('teacher')
   }),
   reportsTeacher: new Route({

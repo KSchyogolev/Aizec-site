@@ -1,8 +1,10 @@
 import { action, observable } from 'mobx'
 import { RouterStore } from 'mobx-router'
 import API from './api/api'
-import moment from 'moment'
+import { extendMoment } from 'moment-range'
+import Moment from 'moment'
 
+const moment = extendMoment(Moment)
 const _ = require('lodash')
 
 const getLessonsVisits = async (lessons) => {
@@ -767,33 +769,44 @@ class Store {
   }
 
   @action
-  getJournalLessons = (courseId) => {
-    if (!courseId) {
-      this.setStore('journalLessons', [])
-      this.setStore('currentVisitsMap', {})
-      this.setStore('currentCourseId', null)
-      return
-    }
+  getJournalLessons = (filter) => {
+    const {course, group, date, lessonType} = filter
+    const courseId = course && course.value
+    const groupId = group && group.value
+    const range = date && moment().range(moment(date[0]).startOf('day'), moment(date[1]).endOf('day'))
+    const lessonTypeId = lessonType && lessonType.value
+    this.getAll('lesson_infos').then(res => {
 
-    const lessons = this.lesson_infos.filter(item => item.course_id === courseId).reduce((res, item) => ([...item.lessons, ...res]), [])
-    getLessonsVisits(lessons).then(res => {
-      const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
-      const lessonsWithVisits = lessons.map(item => ({
-        ...item,
-        visits: visitsMap[item.id] || []
-      })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+      let courseLessonInfos = res.data.filter(item => item.course_id === courseId && (!lessonTypeId || item.lesson_type_id === lessonTypeId))
 
-      const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+      let lessons = courseLessonInfos.reduce((res, item) => ([...item.lessons, ...res]), [])
 
-      const currentLessons = Object.keys(lessonsGroupByType).map(key => {
-        return {
-          lesson_type: key,
-          lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
-        }
+      if (groupId)
+        lessons = lessons.filter(item => item.group_id === groupId)
+
+      if (range) {
+        lessons = lessons.filter(item => range.contains(moment(item.start_time)))
+      }
+
+      getLessonsVisits(lessons).then(res => {
+        const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
+        const lessonsWithVisits = lessons.map(item => ({
+          ...item,
+          visits: visitsMap[item.id] || []
+        })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+
+        const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
+
+        const currentLessons = Object.keys(lessonsGroupByType).map(key => {
+          return {
+            lesson_type: key,
+            lessonsByGroups: _.groupBy(lessonsGroupByType[key], 'group_id')
+          }
+        })
+        this.setStore('journalLessons', currentLessons)
+        this.setStore('currentVisitsMap', visitsMap)
+        this.setStore('currentCourseId', courseId)
       })
-      this.setStore('journalLessons', currentLessons)
-      this.setStore('currentVisitsMap', visitsMap)
-      this.setStore('currentCourseId', courseId)
     })
   }
 

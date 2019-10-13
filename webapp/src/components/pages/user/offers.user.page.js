@@ -50,8 +50,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-
-
 export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers.map((message, index) => <Grid item
                                                                                                                xs={12}
                                                                                                                sm={12 / count}
@@ -59,14 +57,15 @@ export const getCurrentOffers = (currentOffers = [], count = 2) => currentOffers
                                                                                                                lg={12 / (count + 1)}
                                                                                                                key={index}>
   <MessageWidget {...message}
+                 cost={message.cost || message.cost_month}
                  head_text={message.head_text || message.short_description}
                  full_text={message.head_text || message.full_description}
                  isNew={message.isNew}
                  status={message.status}
                  key={index}
                  message_id={message.kind === 'offer' || message.kind === 'merch' ? message.id : null}
-                 // merch_id={message.kind === 'merch' ? message.id : null}
-                 course_id={message.kind === 'intensive' || message.kind === 'regular' ? message.id : null}
+    // merch_id={message.kind === 'merch' ? message.id : null}
+                 course_id={message.kind === 'intensive' || message.kind === 'regular' || message.kind === 'individual' ? message.id : null}
                  images={message.photos}/>
 </Grid>)
 
@@ -104,7 +103,7 @@ const OffersUserPage = (props) => {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Grid container spacing={3}>
-            {getCurrentOffers(store.currentOffers.filter(item => item.status === 'done'))}
+            {getCurrentOffers(store.currentOffers.filter(item => item.status === 'done' && !(item.kind === 'intensive' || item.kind === 'regular' || item.kind === 'individual')))}
           </Grid>
         </TabPanel>
       </div>

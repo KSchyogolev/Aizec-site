@@ -7,7 +7,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Typography from '@material-ui/core/Typography'
-import { Paper } from '@material-ui/core/'
+import { Paper, Grid } from '@material-ui/core/'
 import { MultiSearchInput } from '../inputs'
 import moment from 'moment'
 import List from '@material-ui/core/List'
@@ -21,17 +21,25 @@ import VisibilityOffIcon from '@material-ui/icons/LockOpen'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import ReportIcon from '@material-ui/icons/Error'
+import HistoryIcon from '@material-ui/icons/YoutubeSearchedFor'
 import Button from '@material-ui/core/Button'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import API from '../../api/api'
+import DateRangePicker from '@wojtekmaj/react-daterange-picker'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
     margin: '15px'
   },
-  courseSelect: {
-    width: 400,
-    margin: '15px 0'
+  journalFilterPanel: {
+    width: '100%',
+    // margin: '15px 0',
+    padding: 15,
+    textAlign: 'left'
+  },
+  applyButton: {
+    marginTop: 30
   },
   objectBox: {
     margin: '15px 0',
@@ -60,7 +68,18 @@ const useStyles = makeStyles(theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing(1)
+  },
+  defaultDatePicker: {
+    '& .react-daterange-picker__wrapper': {
+      padding: 6,
+      borderRadius: 5,
+      border: 'thin solid #a6a6a6'
+    },
+    '& .react-daterange-picker__inputGroup':{
+      paddingLeft: 10
+    }
   }
+
 }))
 const options = [
   {
@@ -77,6 +96,10 @@ const options = [
     label: 'Прислал справку'
   }
 ]
+
+const userContacts = user => {
+  return <span> {user.phone} </span>
+}
 
 const getLessonInfo = (status) => {
   switch (status) {
@@ -119,7 +142,14 @@ const statusColors = {
 const JournalPage = props => {
   const classes = useStyles()
   const {store} = props
-  const [selectedCourse, setSelectedCourse] = useState({})
+  const [courseGroups, setGroups] = useState([])
+
+  const [filter, setFilter] = useState({
+    course: null,
+    group: null,
+    lessonType: null,
+    date: [moment().startOf('month'), moment().endOf('month')]
+  })
 
   const coursesItems = store.courses.map(item => ({label: item.short_description, value: item.id}))
 
@@ -127,6 +157,18 @@ const JournalPage = props => {
     ...res,
     [item.id]: item
   }), {})
+
+  const setFilterField = (key, value) => setFilter(prev => ({...prev, [key]: value}))
+
+  const groupsItems = courseGroups.map(item => ({
+    label: item.name,
+    value: item.id
+  }))
+
+  const lessonTypes = store.lesson_types.map(item => ({
+    label: item.name,
+    value: item.id
+  }))
 
   const downloadDocument = (visitId, fileName = 'Справка') => {
     store.getVisitFiles(visitId).then(res => {
@@ -147,10 +189,21 @@ const JournalPage = props => {
     })
   }
 
-  const handleSelectCourse = (course) => {
-    console.log(course)
-    setSelectedCourse(course)
-    setLessonsByCourseId(course.value)
+  /*  const handleSelectCourse = (course) => {
+      setSelectedCourse(course)
+      setLessonsByCourseId(course.value)
+    }*/
+
+  const handleSelectCourse = (e) => {
+    setFilterField('group', null)
+    store.getCourseGroups(e.value).then(res => {
+      let groups = res.data
+      if (store.currentUser.role === 'teacher') {
+        groups = groups.filter(item => item.users.findIndex(user => user.id === store.currentUser.id) !== -1)
+      }
+      setGroups(groups)
+      setFilterField('course', e)
+    })
   }
 
   const setLessonStatus = (id, status, journalIndex, lessonIndex) => {
@@ -231,24 +284,52 @@ const JournalPage = props => {
       </Menu></div>
   }
 
-  const setLessonsByCourseId = (id) => {
-    store.getJournalLessons(id)
+  const getJournalByFilter = () => {
+    store.getJournalLessons(filter)
   }
 
   useEffect(() => {
     store.getAll('courses')
     store.getAll('lesson_types')
-    store.getAll('lesson_infos')
     store.getLessonsInfos()
   }, [])
 
   return (
     <div className={classes.root}>
-      <div className={classes.courseSelect}>
-        <MultiSearchInput multi={false} handleChange={handleSelectCourse}
-                          values={selectedCourse} label={'Выберите курс'}
-                          items={coursesItems}/>
-      </div>
+      <Paper className={classes.journalFilterPanel}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={3}>
+            <DateRangePicker
+              className={classes.defaultDatePicker}
+              onChange={e => setFilterField('date', e)}
+              value={filter.date}
+            />
+          </Grid>
+          <Grid item xs={12} sm={9}>
+          </Grid>
+          <Grid item xs={12} md={6} sm={6} lg={4}>
+            <MultiSearchInput multi={false} handleChange={handleSelectCourse}
+                              values={filter.course} label={'Курс'}
+                              items={coursesItems}/>
+          </Grid>
+          <Grid item xs={12} md={6} sm={6} lg={4}>
+            <MultiSearchInput handleChange={(e) => setFilterField('group', e)} values={filter.group}
+                              label={'Группа'} items={groupsItems}
+                              multi={false}/>
+          </Grid>
+          <Grid item xs={12} md={6} sm={6} lg={4}>
+            <MultiSearchInput handleChange={(e) => setFilterField('lessonType', e)} values={filter.lessonType}
+                              label={'Предмет'} items={lessonTypes}
+                              multi={false}/>
+          </Grid>
+        </Grid>
+        <Button variant="contained" color="primary"
+                disabled={!filter.course || (store.currentUser.role === 'teacher' && !filter.group)}
+                className={classes.applyButton}
+                onClick={getJournalByFilter}>
+          <HistoryIcon className={classes.leftIcon}/> Получить журнал
+        </Button>
+      </Paper>
       <div>
         {store.journalLessons.map((item, jIndex) => {
           const {lessonsByGroups} = item
@@ -275,10 +356,13 @@ const JournalPage = props => {
                       group.users.filter(item => item.role === 'user').map(user => {
                         return <TableRow>
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
-                            ({user.email})</TableCell>
+                            ({user.parents && user.parents.map(userContacts)})</TableCell>
                           {lessons.map((lesson, lIndex) => {
-                            const vIndex = lesson.visits.findIndex((item, ) => item.user_id === user.id)
-                            return <TableCell style={{padding: '0'}}><VisitCell visit={lesson.visits[vIndex]} lIndex={lIndex}
+                            const disabled = store.currentUser.role === 'teacher' && (moment().diff(moment(lesson.start_time), 'minutes') > 120 + lesson.duration || 0)
+                            const vIndex = lesson.visits.findIndex((item) => item.user_id === user.id)
+                            return <TableCell style={{padding: '0'}}><VisitCell visit={lesson.visits[vIndex]}
+                                                                                lIndex={lIndex}
+                                                                                disabled={disabled}
                                                                                 vIndex={vIndex} jIndex={jIndex}
                                                                                 grpId={lesson.group_id}/></TableCell>
                           })}

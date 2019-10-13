@@ -110,7 +110,8 @@ const translate = {
   regular: 'Регулярный курс',
   offer: 'Предложение',
   intensive: 'Интенсивный курс',
-  merch: 'Мерчендайз'
+  merch: 'Мерчендайз',
+  individual: 'Индивидуальный курс',
 }
 
 const widgetImg = {

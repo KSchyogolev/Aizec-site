@@ -1,7 +1,7 @@
 import axios from 'axios'
 import JWTDecode from 'jwt-decode'
 
-axios.defaults.baseURL = 'http://innovate-school.com'
+axios.defaults.baseURL = 'https://innovate-school.com'
 
 axios.interceptors.request.use(reqConfig => {
     reqConfig.headers.Authorization = localStorage.getItem('access_token')

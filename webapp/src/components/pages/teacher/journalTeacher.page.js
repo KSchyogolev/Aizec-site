@@ -259,7 +259,7 @@ const JournalTeacherPage = props => {
           return <Paper key={jIndex + '0'} className={classes.objectBox}>
             <Typography component={'h6'} variant={'h6'}>{item.lesson_type}</Typography>
             {Object.keys(lessonsByGroups).filter(key => store.currentGroups.findIndex(grp => grp.id == key) !== -1).map(key => {
-              const group = groupsMap[key]
+                const group = groupsMap[key]
               const lessons = lessonsByGroups[key]
               return <div key={key} className={classes.groupTable}>
                 <Typography component={'div'} className={classes.groupTitle}>{group.name}</Typography>
