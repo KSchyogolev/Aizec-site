@@ -72,6 +72,7 @@ class Store {
   @observable currentPayments = []
   @observable currentCourseId = {}
   @observable autoNotifications = []
+  @observable coursePayments = {}
 
   @observable archivedUsers = []
 
@@ -478,6 +479,16 @@ class Store {
   }
 
   @action
+  getUserLessons (userId = this.currentUser.id) {
+    return new Promise((resolve, reject) => {
+      API.main.getUserLessons(userId).then(res => {
+        this.setStore('currentLessons', res.data)
+        resolve(res)
+      }).catch(reject)
+    })
+  }
+
+  @action
   getTeacherLessons (userId = this.currentUser.id) {
     return new Promise((resolve, reject) => {
       API.main.getUserLessons(userId).then(res => {
@@ -775,11 +786,33 @@ class Store {
     const groupId = group && group.value
     const range = date && moment().range(moment(date[0]).startOf('day'), moment(date[1]).endOf('day'))
     const lessonTypeId = lessonType && lessonType.value
+
+    const currentCourse = this.courses.find(item => item.id === courseId)
+
+    const userPaymentCourseMap = this.payments.filter(item => item.course_id === courseId).reduce((res, item) => {
+      const allMoney = item.cost || 0 + item.bonuses || 0
+      const lessonsPaid = Math.floor(allMoney / currentCourse.cost_month * 4 * currentCourse.lessonsWeek)
+      return {[item.user_id]: {...item, lessonsPaid}, ...res}
+    }, {})
+
+
+
     this.getAll('lesson_infos').then(res => {
 
       let courseLessonInfos = res.data.filter(item => item.course_id === courseId && (!lessonTypeId || item.lesson_type_id === lessonTypeId))
 
-      let lessons = courseLessonInfos.reduce((res, item) => ([...item.lessons, ...res]), [])
+      // let lessonCountObj = {}
+
+      let lessons = courseLessonInfos.reduce((res, item) => ([...item.lessons, ...res]), []).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+
+      const lessonsGroupByInfoId = _.groupBy(lessons, 'lesson_info_id')
+
+      Object.keys(lessonsGroupByInfoId).forEach((key, index) => {
+        lessonsGroupByInfoId[key].forEach(item => {
+          const lesson = lessons.find(lsn => lsn.id === item.id)
+          lesson.number = index + 1
+        })
+      })
 
       if (groupId)
         lessons = lessons.filter(item => item.group_id === groupId)
@@ -790,10 +823,11 @@ class Store {
 
       getLessonsVisits(lessons).then(res => {
         const visitsMap = res.reduce((res, item) => ({[item.lesson_id]: item.data, ...res}), {})
+
         const lessonsWithVisits = lessons.map(item => ({
           ...item,
           visits: visitsMap[item.id] || []
-        })).sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+        }))
 
         const lessonsGroupByType = _.groupBy(lessonsWithVisits, 'lesson_type')
 
@@ -806,6 +840,7 @@ class Store {
         this.setStore('journalLessons', currentLessons)
         this.setStore('currentVisitsMap', visitsMap)
         this.setStore('currentCourseId', courseId)
+        this.setStore('coursePayments', userPaymentCourseMap)
       })
     })
   }

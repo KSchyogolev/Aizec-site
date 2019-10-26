@@ -12,6 +12,7 @@ import GroupUsersTeacherDialog from './groupUsersTeacher.dialog'
 import FileUploadDialog from './fileUpload.dialog'
 import GenerateLessonsDialog from './generateLessons.dialog'
 import DeleteDialog from './delete.dialog'
+import CoursePayDialog from './coursePay.dialog'
 
 
 export {
@@ -29,4 +30,5 @@ export {
   FileUploadDialog,
   GenerateLessonsDialog,
   DeleteDialog,
+  CoursePayDialog
 }

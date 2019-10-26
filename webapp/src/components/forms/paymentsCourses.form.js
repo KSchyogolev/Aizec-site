@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
 import { tableIcons, tableLocalization } from '../../config/config'
+import { CoursePayDialog } from '../dialogs'
+import AddIcon from '@material-ui/icons/Add'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -19,9 +21,22 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const PaymentsForm = props => {
+const PaymentsCoursesForm = props => {
   const classes = useStyles()
   const {store} = props
+
+  const [payDialogIsOpen, changeDialogVisible] = useState(false)
+
+  const [payFunc, setPayFunc] = useState(() => {})
+
+  const openPayDialog = (payment) => {
+    setPayFunc(() => addPayClosure(payment))
+    changeDialogVisible(true)
+  }
+
+  const closePayDialog = () => {
+    changeDialogVisible(false)
+  }
 
   const usersMap = store.users && store.users.reduce((res, item) => {
     return item.role === 'user' ? {
@@ -30,36 +45,7 @@ const PaymentsForm = props => {
     } : {...res}
   }, {})
 
-  const messagesMap = store.messages.reduce((res, item) => {
-    return item.kind === 'offer' ? {...res, [item.id]: item} : {...res}
-  }, {})
-
-  const merchesMap = store.merches.reduce((res, item) => ({...res, [item.id]: item}), {})
-
   const coursesMap = store.courses.reduce((res, item) => ({...res, [item.id]: item}), {})
-
-  const getDealObject = (payment) => {
-    try {
-      if (payment.merch_id) return {
-        id: 'merch_id',
-        description: merchesMap[payment.merch_id] && merchesMap[payment.merch_id].short_description
-      }
-      if (payment.course_id) return {
-        id: 'course_id',
-        description: coursesMap[payment.course_id] && coursesMap[payment.course_id].short_description
-      }
-      if (payment.message_id) return {
-        id: 'message_id',
-        description: messagesMap[payment.message_id] && messagesMap[payment.message_id].head_text
-      }
-      return {
-        id: 'null_id',
-        description: 'Товар не найден'
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const translate = {
     message_id: 'Предложение',
@@ -68,13 +54,19 @@ const PaymentsForm = props => {
     null_id: 'Тип не указан'
   }
 
-/*  useEffect(() => {
+  const addPayClosure = (payment) => (value) => {
+    store.updateIn('payments', payment.id, {...payment, cost: parseInt(payment.cost) + parseInt(value)}).then(res => {
+
+    })
+  }
+
+  useEffect(() => {
     store.getAllCourses()
-    store.getAll('payments')
-    store.getAll('users')
+    // store.getAll('payments')
+    // store.getAll('users')
     // store.getAll('messages')
     // store.getAll('courses')
-  }, [store.courses && store.courses.length])*/
+  }, [store.courses && store.courses.length])
 
   return (
     <div className={classes.root}>
@@ -95,22 +87,38 @@ const PaymentsForm = props => {
             filtering: false
           },
           {
-            title: 'Тип товара',
-            render: props => translate[getDealObject(props).id],
-            lookup: {'message_id': 'Предложение', /*'course_id': 'Курс',*/ 'merch_id': 'Мерч'},
-            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(getDealObject(rowData).id) !== -1
+            title: 'Описание',
+            filtering: false,
+            render: props => coursesMap[props.course_id] && coursesMap[props.course_id].short_description
           },
-          {title: 'Описание', filtering: false, render: props => getDealObject(props).description},
+          {
+            title: 'Оплачено занятий', filtering: false, render: props => {
+            const course = coursesMap[props.course_id]
+            if (!course) return ''
+            const allMoney = props.cost + props.bonuses
+            return Math.floor(allMoney / course.cost_month * 4 * course.lessonsWeek)
+          }
+          },
+          {
+            title: 'Занятий в неделю',
+            filtering: false,
+            render: props => coursesMap[props.course_id] && coursesMap[props.course_id].lessonsWeek
+          },
+          {
+            title: 'Стоимость в месяц',
+            filtering: false,
+            render: props => coursesMap[props.course_id] && coursesMap[props.course_id].cost_month
+          },
           {title: 'Оплачено рублями', field: 'cost', filtering: false},
           {title: 'Оплачено бонусами', field: 'bonuses', filtering: false},
           {
             title: 'Статус',
             field: 'status',
             defaultSort: 'asc',
-            lookup: {'ready': 'Ожидает оплаты', 'done': 'Оплачено'}
+            lookup: {'ready': 'Требуется оплатить', 'done': 'Все занятия оплачены'}
           }
         ]}
-        data={store.payments.filter(payment => payment.course_id === null)}
+        data={store.payments.filter(item => item.course_id)}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
@@ -118,14 +126,22 @@ const PaymentsForm = props => {
           filtering: true
         }}
         localization={tableLocalization}
+        actions={[
+          {
+            icon: () => <AddIcon/>,
+            tooltip: 'Добавить платеж',
+            onClick: (event, rowData) => openPayDialog(rowData)
+          }
+        ]}
         editable={{
           onRowDelete: oldData => new Promise((resolve, reject) => store.deleteFrom('payments', oldData.id).then(resolve).catch(reject)),
           onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('payments', oldData.id, newData).then(resolve).catch(reject))
         }}
       />
+      <CoursePayDialog open={payDialogIsOpen} handleClose={closePayDialog} handleSave={payFunc}/>
     </div>
   )
 
 }
 
-export default inject('store')(observer(PaymentsForm))
+export default inject('store')(observer(PaymentsCoursesForm))

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import { TabPanel, a11yProps } from './index'
-import { PaymentsForm, ReportsForm } from '../forms/'
+import { PaymentsForm, ReportsForm, PaymentsCoursesForm } from '../forms/'
 
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -34,6 +34,10 @@ const ReportsPage = (props) => {
 
   useEffect(() => {
     store.getAll('payments')
+    // store.getAllCourses()
+    // store.getAll('payments')
+    // store.getAll('payments')
+    store.getAll('users')
     /*    store.getAll('lesson_infos')
         store.getAll('lesson_types')*/
   }, [])
@@ -44,14 +48,18 @@ const ReportsPage = (props) => {
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Покупки" {...a11yProps(0)} />
           <Tab label="Обращения" {...a11yProps(1)} />
+          <Tab label="Оплата курсов" {...a11yProps(2)} />
           {/*  <Tab label="Предметы" {...a11yProps(2)} />*/}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <PaymentsForm/>
+        <PaymentsForm />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ReportsForm/>
+        <ReportsForm />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <PaymentsCoursesForm/>
       </TabPanel>
       {/*    <TabPanel value={value} index={2}>
         <LessonsTypesForm/>

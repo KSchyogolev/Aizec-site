@@ -4,12 +4,16 @@ import { inject, observer } from 'mobx-react'
 import Paper from '@material-ui/core/Paper'
 import Tooltip from '@material-ui/core/Tooltip'
 import { ScheduleWidget } from '../../widgets'
-import HelpIcon from '@material-ui/icons/Help'
+
 import WorkIcon from '@material-ui/icons/Work'
 import NextWeek from '@material-ui/icons/NextWeek'
 import WorkOff from '@material-ui/icons/WorkOff'
+import MoneyOffIcon from '@material-ui/icons/MoneyOff'
 import WarningIcon from '@material-ui/icons/Warning'
 import ReceiptIcon from '@material-ui/icons/Receipt'
+import moment from 'moment'
+
+const _ = require('lodash')
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     '& .MuiPaper-root': {
       margin: 'auto 5px',
       padding: '12px 12px'
-    },
+    }
   }
 }))
 
@@ -114,16 +118,28 @@ const ScheduleUserPage = (props) => {
   const mapVisitOnLesson = store.currentVisits.reduce((res, item) => ({...res, [item.lesson_id]: {...item}}), {})
   const mapCourses = store.currentCourses.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
 
+  const lessonsNumbers = store.currentLessons.sort((a, b) => moment(a.start_time).unix() - moment(b.start_time).unix())
+
+  const lessonsGroupByCourse = _.groupBy(lessonsNumbers, 'course_id')
+
+  const coursesPaymentsMap = store.currentPayments.filter(item => item.course_id).reduce((res, item) => ({[item.course_id]: item, ...res}), {})
+
   const getEvents = (list = []) => {
     return list.map(item => {
       const {start_time, duration, short_description, course_id, id, status} = item
+      const lessonNumber = lessonsGroupByCourse[course_id].findIndex(item => id === item.id) + 1
+      const coursePayment = coursesPaymentsMap[course_id]
+      const course = mapCourses[course_id] || {}
+      const allMoney = coursePayment.cost || 0 + coursePayment.bonuses || 0
+      const lessonsPaid = Math.floor(allMoney / course.cost_month * 4 * course.lessonsWeek)
       return {
         startDate: start_time,
         endDate: getEndFromDuration(start_time, duration || 10),
         title: short_description || 'Урок',
-        course: mapCourses[course_id] || {},
+        course: course,
         visit: mapVisitOnLesson[id],
-        status: status
+        status: status,
+        isPaid: lessonNumber <= lessonsPaid
       }
     })
   }
@@ -135,11 +151,12 @@ const ScheduleUserPage = (props) => {
   useEffect(() => {
     store.getUserLessons()
     store.getUserVisits()
+    store.getUserObjects('payments', 'currentPayments')
     store.getCurrentCourses()
   }, [store.currentLessons.length])
 
   const LegendTitle = () => {
-    return  <Paper className={classes.legendPaper}>
+    return <Paper className={classes.legendPaper}>
       <div className={classes.legendRow}>
         <Paper style={{backgroundColor: lessonType['ok']}}></Paper>
         <div>{getLessonInfo('ok').title}</div>
@@ -157,31 +174,21 @@ const ScheduleUserPage = (props) => {
         <div>Доступ к материалам закрыт</div>
       </div>
       <div className={classes.legendRow}>
-        <div>{getHomeworkInfo('done_not_approved').icon}</div>
-        <div>{getHomeworkInfo('done_not_approved').title}</div>
+        <div><MoneyOffIcon style={{color: '#c54436'}}/></div>
+        <div>Занятие не оплачено</div>
       </div>
-      <div className={classes.legendRow}>
-        <div>{getHomeworkInfo('done_approved').icon}</div>
-        <div>{getHomeworkInfo('done_approved').title}</div>
-      </div>
-      <div className={classes.legendRow}>
-        <div>{getHomeworkInfo('need_fix').icon}</div>
-        <div>{getHomeworkInfo('need_fix').title}</div>
-      </div>
-      <div className={classes.legendRow}>
-        <div>{getHomeworkInfo('').icon}</div>
-        <div>{getHomeworkInfo('').title}</div>
-      </div>
-      <div className={classes.legendRow}>
-        <div>{getLessonInfo('skip_not_approved').icon}</div>
-        <div>{getLessonInfo('skip_not_approved').title}</div>
-      </div>
+      {['done_not_approved', 'done_approved', 'need_fix', 'skip_not_approved'].map(item => <div
+        className={classes.legendRow}>
+        <div>{getHomeworkInfo(item).icon}</div>
+        <div>{getHomeworkInfo(item).title}</div>
+      </div>)}
+
     </Paper>
   }
 
   return (
     <div className={classes.root}>
-{/*      <div className={classes.scheduleHeader}>
+      {/*      <div className={classes.scheduleHeader}>
         <Tooltip title={<LegendTitle/>} aria-label="icon" classes={classes.legendTitle}>
           <HelpIcon style={{color: '#757575'}} size={'big'}/>
         </Tooltip>

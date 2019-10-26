@@ -148,7 +148,7 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
   const getIconByStatus = (status) => {
     switch (status) {
       case 'ready':
-        return <Tooltip title="Заявка на покупку в обработке" aria-label="add">
+        return <Tooltip title="Ожидает оплаты" aria-label="add">
           <DoneIcon style={{color: '#668bc5', margin: 9}}/>
         </Tooltip>
       case 'done' :

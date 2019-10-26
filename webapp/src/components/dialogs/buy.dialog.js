@@ -34,7 +34,7 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
   const handleBuy = () => {
     store.addTo('payments', 'payment', {
       bonuses,
-      cost,
+      cost: course_id ? 0 : cost,
       merch_id,
       course_id,
       message_id,

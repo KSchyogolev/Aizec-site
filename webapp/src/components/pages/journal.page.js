@@ -27,7 +27,6 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import API from '../../api/api'
 import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     margin: '15px'
@@ -75,9 +74,13 @@ const useStyles = makeStyles(theme => ({
       borderRadius: 5,
       border: 'thin solid #a6a6a6'
     },
-    '& .react-daterange-picker__inputGroup':{
+    '& .react-daterange-picker__inputGroup': {
       paddingLeft: 10
     }
+  },
+
+  isPaid: {
+    border: '5px solid #808080'
   }
 
 }))
@@ -150,6 +153,14 @@ const JournalPage = props => {
     lessonType: null,
     date: [moment().startOf('month'), moment().endOf('month')]
   })
+
+  useEffect(() => {
+    store.getAll('courses')
+    store.getAll('courses')
+    store.getAll('payments')
+    store.getLessonsInfos()
+  }, [])
+
 
   const coursesItems = store.courses.map(item => ({label: item.short_description, value: item.id}))
 
@@ -224,7 +235,7 @@ const JournalPage = props => {
     </IconButton>
   }
 
-  const VisitCell = ({visit = {}, disabled = false, jIndex = 0, lIndex = 0, vIndex = 0, grpId = 0}) => {
+  const VisitCell = ({visit = {}, disabled = false, jIndex = 0, lIndex = 0, vIndex = 0, grpId = 0, isPaid = false}) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -250,6 +261,7 @@ const JournalPage = props => {
     return <div>
       <List component="div" className={classes.cellBox}>
         <ListItem
+          className={isPaid ? classes.isPaid : ''}
           button
           aria-haspopup="true"
           aria-controls="lock-menu"
@@ -288,11 +300,6 @@ const JournalPage = props => {
     store.getJournalLessons(filter)
   }
 
-  useEffect(() => {
-    store.getAll('courses')
-    store.getAll('lesson_types')
-    store.getLessonsInfos()
-  }, [])
 
   return (
     <div className={classes.root}>
@@ -358,13 +365,17 @@ const JournalPage = props => {
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
                             ({user.parents && user.parents.map(userContacts)})</TableCell>
                           {lessons.map((lesson, lIndex) => {
+                            const userPaidLessonsCount = store.coursePayments[user.id] ? store.coursePayments[user.id].lessonsPaid  : 0
+                            // console.log(userPaidLessonsCount)
                             const disabled = store.currentUser.role === 'teacher' && (moment().diff(moment(lesson.start_time), 'minutes') > 120 + lesson.duration || 0)
                             const vIndex = lesson.visits.findIndex((item) => item.user_id === user.id)
-                            return <TableCell style={{padding: '0'}}><VisitCell visit={lesson.visits[vIndex]}
-                                                                                lIndex={lIndex}
-                                                                                disabled={disabled}
-                                                                                vIndex={vIndex} jIndex={jIndex}
-                                                                                grpId={lesson.group_id}/></TableCell>
+                            return <TableCell style={{padding: '0'}}><VisitCell
+                              visit={lesson.visits[vIndex]}
+                              lIndex={lIndex}
+                              isPaid={lesson.number <= userPaidLessonsCount}
+                              disabled={disabled}
+                              vIndex={vIndex} jIndex={jIndex}
+                              grpId={lesson.group_id}/></TableCell>
                           })}
                         </TableRow>
                       })

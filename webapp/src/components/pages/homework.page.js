@@ -112,8 +112,13 @@ const HomeworkPage = (props) => {
     setVisibleControlDialog(false)
   }
   const mapLessonsInfos = store.lesson_infos.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+  const mapGroups = store.groups.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+  const mapClubs = store.clubs.reduce((res, item) => ({...res, [item.id]: {...item}}), {})
+
   useEffect(() => {
     store.getAll('lessons')
+    store.getAll('groups')
+    store.getAll('clubs')
     store.getAll('lesson_infos')
   }, [])
 
@@ -143,6 +148,16 @@ const HomeworkPage = (props) => {
               const lessonInfo = rowData && mapLessonsInfos[rowData.lesson_info_id]
               const group = lessonInfo && lessonInfo.groups.find(item => item.id === rowData.group_id)
               return group && group.name
+            }
+          },
+          {
+            title: 'Клуб', field: 'club',
+            filtering: false,
+            grouping: false,
+            render: rowData => {
+              const group = mapGroups[rowData.group_id]
+              const club = mapClubs[group.club_id]
+              return club && club.name
             }
           },
           {
