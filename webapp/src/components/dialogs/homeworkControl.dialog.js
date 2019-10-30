@@ -170,11 +170,13 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
           }}
           editable={{
             onRowUpdate: (newData, oldData) => new Promise((resolve, reject) => store.updateIn('visits', oldData.id, newData).then((res) => {
-              let lessons = [...store.currentLessons]
-              const lessonIndex = lessons.findIndex(item => item.id === lesson.id)
-              const visitIndex = lessons[lessonIndex].visits.findIndex(item => item.id === oldData.id)
-              lessons[lessonIndex].visits[visitIndex] = newData
-              store.setStore('currentLessons', lessons)
+              if (store.currentUser.role === 'teacher') {
+                let lessons = [...store.currentLessons]
+                const lessonIndex = lessons.findIndex(item => item.id === lesson.id)
+                const visitIndex = lessons[lessonIndex].visits.findIndex(item => item.id === oldData.id)
+                lessons[lessonIndex].visits[visitIndex] = newData
+                store.setStore('currentLessons', lessons)
+              }
               store.updateInStore('lessonVisits', oldData.id, newData)
               resolve()
             }).catch(reject))

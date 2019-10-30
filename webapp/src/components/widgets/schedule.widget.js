@@ -20,6 +20,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt'
 import UnarchiveIcon from '@material-ui/icons/Unarchive'
 import { ReportDialog, FileUploadDialog } from '../dialogs'
 import MoneyOffIcon from '@material-ui/icons/MoneyOff'
+import MoneyIcon from '@material-ui/icons/AttachMoney'
 
 const currentDate = new Date()
 const locale = 'ru-RUS'
@@ -168,7 +169,7 @@ const Appointment = ({children, style, openDocumentDialog, onLoadDocument, ...re
       >
         <div className={classes.description}>
           <div><b>{moment(lesson.startDate).format('HH:mm')}</b></div>
-          {!lesson.isPaid && <MoneyOffIcon style={{color: '#c54436'}}/>}
+          {lesson.isPaid ? <MoneyIcon style={{color: '#73c56e'}}/>  : <MoneyOffIcon style={{color: '#c54436'}}/>}
           {lesson.status !== 'closed' && getHomeworkInfo(lesson.visit.approve_status).icon}
           {lesson.status !== 'closed' && getLessonInfo(lesson.visit.status).icon}
           {lesson.status !== 'closed' && lesson.visit.status === 'skip_without_reason' &&

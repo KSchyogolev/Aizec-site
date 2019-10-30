@@ -9,6 +9,7 @@ import WorkIcon from '@material-ui/icons/Work'
 import NextWeek from '@material-ui/icons/NextWeek'
 import WorkOff from '@material-ui/icons/WorkOff'
 import MoneyOffIcon from '@material-ui/icons/MoneyOff'
+import MoneyIcon from '@material-ui/icons/AttachMoney'
 import WarningIcon from '@material-ui/icons/Warning'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import moment from 'moment'
@@ -176,6 +177,10 @@ const ScheduleUserPage = (props) => {
       <div className={classes.legendRow}>
         <div><MoneyOffIcon style={{color: '#c54436'}}/></div>
         <div>Занятие не оплачено</div>
+      </div>
+      <div className={classes.legendRow}>
+        <div><MoneyIcon style={{color: '#73c56e'}}/></div>
+        <div>Занятие оплачено</div>
       </div>
       {['done_not_approved', 'done_approved', 'need_fix', 'skip_not_approved'].map(item => <div
         className={classes.legendRow}>

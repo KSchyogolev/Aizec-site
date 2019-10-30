@@ -79,11 +79,11 @@ const UsersMainForm = props => {
               </IconButton> : '',
             editComponent: () => null
           },
-          {title: 'Имя', field: 'first_name', filtering: false},
-          {title: 'Фамилия', field: 'second_name', filtering: false},
-          {title: 'Отчество', field: 'third_name', filtering: false},
+          {title: 'Имя', field: 'first_name'},
+          {title: 'Фамилия', field: 'second_name'},
+          {title: 'Отчество', field: 'third_name'},
           {title: 'Пароль', field: 'password', filtering: false},
-          {title: 'Почта', field: 'email', filtering: false},
+          {title: 'Почта', field: 'email'},
           {
             title: 'Роль',
             field: 'role',

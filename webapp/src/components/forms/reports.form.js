@@ -111,7 +111,7 @@ const ReportsPage = props => {
             lookup: {'archived': 'Прочитано', 'active': 'Новое'}
           }
         ]}
-        data={store.messages.filter(item => item.kind === 'report')}
+        data={store.messages.filter(item => item.kind === 'report' || item.kind === 'skip')}
         onRowClick={(event, rowData, togglePanel) => togglePanel()}
         detailPanel={[
           {

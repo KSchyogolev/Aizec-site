@@ -96,10 +96,10 @@ const LettersUserPage = (props) => {
           {
             title: 'Статус',
             field: 'status',
-            lookup: {'archived': 'Прочитано', 'active': 'Отправлено'},
+            lookup: {'archived': 'Прочитано', 'active': 'Отправлено'}
           }
         ]}
-        data={store.outbox.filter(item => item.kind === 'report')}
+        data={store.outbox.filter(item => item.kind === 'report' || item.kind === 'skip')}
         onRowClick={(event, rowData, togglePanel) => togglePanel()}
         detailPanel={[
           {
@@ -120,7 +120,7 @@ const LettersUserPage = (props) => {
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],
-          actionsColumnIndex: -1,
+          actionsColumnIndex: -1
           // filtering: true
         }}
         localization={tableLocalization}

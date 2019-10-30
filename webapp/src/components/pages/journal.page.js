@@ -158,6 +158,7 @@ const JournalPage = props => {
     store.getAll('courses')
     store.getAll('courses')
     store.getAll('payments')
+    store.getAll('lesson_types')
     store.getLessonsInfos()
   }, [])
 

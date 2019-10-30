@@ -478,15 +478,6 @@ class Store {
     })
   }
 
-  @action
-  getUserLessons (userId = this.currentUser.id) {
-    return new Promise((resolve, reject) => {
-      API.main.getUserLessons(userId).then(res => {
-        this.setStore('currentLessons', res.data)
-        resolve(res)
-      }).catch(reject)
-    })
-  }
 
   @action
   getTeacherLessons (userId = this.currentUser.id) {
