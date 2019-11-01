@@ -40,6 +40,7 @@ import LettersIcon from '@material-ui/icons/Email'
 import CoursesIcon from '@material-ui/icons/School'
 import AchievementsIcon from '@material-ui/icons/ThumbUp'
 import ProgressIcon from '@material-ui/icons/TrendingUp'
+import StatisticIcon from '@material-ui/icons/BarChart'
 
 import { inject, observer } from 'mobx-react'
 import store from '../store'
@@ -168,6 +169,8 @@ const translate = (str) => {
       return 'Ведомость'
     case 'scheduleUser':
       return 'Расписание'
+    case 'statistics':
+      return 'Статистика'
     default:
       return ''
   }
@@ -223,6 +226,8 @@ const getIcon = (page) => {
       return <CoursesIcon/>
     case 'achievementsUser':
       return <AchievementsIcon/>
+    case 'statistics':
+      return <StatisticIcon/>
     default:
       return <FolderIcon/>
   }

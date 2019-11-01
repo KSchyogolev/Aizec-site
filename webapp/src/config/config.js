@@ -138,8 +138,7 @@ export const pages = {
     {
       name: 'coursesUser',
       label: 'Курсы',
-      subPages: [
-      ]
+      subPages: []
     },
     {
       name: 'offersUser',
@@ -193,15 +192,18 @@ export const tableLocalization = {
       filterTooltip: 'Филтр'
     },
     deleteTooltip: 'Удалить',
-    editRow:{
+    editRow: {
       deleteText: 'Вы уверены что хотите удалить запись?'
     }
   },
   toolbar: {
     searchTooltip: 'Поиск',
-    searchPlaceholder: 'Поиск'
+    searchPlaceholder: 'Поиск',
+    exportTitle: 'Экспорт',
+    exportAriaLabel: 'Экспорт',
+    exportName: 'Экспорт в CSV'
   },
-  grouping:{
+  grouping: {
     placeholder: 'Перетащите заголовки столбцов',
     groupedBy: 'Сгруппировано по'
   }

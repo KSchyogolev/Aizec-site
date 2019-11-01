@@ -174,7 +174,7 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
           <Typography gutterBottom variant="h5" component="h2">
             {head_text}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="body2" color="textSecondary" component="p" >
             {translate[kind]}
           </Typography>
         </CardContent>

@@ -15,6 +15,7 @@ import ListItem from '@material-ui/core/ListItem'
 import IconButton from '@material-ui/core/IconButton'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
 import Menu from '@material-ui/core/Menu'
 import VisibilityIcon from '@material-ui/icons/Lock'
 import VisibilityOffIcon from '@material-ui/icons/LockOpen'
@@ -26,6 +27,9 @@ import Button from '@material-ui/core/Button'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import API from '../../api/api'
 import DateRangePicker from '@wojtekmaj/react-daterange-picker'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,25 +82,30 @@ const useStyles = makeStyles(theme => ({
       paddingLeft: 10
     }
   },
-
+  formControl: {
+    margin: 10,
+    width: 250
+  },
   isPaid: {
-    border: '5px solid #808080'
+    // border: '5px solid #808080'
+  },
+  isPaidCell:{
+    border: '2px solid #00c500'
   }
-
 }))
 const options = [
   {
     value: 'ok',
-    label: 'Был на занятии'
+    label: '*Был на занятии'
   }, {
     value: 'skip_without_reason',
-    label: 'Пропуск без ув.причины'
+    label: '*Пропуск без ув.причины'
   }, {
     value: 'skip_approved',
-    label: 'Пропуск с ув.причиной'
+    label: '*Пропуск с ув.причиной'
   }, {
     value: 'skip_not_approved',
-    label: 'Прислал справку'
+    label: '*Прислал справку'
   }
 ]
 
@@ -161,7 +170,6 @@ const JournalPage = props => {
     store.getAll('lesson_types')
     store.getLessonsInfos()
   }, [])
-
 
   const coursesItems = store.courses.map(item => ({label: item.short_description, value: item.id}))
 
@@ -239,34 +247,41 @@ const JournalPage = props => {
   const VisitCell = ({visit = {}, disabled = false, jIndex = 0, lIndex = 0, vIndex = 0, grpId = 0, isPaid = false}) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
+    const [comment, setComment] = React.useState(visit.teacher_comment)
 
     function handleClickListItem (event) {
       setAnchorEl(event.currentTarget)
     }
 
-    function handleMenuItemClick (item, jIndex, lIndex, vIndex, grpId) {
-      setAnchorEl(null)
-      store.updateVisit(visit.id, {status: item.value}).then(res => {
+    function handleMenuItemClick (params, jIndex, lIndex, vIndex, grpId) {
+      store.updateVisit(visit.id, {...params, teacher_comment: comment}).then(res => {
         const journalLesson = {...store.journalLessons[jIndex]}
         journalLesson.lessonsByGroups[grpId][lIndex].visits[vIndex] = res.data
         let journalLessons = [...store.journalLessons]
         journalLessons[jIndex] = journalLesson
         store.setStore('journalLessons', journalLessons)
       })
+      setAnchorEl(null)
+    }
+
+    const handleChangeComment = (e) => {
+      setComment(e.target.value)
+      e.preventDefault()
+      e.stopPropagation()
     }
 
     function handleClose () {
       setAnchorEl(null)
+      if (comment !== visit.teacher_comment)
+        handleMenuItemClick({teacher_comment: comment}, jIndex, lIndex, vIndex, grpId)
     }
 
     return <div>
       <List component="div" className={classes.cellBox}>
         <ListItem
-          className={isPaid ? classes.isPaid : ''}
+          // className={isPaid ? classes.isPaid : ''}
           button
-          aria-haspopup="true"
           aria-controls="lock-menu"
-          aria-label="when device is locked"
           onClick={handleClickListItem}
           style={{'background-color': visit.status ? statusColors[visit.status] : ''}}
         >
@@ -276,16 +291,22 @@ const JournalPage = props => {
       <Menu
         id="lock-menu"
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        keepMounted
+        disableAutoFocusItem={true}
+        autoFocus={false}
       >
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="component-simple">Комментарий</InputLabel>
+          <Input id="component-simple" value={comment} onChange={handleChangeComment}/>
+        </FormControl>
         {options.map((item, index) => (
           <MenuItem
             disabled={disabled}
             key={index}
             selected={visit.status === item.value}
-            onClick={() => handleMenuItemClick(item, jIndex, lIndex, vIndex, grpId)}
+            onClick={() => handleMenuItemClick({status: item.value}, jIndex, lIndex, vIndex, grpId)}
           >
             {getLessonInfo(item.value).icon}{item.label}
           </MenuItem>
@@ -294,13 +315,13 @@ const JournalPage = props => {
                 className={classes.menuButton} onClick={() => downloadDocument(visit.id)}>
           <CloudDownloadIcon className={classes.leftIcon}/> Скачать справку
         </Button>
-      </Menu></div>
+      </Menu>
+    </div>
   }
 
   const getJournalByFilter = () => {
     store.getJournalLessons(filter)
   }
-
 
   return (
     <div className={classes.root}>
@@ -366,14 +387,13 @@ const JournalPage = props => {
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
                             ({user.parents && user.parents.map(userContacts)})</TableCell>
                           {lessons.map((lesson, lIndex) => {
-                            const userPaidLessonsCount = store.coursePayments[user.id] ? store.coursePayments[user.id].lessonsPaid  : 0
-                            // console.log(userPaidLessonsCount)
+                            const userPaidLessonsCount = store.coursePayments[user.id] ? store.coursePayments[user.id].lessonsPaid : 0
                             const disabled = store.currentUser.role === 'teacher' && (moment().diff(moment(lesson.start_time), 'minutes') > 120 + lesson.duration || 0)
                             const vIndex = lesson.visits.findIndex((item) => item.user_id === user.id)
-                            return <TableCell style={{padding: '0'}}><VisitCell
+                            return <TableCell className={lesson.number <= userPaidLessonsCount ? classes.isPaidCell : ''} style={{padding: '0'}}><VisitCell
                               visit={lesson.visits[vIndex]}
                               lIndex={lIndex}
-                              isPaid={lesson.number <= userPaidLessonsCount}
+                              // isPaid={lesson.number <= userPaidLessonsCount}
                               disabled={disabled}
                               vIndex={vIndex} jIndex={jIndex}
                               grpId={lesson.group_id}/></TableCell>

@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
   },
   leftIcon: {
     marginRight: theme.spacing(1)
+  },
+  courseInfo: {
+    background: '#f9f9f9',
+    padding: 10
   }
 }))
 
@@ -73,8 +77,13 @@ const CoursesForm = props => {
         title="Курсы"
         icons={tableIcons}
         columns={[
-          {title: 'Название', field: 'short_description', filtering: false},
-          {title: 'Полное описание', field: 'full_description', filtering: false},
+          {title: 'Название', field: 'short_description'},
+          {
+            title: 'Полное описание',
+            field: 'full_description',
+            filtering: false,
+            render: rowData => rowData.full_description && <div dangerouslySetInnerHTML={{__html: rowData.full_description}} className={classes.courseInfo}></div>
+          },
           {title: 'Длительность (мес.)', field: 'duration', filtering: false, type: 'numeric'},
           {title: 'Занятий в неделю', field: 'lessonsWeek', filtering: false, type: 'numeric'},
           {title: 'Стоимость в месяц', field: 'cost_month', filtering: false},

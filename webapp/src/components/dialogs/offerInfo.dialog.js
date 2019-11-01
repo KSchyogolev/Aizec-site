@@ -23,8 +23,8 @@ const OfferInfoDialog = ({open, handleClose, text, title, images, ...props}) => 
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'}>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          {text}
+        <DialogContentText dangerouslySetInnerHTML={{__html: text}} style={{color:'rgba(0, 0, 0, 0.87)'}}>
+          {/*{text}*/}
         </DialogContentText>
         {images.length ? <ImageGallery showPlayButton={false} items={getImgResources(images)}/> : null}
       </DialogContent>

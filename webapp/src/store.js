@@ -371,6 +371,7 @@ class Store {
 
   @action
   getAll (field, tipsCountFunction, page, withArchived) {
+    console.log(withArchived)
     return new Promise((resolve, reject) => {
       API.main.getAllObjects(field, withArchived).then(res => {
         this.setStore(field, res.data)

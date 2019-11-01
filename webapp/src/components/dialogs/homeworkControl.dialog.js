@@ -141,17 +141,11 @@ const HomeworkControlDialog = ({handleClose, open, lesson = {}, ...props}) => {
             {
               title: 'Комментарий к ДЗ',
               field: 'homework_comment'
+            },
+            {
+              title: 'Заметка к занятию',
+              field: 'teacher_comment'
             }
-            /*            {
-                          title: 'Посещение',
-                          field: 'status',
-                          lookup: {
-                            'ok': 'Был на занятии',
-                            'skip_without_reason': 'Пропуск без ув.причины',
-                            'skip_not_approved': 'Прислал справку',
-                            'skip_approved': 'Пропуск с ув.причиной'
-                          }
-                        }*/
           ]}
           actions={[
             rowData => ({
