@@ -66,7 +66,7 @@ const roleName = {
   user: 'Ученик'
 }
 
-const getFilterCount = (arr, params) => {
+export const getFilterCount = (arr, params) => {
   return arr.filter(item => {
     return params.reduce((res, obj) => {
       return res && item[obj.key] === obj.value

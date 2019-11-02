@@ -155,8 +155,8 @@ const HomeworkPage = (props) => {
             filtering: false,
             grouping: false,
             render: rowData => {
-              const group = mapGroups[rowData.group_id]
-              const club = mapClubs[group.club_id]
+              const group = rowData && mapGroups[rowData.group_id]
+              const club = group && mapClubs[group.club_id]
               return club && club.name
             }
           },

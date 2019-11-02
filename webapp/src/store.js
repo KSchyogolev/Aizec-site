@@ -74,6 +74,7 @@ class Store {
   @observable autoNotifications = []
   @observable coursePayments = {}
 
+  @observable archivedOffers = []
   @observable archivedUsers = []
 
   @observable loading = {

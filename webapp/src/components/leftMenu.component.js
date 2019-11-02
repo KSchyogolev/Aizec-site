@@ -160,7 +160,7 @@ const translate = (str) => {
     case 'summary':
       return 'Прогресс'
     case 'offers':
-      return 'Магазин'
+      return 'Предложения'
     case 'reminders':
       return 'Напоминания'
     case 'courses':
@@ -171,6 +171,8 @@ const translate = (str) => {
       return 'Расписание'
     case 'statistics':
       return 'Статистика'
+    case 'achievementsUser':
+      return 'Достижения'
     default:
       return ''
   }

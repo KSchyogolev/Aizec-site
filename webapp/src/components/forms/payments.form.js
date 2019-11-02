@@ -31,12 +31,14 @@ const PaymentsForm = props => {
   }, {})
 
   const messagesMap = store.messages.reduce((res, item) => {
-    return item.kind === 'offer' ? {...res, [item.id]: item} : {...res}
+    return item.kind === 'offer' || item.kind === 'merch' ? {...res, [item.id]: item} : {...res}
   }, {})
 
   const merchesMap = store.merches.reduce((res, item) => ({...res, [item.id]: item}), {})
 
   const coursesMap = store.courses.reduce((res, item) => ({...res, [item.id]: item}), {})
+
+  const messagesLookup = {'offer': 'Предложение', 'merch': 'Товар'}
 
   const getDealObject = (payment) => {
     try {
@@ -68,13 +70,13 @@ const PaymentsForm = props => {
     null_id: 'Тип не указан'
   }
 
-/*  useEffect(() => {
-    store.getAllCourses()
-    store.getAll('payments')
-    store.getAll('users')
-    // store.getAll('messages')
-    // store.getAll('courses')
-  }, [store.courses && store.courses.length])*/
+  /*  useEffect(() => {
+      store.getAllCourses()
+      store.getAll('payments')
+      store.getAll('users')
+      // store.getAll('messages')
+      // store.getAll('courses')
+    }, [store.courses && store.courses.length])*/
 
   return (
     <div className={classes.root}>
@@ -94,11 +96,18 @@ const PaymentsForm = props => {
             },
             filtering: false
           },
+          /*          {
+                      title: 'Тип товара',
+                      render: props => translate[getDealObject(props).id],
+                      lookup: {'message_id': 'Предложение', 'merch_id': 'Мерч'},
+                      customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(getDealObject(rowData).id) !== -1
+                    },*/
           {
-            title: 'Тип товара',
-            render: props => translate[getDealObject(props).id],
-            lookup: {'message_id': 'Предложение', /*'course_id': 'Курс',*/ 'merch_id': 'Мерч'},
-            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(getDealObject(rowData).id) !== -1
+            title: 'Тип',
+            field: 'message_id',
+            render: rowData => messagesMap[rowData.message_id] && messagesLookup[messagesMap[rowData.message_id].kind],
+            lookup: messagesLookup,
+            customFilterAndSearch: (term, rowData) => !term.length || term.indexOf(messagesMap[rowData.message_id].kind) !== -1
           },
           {title: 'Описание', filtering: false, render: props => getDealObject(props).description},
           {title: 'Оплачено рублями', field: 'cost', filtering: false},
