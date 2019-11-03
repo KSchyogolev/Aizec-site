@@ -17,6 +17,7 @@ import MerchEditForm from './merchEdiit.form'
 import PaymentsCoursesForm from './paymentsCourses.form'
 import OffersForm from './offers.form'
 import OffersArchiveForm from './offersArchive.form'
+import BonusesForm from './bonuses.form'
 
 export {
   ChildInfoForm,
@@ -37,5 +38,6 @@ export {
   MerchEditForm,
   PaymentsCoursesForm,
   OffersForm,
-  OffersArchiveForm
+  OffersArchiveForm,
+  BonusesForm
 }

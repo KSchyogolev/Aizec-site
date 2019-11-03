@@ -13,6 +13,7 @@ import FileUploadDialog from './fileUpload.dialog'
 import GenerateLessonsDialog from './generateLessons.dialog'
 import DeleteDialog from './delete.dialog'
 import CoursePayDialog from './coursePay.dialog'
+import BonusesDialog from './bonuses.dialog'
 
 
 export {
@@ -30,5 +31,6 @@ export {
   FileUploadDialog,
   GenerateLessonsDialog,
   DeleteDialog,
-  CoursePayDialog
+  CoursePayDialog,
+  BonusesDialog
 }

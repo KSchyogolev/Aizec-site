@@ -76,11 +76,6 @@ export const pages = {
       subPages: []
     },
     {
-      name: 'bonuses',
-      label: 'Бонусы',
-      subPages: []
-    },
-    {
       name: 'statistics',
       label: 'Статистика',
       subPages: []
@@ -105,6 +100,11 @@ export const pages = {
     {
       name: 'reportsTeacher',
       label: 'Сообщить руководству',
+      subPages: []
+    },
+    {
+      name: 'profileTeacher',
+      label: 'Профиль',
       subPages: []
     }
   ],
@@ -153,6 +153,11 @@ export const pages = {
     {
       name: 'profileUser',
       label: 'Профиль',
+      subPages: []
+    },
+    {
+      name: 'bonusesUser',
+      label: 'Бонусы',
       subPages: []
     }
   ]

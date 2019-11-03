@@ -3,9 +3,9 @@ import { Route } from 'mobx-router'
 
 import {
   HomeworkTeacherPage,
-  JournalTeacherPage,
   ListTeacherPage,
-  ReportsTeacherPage
+  ReportsTeacherPage,
+  ProfileTeacherPage
 } from '../components/pages/teacher'
 
 import {
@@ -33,7 +33,8 @@ import {
   MainUserPage,
   OffersUserPage,
   LettersUserPage,
-  ProfileUserPage
+  ProfileUserPage,
+  BonusesUserPage
 } from '../components/pages/user'
 
 const userIsRegistered = (user) => {
@@ -97,6 +98,11 @@ const routes = {
     component: <HomeworkTeacherPage/>,
     beforeEnter: () => userIsLoggedIn('teacher')
   }),
+  profileTeacher: new Route({
+    path: '/profileTeacher',
+    component: <ProfileTeacherPage/>,
+    beforeEnter: () => userIsLoggedIn('teacher')
+  }),
   courses: new Route({
     path: '/courses',
     component: <CoursesPage/>,
@@ -130,6 +136,11 @@ const routes = {
   coursesUser: new Route({
     path: '/coursesUser',
     component: <CoursesUserPage/>,
+    beforeEnter: () => userIsLoggedIn('user')
+  }),
+  bonusesUser: new Route({
+    path: '/bonusesUser',
+    component: <BonusesUserPage/>,
     beforeEnter: () => userIsLoggedIn('user')
   }),
   homeworkUser: new Route({
@@ -180,7 +191,7 @@ const routes = {
   profile: new Route({
     path: '/profile',
     component: <ProfilePage/>,
-    beforeEnter: () => userIsLoggedIn()
+    beforeEnter: () => userIsLoggedIn('admin')
   }),
   users: new Route({
     path: '/users',

@@ -70,7 +70,7 @@ const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entit
     store.addMessage({
       ...message,
       head_text: kind === 'skip' ? 'Пропуск по болезни' : message.head_text,
-      full_text: kind === 'skip' ? 'Справка о пропуске занятия' : message.head_text,
+      full_text: kind === 'skip' ? 'Справка о пропуске занятия' : message.full_text,
       kind: kind || 'report',
       to_entity_type: to_entity_type || 'admin',
       to_entity_id

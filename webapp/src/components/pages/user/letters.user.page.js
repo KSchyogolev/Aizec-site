@@ -91,6 +91,7 @@ const LettersUserPage = (props) => {
             field: 'created_at',
             filtering: false,
             type: 'datetime',
+            defaultSort: 'desc',
             render: rowData => <div>{moment(rowData.created_at).format('DD.MM.YYYY HH:mm')}</div>
           },
           {

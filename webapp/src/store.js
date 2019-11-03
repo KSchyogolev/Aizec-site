@@ -204,6 +204,17 @@ class Store {
   }
 
   @action
+  updateCurrentUser (data) {
+    return new Promise((resolve, reject) => {
+      API.main.updateUser(this.currentUser.id, data).then(res => {
+        localStorage.setItem('current_user', JSON.stringify(res.data))
+        this.currentUser = res.data
+        resolve(res.data)
+      }).catch(reject)
+    })
+  }
+
+  @action
   deleteUser (userId, data) {
     return new Promise((resolve, reject) => {
       API.main.deleteUser(userId, data).then(() => {
@@ -480,7 +491,6 @@ class Store {
     })
   }
 
-
   @action
   getTeacherLessons (userId = this.currentUser.id) {
     return new Promise((resolve, reject) => {
@@ -608,12 +618,12 @@ class Store {
   }
 
   @action
-  uploadImages (files, messageId, field = 'message', requestField = 'messages', type = 'photos') {
+  uploadImages (files, messageId, field = 'message', requestField = 'messages', type = 'photos', singleField) {
     return new Promise((resolve, reject) => {
       const formData = new FormData()
 
       for (let i = 0; i < files.length; i++)
-        formData.append(field + `[${type}][]`, files[i])
+        formData.append(field + `[${type}]${singleField ? '' : '[]'}`, files[i])
 
       API.main.uploadFile(formData, messageId, requestField).then(res => {
         if (field === 'message') this.updateInStore('outbox', messageId, res.data)
@@ -787,8 +797,6 @@ class Store {
       const lessonsPaid = Math.floor(allMoney / currentCourse.cost_month * 4 * currentCourse.lessonsWeek)
       return {[item.user_id]: {...item, lessonsPaid}, ...res}
     }, {})
-
-
 
     this.getAll('lesson_infos').then(res => {
 

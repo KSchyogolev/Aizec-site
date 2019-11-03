@@ -5,14 +5,8 @@ import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
-import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import { getCurrentOffers } from './offers.user.page'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import NotifIcon from '@material-ui/icons/PriorityHigh'
 
 const moment = require('moment')
@@ -174,22 +168,6 @@ const ProfileUserPage = (props) => {
               <ParentCard parent={item}/>
             </Grid>)}
           </Grid>
-{/*          {user.parents ? <ExpansionPanel>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon/>}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>Родители</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails className={classes.parentsExpand}>
-              <Grid container spacing={3}>
-                {user.parents.map(item => <Grid item xs={12} sm={12} md={6} lg={6}>
-                  <ParentCard parent={item}/>
-                </Grid>)}
-              </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel> : null}*/}
         </CardContent>
       </Card>
       <br/>

@@ -1,19 +1,15 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
-import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
 import { getCurrentOffers } from './offers.user.page'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import NotifIcon from '@material-ui/icons/PriorityHigh'
+import NotificationIcon from '@material-ui/icons/NotificationImportant'
+import OfferIcon from '@material-ui/icons/CardGiftcard'
+import TeacherIcon from '@material-ui/icons/School'
+import Divider from '@material-ui/core/Divider'
+import { TeacherWidget } from '../../widgets'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   notificationBox: {
-    margin: '20px 0',
+    // margin: '20px 0',
     textAlign: 'left'
     // backgroundColor: '#ff57221c'
   },
@@ -65,6 +61,25 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 600,
     '& svg': {
       marginRight: 10
+    }
+  },
+  divider: {
+    margin: '30px 0px 10px 0px',
+    display: 'flex',
+    fontSize: '1.2rem',
+
+    '& .MuiDivider-root': {
+      flex: 1,
+      margin: 'auto',
+      marginLeft: 10
+    }
+  },
+  divLabel: {
+    display: 'flex',
+    '& svg': {
+      margin: 'auto',
+      marginRight: 10,
+      color: '#757575'
     }
   }
 }))
@@ -94,18 +109,45 @@ const MainUserPage = (props) => {
   useEffect(() => {
     store.getCurrentOffers()
     store.getUserObjects('inbox')
+    store.getUserObjects('groups', 'currentGroups')
   }, [store.currentOffers.length])
+
+  let teachers = store.currentGroups.reduce((res, item) => [...res, ...item.users], []).filter(item => item.role === 'teacher')
+
+  teachers = teachers.filter((item, index) => teachers.findIndex(t => t.id === item.id) === index)
 
   return (
     <div className={classes.root}>
+      <div className={classes.divider}>
+        <div className={classes.divLabel}><NotificationIcon/>НАПОМИНАНИЯ</div>
+        <Divider variant="middle"/>
+      </div>
       <Paper className={classes.notificationBox}>
         {[...store.inbox.filter(item => item.kind === 'notification'), ...store.autoNotifications].sort((a, b) => parseInt(a.head_text) - parseInt(b.head_text)).map(item =>
           <NotificationRow
             text={item.full_text} priority={item.head_text}/>)}
       </Paper>
+      <div className={classes.divider}>
+        <div className={classes.divLabel}><OfferIcon/>ПРЕДЛОЖЕНИЯ</div>
+        <Divider variant="middle"/>
+      </div>
       <Grid container spacing={3}>
         {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && item.isNew))}
         {getCurrentOffers(store.currentOffers.filter(item => item.status !== 'done' && !item.isNew))}
+      </Grid>
+      <div className={classes.divider}>
+        <div className={classes.divLabel}><TeacherIcon/>УЧИТЕЛЯ</div>
+        <Divider variant="middle"/>
+      </div>
+      <Grid container spacing={3}>
+        {teachers.map((item, index) => <Grid item
+                                             xs={12}
+                                             sm={12}
+                                             md={12}
+                                             lg={6}
+                                             key={index}>
+          <TeacherWidget name={`${item.second_name} ${item.first_name} ${item.third_name}`} info={item.bio} photo={item.photo}/>
+        </Grid>)}
       </Grid>
     </div>
   )

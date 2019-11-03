@@ -147,6 +147,8 @@ const translate = (str) => {
       return 'Календарь'
     case 'profile' :
       return 'Профиль'
+    case 'profileTeacher' :
+      return 'Профиль'
     case 'main' :
       return 'Главная'
     case 'users' :
@@ -173,6 +175,8 @@ const translate = (str) => {
       return 'Статистика'
     case 'achievementsUser':
       return 'Достижения'
+    case 'bonusesUser':
+      return 'Бонусы'
     default:
       return ''
   }
@@ -185,6 +189,8 @@ const getIcon = (page) => {
     case 'profile':
       return <FaceIcon/>
     case 'profileUser':
+      return <FaceIcon/>
+    case 'profileTeacher':
       return <FaceIcon/>
     case 'calendar':
       return <CalendarIcon/>
@@ -204,7 +210,7 @@ const getIcon = (page) => {
       return <AssessmentIcon/>
     case 'listTeacher':
       return <AssessmentIcon/>
-    case 'bonuses':
+    case 'bonusesUser':
       return <LoyalotyIcon/>
     case 'journal':
       return <JournalIcon/>

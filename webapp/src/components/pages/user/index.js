@@ -6,6 +6,7 @@ import MainUserPage from './main.user.page'
 import OffersUserPage from './offers.user.page'
 import ScheduleUserPage from './schedule.user.page'
 import ProfileUserPage from './profile.user.page'
+import BonusesUserPage from './bonuses.user.page'
 
 export {
   AchievementUserPage,
@@ -15,5 +16,6 @@ export {
   MainUserPage,
   OffersUserPage,
   ScheduleUserPage,
-  ProfileUserPage
+  ProfileUserPage,
+  BonusesUserPage
 }
