@@ -58,6 +58,11 @@ const useStyles = makeStyles(theme => ({
   },
   divider: {
     height: theme.spacing(2)
+  },
+  zSelect: {
+    '& .MuiPaper-elevation1': {
+      zIndex: '100000000!important'
+    }
   }
 }))
 
@@ -182,6 +187,7 @@ const MultiSearchInput = ({label, items, handleChange, values, multi = true}) =>
       <NoSsr>
         <Select
           classes={classes}
+          className={classes.zSelect}
           styles={selectStyles}
           inputId="react-select-multiple"
           TextFieldProps={{

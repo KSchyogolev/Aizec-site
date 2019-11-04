@@ -57,14 +57,16 @@ const useStyles = makeStyles(theme => ({
     minWidth: 250,
     minHeight: 250,
     display: 'flex',
-    borderRadius: 200
+    borderRadius: 200,
+    border: '3px solid #ff5722',
+    margin: 20
   },
   input: {
     display: 'none'
   },
   conttolPanel: {
     display: 'flex',
-    '& span' :{
+    '& span': {
       margin: 10
     }
   },
@@ -94,7 +96,7 @@ const ProfilePage = (props) => {
   const onChangeFileHandler = (e, userId) => {
     const files = e.target.files
     if (files.length > 0) {
-      store.uploadImages(files, userId, 'user', 'users', 'photo', true ).then(res => {
+      store.uploadImages(files, userId, 'user', 'users', 'photo', true).then(res => {
         store.showNotification('success', 'Аватар обновлен')
         localStorage.setItem('current_user', JSON.stringify(res.data))
         store.currentUser = res.data
@@ -138,8 +140,8 @@ const ProfilePage = (props) => {
             {editMode ? <Fab size="small" component={'span'}
                              onClick={() => {saveUserInfo(bio)}}>
               <SaveIcon/>
-            </Fab> : <Tooltip title="Редактировать информацию" aria-label="add"><Fab size="small"  component={'span'}
-                          onClick={() => {setEditMode(true)}}>
+            </Fab> : <Tooltip title="Редактировать информацию" aria-label="add"><Fab size="small" component={'span'}
+                                                                                     onClick={() => {setEditMode(true)}}>
               <EditIcon/>
             </Fab></Tooltip>}
             <UploadAvatarButton userId={user.id}/>

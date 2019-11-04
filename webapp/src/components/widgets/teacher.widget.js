@@ -10,7 +10,7 @@ import clsx from 'clsx'
 const useStyles = makeStyles(theme => ({
   card: {
     display: 'flex',
-    borderRadius: '200px 20px 20px 200px'
+    minHeight: 280
   },
   details: {
     textAlign: 'left',
@@ -25,7 +25,11 @@ const useStyles = makeStyles(theme => ({
     minWidth: 250,
     minHeight: 250,
     display: 'flex',
-    borderRadius: 200
+    borderRadius: 200,
+    maxWidth: 250,
+    maxHeight: 250,
+    margin: 'auto 10px',
+    border: '3px solid #ff5722'
   },
   blocked: {
     backgroundColor: '#b5b5b5',

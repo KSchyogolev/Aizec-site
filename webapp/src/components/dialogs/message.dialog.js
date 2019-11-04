@@ -17,6 +17,7 @@ import Select from '@material-ui/core/Select'
 const useStyles = makeStyles(theme => ({
   root: {
     // margin: '15px'
+    minHeight: '800px!important'
   },
   typeSelect: {
     display: 'flex',
@@ -29,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   },
   messageEditBody: {
     height: 400
+  },
+  content:{
+    minHeight: '600px !important'
   }
 }))
 
@@ -67,7 +71,8 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}>
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth={'md'}
+            className={classes.root}>
       <DialogTitle id="form-dialog-title">
         <FormControl className={classes.typeSelect}>
           <InputLabel htmlFor="age-simple">Тип предложения</InputLabel>
@@ -83,7 +88,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
           </Select>
         </FormControl>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers className={classes.content}>
         {getFormByType(types.length === 1 ? types[0] : message.kind)}
       </DialogContent>
       <DialogActions>

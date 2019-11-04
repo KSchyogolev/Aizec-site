@@ -69,6 +69,7 @@ const OffersForm = props => {
   }
 
   const saveMessage = () => {
+    console.log({...currentMessage})
     let savePromise = currentMessage.id ? () => store.updateMessage(currentMessage.id, currentMessage) : () => store.addMessage({...currentMessage})
     savePromise().then(() => {
       closeMessageDialog()
@@ -76,7 +77,7 @@ const OffersForm = props => {
   }
 
   const handleChange = (name, value) => {
-    setCurrentMessage({...currentMessage, [name]: value})
+    setCurrentMessage(prev => ({...prev, [name]: value}))
   }
 
   const openMessageDialog = (message) => {
