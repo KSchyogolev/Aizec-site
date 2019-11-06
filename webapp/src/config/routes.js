@@ -62,6 +62,11 @@ const toHomePage = (a, b, store) => {
   const currentUser = localStorage.getItem('current_user')
   const user = JSON.parse(currentUser)
   let homePage
+  if (!user){
+    store.router.goTo(routes.login)
+    return false
+  }
+
   switch (user.role) {
     case('user'):
       homePage = routes.mainUser
