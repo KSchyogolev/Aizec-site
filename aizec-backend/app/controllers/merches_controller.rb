@@ -45,7 +45,7 @@ class MerchesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_merch
-      @merch = Merch.find(params[:id])
+      @merch = Merch.unscoped.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
