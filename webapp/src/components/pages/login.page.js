@@ -83,8 +83,11 @@ class LoginPage extends Component {
         default:
           store.router.goTo(routes.profile)
       }
-    }).catch(console.log)
+    }).catch((error) => {
+      store.showNotification('error', error.data.error)
+    })
   }
+
 
   handleChange = (e) => {
     const {target: {name, value}} = e

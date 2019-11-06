@@ -20,7 +20,7 @@ const BonusesDialog = ({open, handleClose, text, handleProof, name, link, ...pro
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {link && <Button onClick={() => {window.open(link);}} color="primary">
+        {link && <Button onClick={() => {window.open(link)}} color="primary">
           Перейти
         </Button>}
         <Button onClick={handleProof} color="primary">

@@ -53,13 +53,29 @@ const userIsLoggedIn = (role) => {
     return false
   }
   if (role && role !== user.role) {
-    window.location = '/'
+    window.location = '/403'
     return false
   }
 }
 
 const toHomePage = (a, b, store) => {
-  store.router.goTo(routes.profile)
+  const currentUser = localStorage.getItem('current_user')
+  const user = JSON.parse(currentUser)
+  let homePage
+  switch (user.role) {
+    case('user'):
+      homePage = routes.mainUser
+      break
+    case('teacher'):
+      homePage = routes.profileTeacher
+      break
+    case('admin'):
+      homePage = routes.profile
+      break
+    default:
+      homePage = routes.profile
+  }
+  store.router.goTo(homePage)
   return false
 }
 
@@ -210,6 +226,10 @@ const routes = {
   empty: new Route({
     path: '/',
     beforeEnter: toHomePage
+  }),
+  403: new Route({
+    path: '/403',
+    component: <h1>СТРАНИЦА НЕ НАЙДЕНА</h1>
   })
 }
 

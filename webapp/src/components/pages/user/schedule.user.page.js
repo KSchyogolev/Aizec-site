@@ -131,7 +131,7 @@ const ScheduleUserPage = (props) => {
       const lessonNumber = lessonsGroupByCourse[course_id].findIndex(item => id === item.id) + 1
       const coursePayment = coursesPaymentsMap[course_id]
       const course = mapCourses[course_id] || {}
-      const allMoney = coursePayment.cost || 0 + coursePayment.bonuses || 0
+      const allMoney = coursePayment ? (coursePayment.cost || 0 + coursePayment.bonuses || 0) : 0
       const lessonsPaid = Math.floor(allMoney / course.cost_month * 4 * course.lessonsWeek)
       return {
         startDate: start_time,

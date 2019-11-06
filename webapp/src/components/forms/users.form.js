@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { inject, observer } from 'mobx-react'
 import MaterialTable from 'material-table'
@@ -10,6 +10,7 @@ import GroupIcon from '@material-ui/icons/Group'
 import InfoIcon from '@material-ui/icons/Portrait'
 import PhoneIcon from '@material-ui/icons/Phone'
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 
@@ -27,8 +28,14 @@ const useStyles = makeStyles(theme => ({
   },
   filterHeader: {
     display: 'flex',
-    marginBottom : 10
+    marginBottom: 10
+  },
+  checkPicker: {
+    padding: '10px 20px 10px 10px',
+    background: '#e4e4e4',
+    borderRadius: 10
   }
+
 }))
 
 const label = {
@@ -53,6 +60,15 @@ const UsersForm = props => {
   const {store} = props
   const [userDialogIsOpen, setUserDialogVisible] = useState(false)
   const [currentUser, setCurrentUser] = useState({})
+  const [currentGroup, setGroup] = useState(null)
+  const [filter, setFilter] = useState({
+    group: {}
+  })
+
+  const groupsItems = [...store.groups.map(item => ({
+    label: item.name,
+    value: item.id
+  })), {label: '- не выбрано -', value: null}]
 
   const [checkBio, setCheckBio] = useState(false)
 
@@ -60,6 +76,13 @@ const UsersForm = props => {
     setCheckBio(e.target.checked)
   }
 
+  const handleChangeFilter = (field) => (e) => {
+    setFilter(prev => ({...prev, group: e}))
+    if (field === 'group') {
+      const group = store.groups.find(item => item.id === e.value)
+      setGroup(group)
+    }
+  }
 
   const openUserInfoDialog = (user) => {
     setCurrentUser(user)
@@ -70,16 +93,26 @@ const UsersForm = props => {
   return (
     <div className={classes.root}>
       <div className={classes.filterHeader}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkBio}
-              onChange={handleCheckBio}
-              color="secondary"
+        <Grid container spacing={2}>
+          <Grid item lg={2} md={4} xs={12}>
+            <FormControlLabel
+              className={classes.checkPicker}
+              control={
+                <Checkbox
+                  checked={checkBio}
+                  onChange={handleCheckBio}
+                  color="secondary"
+                />
+              }
+              label="Показывать только с заметками"
             />
-          }
-          label="Показывать только с заметками"
-        />
+          </Grid>
+          <Grid item lg={2} md={4} xs={12}>
+            <MultiSearchInput multi={false} handleChange={handleChangeFilter('group')}
+                              values={filter.group} label={'Выберите группу'}
+                              items={groupsItems}/>
+          </Grid>
+        </Grid>
       </div>
       <MaterialTable
         title="Ученики"
@@ -111,7 +144,7 @@ const UsersForm = props => {
           {title: 'Почта аккаунта', field: 'email', filtering: false, editable: false},
           {title: 'Заметка', field: 'bio'}
         ]}
-        data={store.users.filter(user => user.role === 'user' && user.status === 'active' && (checkBio ? (user.bio && user.bio.length > 0) : true))}
+        data={store.users.filter(user => user.role === 'user' && user.status === 'active' && (checkBio ? (user.bio && user.bio.length > 0) : true) && (currentGroup ? currentGroup.users.findIndex(item => item.id === user.id) >= 0 : true))}
         options={{
           pageSize: 10,
           pageSizeOptions: [10, 20, 50],

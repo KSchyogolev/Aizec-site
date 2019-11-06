@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select'
 const useStyles = makeStyles(theme => ({
   root: {
     // margin: '15px'
-    minHeight: '800px!important'
+    minHeight: '500px!important'
   },
   typeSelect: {
     display: 'flex',
