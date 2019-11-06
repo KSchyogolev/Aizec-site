@@ -2,13 +2,13 @@ class UserMailer < ApplicationMailer
   def activate_email
     @password = params[:password]
     @user     = params[:user]
-    @url      = 'http://innovate-school.com/login'
+    @url      = 'https://azimovclub.com/login'
     mail(to: @user.email, subject: 'Активация аккаунта')
   end
 
   def approve_email
     @user = params[:user]
-    @url  = 'http://innovate-school.com/login'
+    @url  = 'https://azimovclub.com/login'
     mail(to: @user.email, subject: 'Ваш аккаунт активирован')
   end
 
@@ -22,7 +22,7 @@ class UserMailer < ApplicationMailer
   def revoke_password
     @user = params[:user]
     @password = params[:password]
-    @url  = 'http://innovate-school.com/login'
+    @url  = 'https://azimovclub.com/login'
     mail(to: @user.email, subject: 'Ваш пароль обновлен')
   end
 end
