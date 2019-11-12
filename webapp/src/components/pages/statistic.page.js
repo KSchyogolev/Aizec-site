@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    minWidth: 300
+    minWidth: 400
   },
   chartTitle: {
     fontSize: '1.6em',
@@ -82,6 +82,7 @@ const StatisticPage = props => {
     store.getAll('payments')
     store.getAll('courses')
     store.getAll('users')
+    store.getAll('visits')
     store.getAll('messages', null, null, true)
   }, [])
 
@@ -119,6 +120,20 @@ const StatisticPage = props => {
     value: 'archived'
   }])
 
+  const skipsWithoutReason = getFilterCount(store.visits, [{key: 'status', value: 'skip_without_reason'}])
+  const skipsWithReason = getFilterCount(store.visits, [{key: 'status', value: 'skip_approved'}])
+  const skipsWithDocument = getFilterCount(store.visits, [{key: 'status', value: 'skip_not_approved'}])
+  const allSkips = skipsWithoutReason + skipsWithReason + skipsWithDocument
+
+  const approveHomework = getFilterCount(store.visits, [{key: 'approve_status', value: 'done_approved'}])
+  const progressHomework = getFilterCount(store.visits, [{key: 'approve_status', value: 'done_not_approved'}])
+  const notApprovedHomework = getFilterCount(store.visits, [{key: 'approve_status', value: 'need_fix'}])
+
+  const merchesResult = store.payments.filter(item => item.merch_id !== null).reduce((res, item) => res + item.cost, 0)
+  const coursesResult = store.payments.filter(item => item.course_id !== null).reduce((res, item) => res + item.cost, 0)
+  const offersResult = store.payments.filter(item => item.message_id !== null).reduce((res, item) => res + item.cost, 0)
+  const allResult = merchesResult + coursesResult + offersResult
+
   let data = [{
     name: 'Активных учеников',
     value: allUsers,
@@ -154,19 +169,19 @@ const StatisticPage = props => {
   }, {
     name: 'Купленные курсы',
     value: paidCourses,
-    type: 'Финансы'
+    type: 'Магазин'
   }, {
     name: 'Купленные товары',
     value: paidMerches,
-    type: 'Финансы'
+    type: 'Магазин'
   }, {
     name: 'Купленные предложения',
     value: paidOffers,
-    type: 'Финансы'
+    type: 'Магазин'
   }, {
     name: 'Необработанные заявки на покупку',
     value: activePayments,
-    type: 'Финансы'
+    type: 'Магазин'
   }, {
     name: 'Прочитанные сообщения',
     value: usersReportsArchived,
@@ -183,11 +198,53 @@ const StatisticPage = props => {
     name: 'Непросмотреные справки',
     value: usersSkips,
     type: 'Обращения'
+  }, {
+    name: 'Пропущенных занятий',
+    value: allSkips,
+    type: 'Посещения'
+  }, {
+    name: 'Пропущенных занятий по уважительной причине',
+    value: skipsWithReason,
+    type: 'Посещения'
+  }, {
+    name: 'Пропущенных занятий без уважительной причины',
+    value: skipsWithoutReason,
+    type: 'Посещения'
+  }, {
+    name: 'Отправлена справка',
+    value: skipsWithDocument,
+    type: 'Посещения'
+  }, {
+    name: 'Заданий выполнено',
+    value: approveHomework,
+    type: 'Домашняя работа'
+  }, {
+    name: 'Заданий на проверке',
+    value: progressHomework,
+    type: 'Домашняя работа'
+  }, {
+    name: 'Заданий не зачтено',
+    value: notApprovedHomework,
+    type: 'Домашняя работа'
+  }, {
+    name: 'Всего выручки',
+    value: allResult,
+    type: 'Выручка'
+  }, {
+    name: 'Выручка с мерча',
+    value: merchesResult,
+    type: 'Выручка'
+  }, {
+    name: 'Выручка с предложений',
+    value: offersResult,
+    type: 'Выручка'
+  }, {
+    name: 'Выручка с курсов',
+    value: coursesResult,
+    type: 'Выручка'
   }]
 
-  // const COLORS = ['#ffe7d1','#f6c89f', '#4b8e8d', '#396362', '#757575']
   const COLORS = ['#F47A1F', '#FDBB2F', '#377B2B', '#7AC142', '#007CC3', '#00529B']
-  // const COLORS = ['#003f5c', '#444e86', '#955196', '#dd5182', '#ff6e54', '#ffa600']
 
   const groupStatsByType = _.groupBy(data, 'type')
 
