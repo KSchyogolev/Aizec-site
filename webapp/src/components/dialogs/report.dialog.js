@@ -44,12 +44,12 @@ const teacherThemes = {
   5: 'Другое'
 }
 
-const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entity_id, label, sucess_message, onSuccess, ...props}) => {
+const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entity_id, label, sucess_message, onSuccess, defaultMessage = {}, ...props}) => {
   const classes = useStyles()
   const {store} = props
   const [message, setMessage] = useState({})
   const [photos, setPhotos] = useState([])
-
+  console.log(defaultMessage)
   const themes = isUser ? userThemes : teacherThemes
 
   const showText = kind !== 'skip'
@@ -69,8 +69,8 @@ const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entit
     }
     store.addMessage({
       ...message,
-      head_text: kind === 'skip' ? 'Пропуск по болезни' : message.head_text,
-      full_text: kind === 'skip' ? 'Справка о пропуске занятия' : message.full_text,
+      head_text: kind === 'skip' ? 'Пропуск по болезни' : message.head_text || defaultMessage.head_text,
+      full_text: kind === 'skip' ? 'Справка о пропуске занятия' : message.full_text  || defaultMessage.full_text,
       kind: kind || 'report',
       to_entity_type: to_entity_type || 'admin',
       to_entity_id
@@ -115,7 +115,7 @@ const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entit
                 inputProps={{
                   name: 'head_text',
                   id: 'head_text',
-                  value: message.head_text,
+                  value: message.head_text || defaultMessage.head_text,
                   onChange: handleChange
                 }}
               >
@@ -130,7 +130,7 @@ const ReportDialog = ({handleClose, open, isUser, kind, to_entity_type, to_entit
                 multiline
                 label="Сообщение"
                 className={classes.textField}
-                value={message.full_text}
+                value={message.full_text || defaultMessage.full_text}
                 name={'full_text'}
                 onChange={handleChange}
                 margin="normal"

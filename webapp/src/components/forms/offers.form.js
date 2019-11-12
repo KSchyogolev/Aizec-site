@@ -100,7 +100,7 @@ const OffersForm = props => {
         </Button>
       </Typography>
       <MaterialTable
-        title="Курсы"
+        title="Предложения"
         icons={tableIcons}
         columns={[
           {

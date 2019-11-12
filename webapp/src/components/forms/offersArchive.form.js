@@ -32,7 +32,7 @@ const UsersArchiveForm = props => {
   return (
     <div className={classes.root}>
       <MaterialTable
-        title="Архивне курсы"
+        title="Архивные предложения"
         icons={tableIcons}
         columns={[
           {
@@ -49,7 +49,10 @@ const UsersArchiveForm = props => {
           {
             icon: () => <RestoreIcon/>,
             tooltip: 'Восстановить',
-            onClick: (event, rowData) => store.updateMessage(rowData.id, {status: 'active'}).then(() => store.getArchived('messages', 'archivedOffers'))
+            onClick: (event, rowData) => store.updateMessage(rowData.id, {status: 'active'}).then(() => {
+              store.showNotification('success', 'Предложение восстановлено')
+              store.getArchived('messages', 'archivedOffers')
+            })
           }
         ]}
         options={{
