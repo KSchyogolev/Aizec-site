@@ -98,7 +98,7 @@ const NotificationRow = ({text, priority}) => {
     3: '#757575'
   }
 
-  return <div className={classes.notification}><NotifIcon style={{color: priorityColor[priority]}}/>{text}</div>
+  return <div className={classes.notification}><NotifIcon style={{color: priorityColor[priority]}}/><span style={{margin:'auto 0px'}}>{text}</span></div>
 }
 
 const MainUserPage = (props) => {

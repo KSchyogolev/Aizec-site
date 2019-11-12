@@ -142,6 +142,7 @@ const UsersForm = props => {
             render: rowData => <div>{moment().diff(moment(rowData.birthday), 'years')}</div>
           },
           {title: 'Почта аккаунта', field: 'email', filtering: false, editable: false},
+          {title: 'Бонусы', field: 'bonus_count', type: 'numeric'},
           {title: 'Заметка', field: 'bio'}
         ]}
         data={store.users.filter(user => user.role === 'user' && user.status === 'active' && (checkBio ? (user.bio && user.bio.length > 0) : true) && (currentGroup ? currentGroup.users.findIndex(item => item.id === user.id) >= 0 : true))}

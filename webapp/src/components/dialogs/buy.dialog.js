@@ -72,7 +72,7 @@ const BuyDialog = ({open, handleClose, name, cost = 0, merch_id = null, course_i
             }}
           >
             {getBonusesOptions(store.currentUser.bonus_count, 500).map((item, index) => <MenuItem key={index}
-                                                                                value={item}>{item}</MenuItem>)}
+                                                                                                  value={item}>{item}</MenuItem>)}
           </Select>
         </FormControl>
       </DialogContent>

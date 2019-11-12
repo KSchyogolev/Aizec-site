@@ -110,7 +110,7 @@ const PaymentsCoursesForm = props => {
             render: props => coursesMap[props.course_id] && coursesMap[props.course_id].cost_month
           },
           {title: 'Оплачено рублями', field: 'cost', filtering: false},
-          {title: 'Оплачено бонусами', field: 'bonuses', filtering: false},
+          {title: 'Простить оплату', field: 'bonuses', filtering: false},
           {
             title: 'Статус',
             field: 'status',

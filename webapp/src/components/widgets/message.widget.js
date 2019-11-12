@@ -152,7 +152,7 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
           <DoneIcon style={{color: '#668bc5', margin: 9}}/>
         </Tooltip>
       case 'done' :
-        return <Tooltip title="Товар приобретен" aria-label="add">
+        return <Tooltip title="Оплачен" aria-label="add">
           <DoneAllIcon style={{color: '#73c56e', margin: 9}}/>
         </Tooltip>
       default:
@@ -180,7 +180,7 @@ const MessageWidget = ({kind, head_text, full_text, index, merch_id, course_id, 
         </CardContent>
       </CardActionArea>
       <CardActions>
-        {getIconByStatus(status)}
+        {course_id ? getIconByStatus(status === 'done' ? 'done' : 'ready') : getIconByStatus(status)}
         {cost ? <span className={classes.cost}>{cost},00 руб.</span> : null}
         {isNew ? <Tooltip title="Новинка" aria-label="add">
           <NewIcon className={classes.rightIcon}/>

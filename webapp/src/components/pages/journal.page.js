@@ -15,7 +15,7 @@ import ListItem from '@material-ui/core/ListItem'
 import IconButton from '@material-ui/core/IconButton'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
+import Fab from '@material-ui/core/Fab'
 import Menu from '@material-ui/core/Menu'
 import VisibilityIcon from '@material-ui/icons/Lock'
 import VisibilityOffIcon from '@material-ui/icons/LockOpen'
@@ -23,6 +23,7 @@ import CheckIcon from '@material-ui/icons/CheckCircle'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import ReportIcon from '@material-ui/icons/Error'
 import HistoryIcon from '@material-ui/icons/YoutubeSearchedFor'
+import PaymentIcon from '@material-ui/icons/MonetizationOn'
 import Button from '@material-ui/core/Button'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import API from '../../api/api'
@@ -30,6 +31,8 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 import FormControl from '@material-ui/core/FormControl'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
+import Tooltip from '@material-ui/core/Tooltip'
+import { CoursePayDialog } from '../dialogs'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -89,8 +92,14 @@ const useStyles = makeStyles(theme => ({
   isPaid: {
     // border: '5px solid #808080'
   },
-  isPaidCell:{
-    border: '2px solid #00c500'
+  isPaidCell: {
+    border: '2px solid #00b100',
+    backgroundColor: '#e8ffe8'
+  },
+  isBonusCell: {
+    border: '2px solid #989898 !important',
+    backgroundColor: '#f3f3f3 !important',
+    // pointerEvents: 'none'
   }
 }))
 const options = [
@@ -155,6 +164,43 @@ const JournalPage = props => {
   const classes = useStyles()
   const {store} = props
   const [courseGroups, setGroups] = useState([])
+
+  const [paymentDialogVisible, setPaymentDialogVisible] = useState(false)
+  const [payFunc, setPayFunc] = useState(() => {})
+
+  const addPayClosure = (userId, courseId) => (value) => {
+    const currentPayment = store.payments.find(item => item.user_id === userId && item.course_id === courseId)
+    if (currentPayment) {
+      store.updateIn('payments', currentPayment.id, {
+        ...currentPayment,
+        cost: parseInt(currentPayment.cost) + parseInt(value)
+      }).then(res => {
+        store.showNotification('success', 'Платеж добавлен')
+        getJournalByFilter()
+      })
+      return
+    }
+
+    store.addTo('payments', 'payment', {
+      course_id: courseId,
+      user_id: userId,
+      cost: parseInt(value),
+      status: 'done',
+      bonuses: 0
+    }).then(res => {
+      store.showNotification('success', 'Платеж добавлен')
+      getJournalByFilter()
+    })
+  }
+
+  const openPaymentDialog = (user) => {
+    setPayFunc(() => addPayClosure(user.id, filter.course.value))
+    setPaymentDialogVisible(true)
+  }
+
+  const closePaymentDialog = () => {
+    setPaymentDialogVisible(false)
+  }
 
   const [filter, setFilter] = useState({
     course: null,
@@ -372,6 +418,7 @@ const JournalPage = props => {
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
+                      {store.currentUser.role === 'teacher' && <TableCell align="left"></TableCell>}
                       <TableCell align="left">Ученик</TableCell>
                       {lessons.map((lesson, i) => <TableCell align={'center'}>
                         <div><VisibilityButton status={lesson.status} lessonId={lesson.id} journalIndex={jIndex}
@@ -383,14 +430,24 @@ const JournalPage = props => {
                   <TableBody>
                     {
                       group.users.filter(item => item.role === 'user').map(user => {
-                        return <TableRow>
+                        return <TableRow>{store.currentUser.role === 'teacher' && <TableCell style={{width: '30px'}}>
+                          <Tooltip title="Добавить платеж" aria-label="add">
+                            <Fab size="small" color='primary' className={classes.margin}
+                                 component={'span'} onClick={() => openPaymentDialog(user)}>
+                              <PaymentIcon/>
+                            </Fab>
+                          </Tooltip>
+                        </TableCell>}
                           <TableCell>{user.second_name} {user.first_name && user.first_name[0]}.{user.third_name && user.third_name[0]}.
                             ({user.parents && user.parents.map(userContacts)})</TableCell>
                           {lessons.map((lesson, lIndex) => {
                             const userPaidLessonsCount = store.coursePayments[user.id] ? store.coursePayments[user.id].lessonsPaid : 0
+                            const userBonusLessonsCount = store.coursePayments[user.id] ? store.coursePayments[user.id].lessonsBonus : 0
                             const disabled = store.currentUser.role === 'teacher' && (moment().diff(moment(lesson.start_time), 'minutes') > 120 + lesson.duration || 0)
                             const vIndex = lesson.visits.findIndex((item) => item.user_id === user.id)
-                            return <TableCell className={lesson.number <= userPaidLessonsCount ? classes.isPaidCell : ''} style={{padding: '0'}}><VisitCell
+                            return <TableCell
+                              className={lesson.number <= userBonusLessonsCount ? classes.isBonusCell : (lesson.number <= (userBonusLessonsCount + userPaidLessonsCount) ? classes.isPaidCell : '')}
+                              style={{padding: '0'}}><VisitCell
                               visit={lesson.visits[vIndex]}
                               lIndex={lIndex}
                               // isPaid={lesson.number <= userPaidLessonsCount}
@@ -408,6 +465,7 @@ const JournalPage = props => {
           </Paper>
         })}
       </div>
+      <CoursePayDialog open={paymentDialogVisible} handleClose={closePaymentDialog} handleSave={payFunc}/>
     </div>
   )
 }

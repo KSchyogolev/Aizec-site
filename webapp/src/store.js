@@ -793,9 +793,11 @@ class Store {
     const currentCourse = this.courses.find(item => item.id === courseId)
 
     const userPaymentCourseMap = this.payments.filter(item => item.course_id === courseId).reduce((res, item) => {
-      const allMoney = item.cost || 0 + item.bonuses || 0
+      const allMoney = item.cost || 0
+      const bonusMoney = item.bonuses || 0
       const lessonsPaid = Math.floor(allMoney / currentCourse.cost_month * 4 * currentCourse.lessonsWeek)
-      return {[item.user_id]: {...item, lessonsPaid}, ...res}
+      const lessonsBonus = Math.floor(bonusMoney / currentCourse.cost_month * 4 * currentCourse.lessonsWeek)
+      return {[item.user_id]: {...item, lessonsPaid, lessonsBonus}, ...res}
     }, {})
 
     this.getAll('lesson_infos').then(res => {
@@ -841,6 +843,7 @@ class Store {
         this.setStore('journalLessons', currentLessons)
         this.setStore('currentVisitsMap', visitsMap)
         this.setStore('currentCourseId', courseId)
+        console.log(userPaymentCourseMap)
         this.setStore('coursePayments', userPaymentCourseMap)
       })
     })

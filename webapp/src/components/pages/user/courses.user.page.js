@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import AddIcon from '@material-ui/icons/Add'
 import Paper from '@material-ui/core/Paper'
+import moment from 'moment'
 
 import {getCurrentOffers} from './offers.user.page'
 
@@ -62,7 +63,7 @@ const CoursesPage = props => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'regular' || item.kind === 'intensive' || item.kind === 'individual')))}
+        {getCurrentOffers(store.currentOffers.filter(item => (item.kind === 'regular' || item.kind === 'intensive' || item.kind === 'individual')).sort((a, b) => moment(b.created_at).unix() - moment(a.created_at).unix()))}
       </Grid>
 
       {/*<MaterialTable
