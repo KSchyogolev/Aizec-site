@@ -51,7 +51,7 @@ class MessagesController < ApplicationController
     when 'admin'
       @users = User.where(:role => 'admin')
     when 'user' 
-      @users = User.find(@message.to_entity_id)
+      @users = [User.find(@message.to_entity_id)]
     when 'club' 
       @users = Club.find(@message.to_entity_id).users
     when 'group' 
