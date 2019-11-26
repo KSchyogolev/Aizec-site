@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   include ArchivableController
 
-  before_action :set_message, only: [:show, :update, :destroy]
+  before_action :set_message, only: [:show, :update, :destroy, :visible_for_users]
 
   has_many_methods_for Message
   
@@ -44,6 +44,27 @@ class MessagesController < ApplicationController
     else
       render json: @message.errors, status: :unprocessable_entity
     end
+  end
+
+  def visible_for_users
+    case @message.to_entity_type
+    when 'admin'
+      @users = User.where(:role => 'admin')
+    when 'user' 
+      @users = User.find(@message.to_entity_id)
+    when 'club' 
+      @users = Club.find(@message.to_entity_id).users
+    when 'group' 
+      @users = Group.find(@message.to_entity_id).users
+    when 'course' 
+      @users = Course.find(@message.to_entity_id).users
+    when 'all' 
+      @users = User.all
+    when 'visit'
+      @users = [Visit.find(@message.to_entity_id).user]
+    end
+
+    render :template => "users/index", formats: [:json]
   end
 
   # DELETE /messages/1

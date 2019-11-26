@@ -76,6 +76,8 @@ Rails.application.routes.draw do
 
   get 'lessons/by_user_id/:user_id', to: 'lessons#by_user'
   get 'lessons/my_courses', to: 'lessons#by_user'
+  
+  get 'messages/:id/visible_for_users', to: 'messages#visible_for_users'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
