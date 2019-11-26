@@ -53,7 +53,7 @@ class MessagesController < ApplicationController
     when 'user' 
       @users = [User.find(@message.to_entity_id)]
     when 'club' 
-      @users = Club.find(@message.to_entity_id).users
+      @users = Club.find(@message.to_entity_id).groups.map(&:users).flatten.uniq
     when 'group' 
       @users = Group.find(@message.to_entity_id).users
     when 'course' 
