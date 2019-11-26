@@ -57,7 +57,7 @@ class MessagesController < ApplicationController
     when 'group' 
       @users = Group.find(@message.to_entity_id).users
     when 'course' 
-      @users = Course.find(@message.to_entity_id).users
+      @users = Course.find(@message.to_entity_id).groups.map(&:users).flatten.uniq
     when 'all' 
       @users = User.all
     when 'visit'
