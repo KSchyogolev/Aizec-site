@@ -102,8 +102,19 @@ const StatisticPage = props => {
   const intensiveCourses = getFilterCount(store.courses, [{key: 'kind', value: 'intensive'}])
 
   const paidCourses = store.payments.length - getFilterCount(store.payments, [{key: 'course_id', value: null}])
-  const paidMerches = store.payments.length - getFilterCount(store.payments, [{key: 'merch_id', value: null}])
-  const paidOffers = store.payments.length - getFilterCount(store.payments, [{key: 'message_id', value: null}])
+
+  // const paidMerches = store.payments.length - getFilterCount(store.payments, [{key: 'merch_id', value: null}])
+  // const paidOffers = store.payments.length - getFilterCount(store.payments, [{key: 'message_id', value: null}])
+
+  const offers = store.payments.filter(item => item.message_id !== null && item.status === 'done')
+  const merches = offers && offers.filter(item => {
+    const message = store.messages.find(mes => mes.id === item.message_id)
+    return message && message.kind === 'merch'
+  })
+
+  const paidMerches = merches.length
+  const paidOffers = offers.length - merches.length
+
   const activePayments = getFilterCount(store.payments, [{key: 'status', value: 'ready'}])
 
   const usersReports = getFilterCount(store.messages, [{key: 'kind', value: 'report'}, {
@@ -129,9 +140,14 @@ const StatisticPage = props => {
   const progressHomework = getFilterCount(store.visits, [{key: 'approve_status', value: 'done_not_approved'}])
   const notApprovedHomework = getFilterCount(store.visits, [{key: 'approve_status', value: 'need_fix'}])
 
-  const merchesResult = store.payments.filter(item => item.merch_id !== null).reduce((res, item) => res + item.cost, 0)
+
   const coursesResult = store.payments.filter(item => item.course_id !== null).reduce((res, item) => res + item.cost, 0)
-  const offersResult = store.payments.filter(item => item.message_id !== null).reduce((res, item) => res + item.cost, 0)
+
+  // const merchesResult = store.payments.filter(item => item.merch_id !== null).reduce((res, item) => res + item.cost, 0)
+  // const offersResult = store.payments.filter(item => item.message_id !== null).reduce((res, item) => res + item.cost, 0)
+
+  const merchesResult = merches.reduce((res, item) => res + item.cost, 0)
+  const offersResult = offers.reduce((res, item) => res + item.cost, 0) - merchesResult
   const allResult = merchesResult + coursesResult + offersResult
 
   let data = [{
