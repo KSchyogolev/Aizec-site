@@ -63,7 +63,7 @@ const MessageDialog = ({handleClose, handleSave, handleChange, open, types = [],
         contentBody = <OfferEditForm onChange={handleChange} message={message}/>
         break
       default:
-        contentBody = 'Type not found'
+        contentBody = <h2 style={{'text-align':'center'}}>Тип не выбран</h2>
         break
     }
 

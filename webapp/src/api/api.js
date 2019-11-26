@@ -106,7 +106,7 @@ API.main.getUserLessons = (userId) => get('restapi/lessons/by_user_id/' + userId
 API.main.getUserVisits = (userId) => get('restapi/users/' + userId + '/visits')
 API.main.getUserMessages = (userId) => get('restapi/users/' + userId + '/messages')
 
-API.main.getMessageUsers = (messageId) => get(`/messages/${messageId}/users`)
+API.main.getMessageUsers = (messageId) => get(`restapi/messages/${messageId}/visible_for_users`)
 
 API.main.getUserObjects = (field, userId, withArchived) => get('restapi/users/' + userId + '/' + field + (withArchived ? '/with_archivated' : '' ))
 // API.main.getUserEvents = (userId) => get('restapi/lessons/by_user_id/' + userId)
